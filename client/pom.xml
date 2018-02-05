@@ -12,7 +12,15 @@
 	<packaging>pom</packaging>
 
     <modules>
-        <module>jersey</module>
+        <module>apache</module>
     </modules>
+
+	<dependencies>
+        <!-- jee -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+        </dependency>
+	</dependencies>
 
 </project>

@@ -17,6 +17,12 @@
             <artifactId>jremote-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- jee -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

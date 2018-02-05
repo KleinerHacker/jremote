@@ -9,10 +9,20 @@
     </parent>
 
     <artifactId>jremote-core</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
-    <modules>
-        <module>jersey</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jremote-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- jee -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
