@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.api.exception;
 
-public class JRemoteException extends Exception {
+public class JRemoteException extends RuntimeException {
     public JRemoteException() {
     }
 

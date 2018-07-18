@@ -1,26 +1,23 @@
 package org.pcsoft.framework.jremote.core;
 
-import org.pcsoft.framework.jremote.api.config.JRemoteClientConfiguration;
-import org.pcsoft.framework.jremote.api.factory.ClientFactory;
-import org.pcsoft.framework.jremote.api.factory.ServerFactory;
-
-public final class RemoteClientBuilder extends RemoteBaseBuilder<RemoteClientBuilder> {
-    public static RemoteClientBuilder create(final ServerFactory serverFactory, final ClientFactory clientFactory) {
-        return new RemoteClientBuilder(serverFactory, clientFactory);
+public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
+    public static RemoteClientBuilder create() {
+        return new RemoteClientBuilder();
     }
 
-    private JRemoteClientConfiguration configuration = new JRemoteClientConfiguration();
+    private final RemoteClient remoteClient;
 
-    private RemoteClientBuilder(ServerFactory serverFactory, ClientFactory clientFactory) {
-        super(serverFactory, clientFactory);
+    private RemoteClientBuilder() {
+        remoteClient = new RemoteClient();
     }
 
-    public RemoteClientBuilder withConfiguration(final JRemoteClientConfiguration configuration) {
-        this.configuration = configuration;
+    public RemoteClientBuilder withRemoteModel(Class<?> modelClass) {
+        remoteClient.getProxyManager().addRemoteModelProxy(modelClass);
         return this;
     }
 
+    @Override
     public RemoteClient build() {
-        return new RemoteClient(serverFactory, clientFactory, configuration, classList.toArray(new Class[classList.size()]));
+        return remoteClient;
     }
 }
