@@ -15,4 +15,12 @@
 		<module>rmi</module>
 	</modules>
 
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>jremote-io-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+	</dependencies>
+
 </project>
