@@ -1,4 +1,7 @@
 package org.pcsoft.framework.jremote.core;
 
-public interface Remote {
+import java.io.Closeable;
+
+public interface Remote extends AutoCloseable {
+    void open();
 }

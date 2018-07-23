@@ -12,4 +12,14 @@ public final class RemoteServer implements Remote {
     ServerProxyManager getProxyManager() {
         return proxyManager;
     }
+
+    @Override
+    public void open() {
+
+    }
+
+    @Override
+    public void close() throws Exception {
+
+    }
 }

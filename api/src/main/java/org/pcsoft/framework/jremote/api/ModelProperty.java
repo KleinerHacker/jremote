@@ -15,11 +15,11 @@ public @interface ModelProperty {
      * Class of push with method to observe, must be annotated with {@link RemotePushService}
      * @return
      */
-    Class<?> pushClass();
+    Class<?> sourcePushClass();
 
     /**
      * Method name of push class to observe
      * @return
      */
-    String pushMethod();
+    String sourcePushMethod();
 }

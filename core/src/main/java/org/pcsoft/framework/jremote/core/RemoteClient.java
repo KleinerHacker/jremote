@@ -12,4 +12,18 @@ public final class RemoteClient implements Remote {
     ClientProxyManager getProxyManager() {
         return proxyManager;
     }
+
+    public <T>T getRemoteModel(Class<T> clazz) {
+        return proxyManager.geRemoteModelProxy(clazz);
+    }
+
+    @Override
+    public void open() {
+
+    }
+
+    @Override
+    public void close() throws Exception {
+
+    }
 }
