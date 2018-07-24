@@ -11,6 +11,7 @@ import java.util.Map;
 public final class ClientProxyManager {
     private final Map<Class<?>, Object> modelProxyMap = new HashMap<>();
     private final Map<Class<?>, Object> observerProxyMap = new HashMap<>();
+    private final Map<Class<?>, Object> pushServiceProxyMap = new HashMap<>();
 
     private final Map<PushMethodKey, Object> propertyValueMap = new HashMap<>();
     private final Map<PushMethodKey, List<ChangeListener>> observerListenerMap = new HashMap<>();
@@ -48,6 +49,24 @@ public final class ClientProxyManager {
             throw new IllegalStateException("Unknown remote observer class: " + clazz.getName());
 
         return (T) observerProxyMap.get(clazz);
+    }
+    //endregion
+
+    //region Push Service Proxy
+    public <T>void addRemotePushServiceProxy(Class<T> clazz) {
+        if (pushServiceProxyMap.containsKey(clazz))
+            throw new IllegalStateException("Remote push service class already added: " + clazz.getName());
+
+        final T proxy = ProxyFactory.buildRemotePushServiceProxy(clazz, propertyValueMap, observerListenerMap);
+        pushServiceProxyMap.put(clazz, proxy);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T>T getRemotePushServiceProxy(Class<T> clazz) {
+        if (!pushServiceProxyMap.containsKey(clazz))
+            throw new IllegalStateException("Unknown remote push service class: " + clazz.getName());
+
+        return (T) pushServiceProxyMap.get(clazz);
     }
     //endregion
 }

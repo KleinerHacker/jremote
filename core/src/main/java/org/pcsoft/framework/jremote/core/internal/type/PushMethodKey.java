@@ -33,11 +33,18 @@ public final class PushMethodKey {
         return Objects.hash(pushClass, pushMethod);
     }
 
+    public String toString(boolean full) {
+        if (full)
+            return "PushMethodKey{" +
+                    "pushClass=" + pushClass +
+                    ", pushMethod='" + pushMethod + '\'' +
+                    '}';
+
+        return pushClass.getName() + "#" + pushMethod;
+    }
+
     @Override
     public String toString() {
-        return "PushMethodKey{" +
-                "pushClass=" + pushClass +
-                ", pushMethod='" + pushMethod + '\'' +
-                '}';
+        return toString(true);
     }
 }

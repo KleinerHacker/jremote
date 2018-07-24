@@ -12,8 +12,12 @@ public final class ProxyFactory {
         return RemoteModelProxyBuilder.buildProxy(clazz, dataMap);
     }
 
-    public static <T>T buildRemoteObserverProxy(Class<T> clazz, Map<PushMethodKey, List<ChangeListener>> dataMap) {
-        return RemoteObserverProxyBuilder.buildProxy(clazz, dataMap);
+    public static <T>T buildRemoteObserverProxy(Class<T> clazz, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
+        return RemoteObserverProxyBuilder.buildProxy(clazz, listenerMap);
+    }
+
+    public static <T>T buildRemotePushServiceProxy(Class<T> clazz, Map<PushMethodKey, Object> dataMap, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
+        return RemotePushServiceProxyBuilder.buildProxy(clazz, dataMap, listenerMap);
     }
 
     private ProxyFactory() {

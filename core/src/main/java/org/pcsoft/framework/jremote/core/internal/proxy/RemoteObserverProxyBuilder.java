@@ -1,6 +1,5 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
-import org.pcsoft.framework.jremote.api.ModelProperty;
 import org.pcsoft.framework.jremote.api.ObserverListener;
 import org.pcsoft.framework.jremote.api.RemoteObserver;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
@@ -8,18 +7,16 @@ import org.pcsoft.framework.jremote.api.type.ChangeListener;
 import org.pcsoft.framework.jremote.api.type.ObserverListenerType;
 import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 final class RemoteObserverProxyBuilder {
 
     @SuppressWarnings("unchecked")
-    static <T> T buildProxy(Class<T> clazz, Map<PushMethodKey, List<ChangeListener>> dataMap) {
+    static <T> T buildProxy(Class<T> clazz, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
         if (clazz.getAnnotation(RemoteObserver.class) == null)
             throw new JRemoteAnnotationException(String.format("unable to find annotation %s on class %s", RemoteObserver.class.getName(), clazz.getName()));
 
@@ -37,22 +34,26 @@ final class RemoteObserverProxyBuilder {
                             ChangeListener.class.getName(), clazz.getName(), method.getName()));
             }
 
-            final PushMethodKey key = new PushMethodKey(observerListener.pushClass(), observerListener.pushMethod());
-            final ObserverListenerType type = extractListenerType(clazz, method, observerListener);
-            switch (type) {
-                case Add:
-                    doAddListener(key, (ChangeListener) args[0], dataMap);
-                    break;
-                case Remove:
-                    doRemoveListener(key, (ChangeListener) args[0], dataMap);
-                    break;
-                case AutoDetection:
-                default:
-                    throw new RuntimeException();
-            }
-
+            addOrRemoveListener(clazz, method, (ChangeListener) args[0], observerListener, listenerMap);
             return null;
         });
+    }
+
+    private static <T> void addOrRemoveListener(Class<T> clazz, Method method, ChangeListener listener, ObserverListener observerListener,
+                                                Map<PushMethodKey, List<ChangeListener>> listenerMap) {
+        final PushMethodKey key = new PushMethodKey(observerListener.pushClass(), observerListener.pushMethod());
+        final ObserverListenerType type = extractListenerType(clazz, method, observerListener);
+        switch (type) {
+            case Add:
+                doAddListener(key, listener, listenerMap);
+                break;
+            case Remove:
+                doRemoveListener(key, listener, listenerMap);
+                break;
+            case AutoDetection:
+            default:
+                throw new RuntimeException();
+        }
     }
 
     private static void doAddListener(PushMethodKey key, ChangeListener listener, Map<PushMethodKey, List<ChangeListener>> dataMap) {

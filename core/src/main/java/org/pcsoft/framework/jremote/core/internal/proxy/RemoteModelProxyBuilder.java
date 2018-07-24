@@ -39,8 +39,12 @@ final class RemoteModelProxyBuilder {
                             clazz.getName(), method.getName()));
             }
 
-            return dataMap.get(new PushMethodKey(modelProperty.sourcePushClass(), modelProperty.sourcePushMethod()));
+            return getData(modelProperty, dataMap);
         });
+    }
+
+    private static Object getData(ModelProperty modelProperty, Map<PushMethodKey, Object> dataMap) {
+        return dataMap.get(new PushMethodKey(modelProperty.sourcePushClass(), modelProperty.sourcePushMethod()));
     }
 
     private RemoteModelProxyBuilder() {

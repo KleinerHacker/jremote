@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.pcsoft.framework.jremote.core.RemoteClient;
 import org.pcsoft.framework.jremote.core.RemoteClientBuilder;
+import org.pcsoft.framework.jremote.core.test.api.TestPushService;
 import org.pcsoft.framework.jremote.core.test.api.TestRemoteModel;
 import org.pcsoft.framework.jremote.core.test.api.TestRemoteObserver;
 
@@ -19,6 +20,7 @@ public class MainTest {
         remoteClient = RemoteClientBuilder.create()
                 .withRemoteModel(TestRemoteModel.class)
                 .withRemoteObserver(TestRemoteObserver.class)
+                .withRemotePushService(TestPushService.class)
                 .build();
 
         remoteClient.open();
