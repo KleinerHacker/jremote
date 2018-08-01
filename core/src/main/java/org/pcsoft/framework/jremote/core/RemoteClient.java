@@ -1,14 +1,28 @@
 package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.core.internal.manager.ClientProxyManager;
+import org.pcsoft.framework.jremote.core.internal.manager.ServerClientManager;
+import org.pcsoft.framework.jremote.io.api.Service;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class RemoteClient implements Remote {
+    private final String host;
+    private final int port;
+
     private final ClientProxyManager proxyManager;
     private final DataManager dataManager = new DataManager();
     private final ControlManager controlManager = new ControlManager();
 
-    RemoteClient() {
-        proxyManager = new ClientProxyManager();
+    private final List<Service> pushServiceList = new ArrayList<>();
+
+    RemoteClient(String host, int port) {
+        this.host = host;
+        this.port = port;
+
+        this.proxyManager = new ClientProxyManager();
     }
 
     ClientProxyManager getProxyManager() {
@@ -24,13 +38,42 @@ public final class RemoteClient implements Remote {
     }
 
     @Override
-    public void open() {
+    public String getHost() {
+        return host;
+    }
 
+    @Override
+    public int getPort() {
+        return port;
+    }
+
+    @Override
+    public void open() throws IOException {
+        createAndOpenPushServices();
     }
 
     @Override
     public void close() throws Exception {
+        closeAndRemovePushServices();
+    }
 
+    private void createAndOpenPushServices() throws IOException {
+        for (final Class<?> pushClass : proxyManager.getRemotePushClasses()) {
+            final Object pushServiceProxy = proxyManager.getRemotePushServiceProxy(pushClass);
+
+            final Service service = ServerClientManager.getInstance().createService();
+            service.setServiceImplementation(pushServiceProxy);
+            service.startService(host, port);
+
+            pushServiceList.add(service);
+        }
+    }
+
+    private void closeAndRemovePushServices() throws IOException {
+        for (final Service service : pushServiceList) {
+            service.stopService();
+        }
+        pushServiceList.clear();
     }
 
     public final class DataManager {

@@ -17,6 +17,19 @@
 			<artifactId>jremote-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>jremote-io-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jremote-io-impl-rmi</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 </project>

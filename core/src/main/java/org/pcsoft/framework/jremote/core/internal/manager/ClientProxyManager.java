@@ -32,6 +32,10 @@ public final class ClientProxyManager {
 
         return (T) modelProxyMap.get(clazz);
     }
+
+    public Class[] getRemoteModelClasses() {
+        return modelProxyMap.keySet().toArray(new Class[0]);
+    }
     //endregion
 
     //region Observer Proxy
@@ -50,6 +54,10 @@ public final class ClientProxyManager {
 
         return (T) observerProxyMap.get(clazz);
     }
+
+    public Class[] getRemoteObserverClasses() {
+        return observerProxyMap.keySet().toArray(new Class[0]);
+    }
     //endregion
 
     //region Push Service Proxy
@@ -67,6 +75,10 @@ public final class ClientProxyManager {
             throw new IllegalStateException("Unknown remote push service class: " + clazz.getName());
 
         return (T) pushServiceProxyMap.get(clazz);
+    }
+
+    public Class[] getRemotePushClasses() {
+        return pushServiceProxyMap.keySet().toArray(new Class[0]);
     }
     //endregion
 }

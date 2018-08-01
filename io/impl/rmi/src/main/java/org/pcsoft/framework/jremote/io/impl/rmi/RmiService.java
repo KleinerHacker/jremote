@@ -3,7 +3,6 @@ package org.pcsoft.framework.jremote.io.impl.rmi;
 import org.pcsoft.framework.jremote.io.api.ServiceBase;
 
 import java.io.IOException;
-import java.lang.reflect.Proxy;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
@@ -32,12 +31,5 @@ public final class RmiService extends ServiceBase {
         } catch (NotBoundException e) {
             throw new IOException("Exception while unbind RMI service", e);
         }
-    }
-
-    @Override
-    public <T> void createProxyFor(Class<T> serviceClass) {
-        Proxy.newProxyInstance(serviceClass.getClassLoader(), new Class[]{serviceClass}, (proxy, method, args) -> {
-            return null;
-        });
     }
 }

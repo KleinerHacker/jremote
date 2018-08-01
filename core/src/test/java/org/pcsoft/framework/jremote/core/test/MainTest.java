@@ -16,8 +16,8 @@ public class MainTest {
     private RemoteClient remoteClient;
 
     @Before
-    public void init() {
-        remoteClient = RemoteClientBuilder.create()
+    public void init() throws Exception {
+        remoteClient = RemoteClientBuilder.create("localhost", 9999)
                 .withRemoteModel(TestRemoteModel.class)
                 .withRemoteObserver(TestRemoteObserver.class)
                 .withRemotePushService(TestPushService.class)

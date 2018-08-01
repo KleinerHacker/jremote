@@ -31,11 +31,4 @@ public interface Service {
      * @return
      */
     Object getServiceImplementation();
-
-    /**
-     * Create a new internal proxy for the given interface class to handle methods in service
-     * @param serviceClass
-     * @param <T>
-     */
-    <T>void createProxyFor(Class<T> serviceClass);
 }
