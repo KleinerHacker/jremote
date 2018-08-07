@@ -1,6 +1,7 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
 import org.pcsoft.framework.jremote.api.type.ChangeListener;
+import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
 import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
 
 import java.util.List;
@@ -18,6 +19,14 @@ public final class ProxyFactory {
 
     public static <T>T buildRemotePushServiceProxy(Class<T> clazz, Map<PushMethodKey, Object> dataMap, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
         return RemotePushServiceProxyBuilder.buildProxy(clazz, dataMap, listenerMap);
+    }
+
+    public static <T>T buildRemoteRegistrationClientProxy(Class<T> clazz) {
+        return RemoteRegistrationServiceProxyBuilder.buildProxy(clazz);
+    }
+
+    public static <T>T buildRemoteKeepAliveClientProxy(Class<T> clazz) {
+
     }
 
     private ProxyFactory() {

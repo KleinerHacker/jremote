@@ -1,7 +1,7 @@
 package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.core.internal.manager.ClientProxyManager;
-import org.pcsoft.framework.jremote.core.internal.manager.ServerClientManager;
+import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
 import org.pcsoft.framework.jremote.io.api.Service;
 
 import java.io.IOException;
@@ -61,7 +61,7 @@ public final class RemoteClient implements Remote {
         for (final Class<?> pushClass : proxyManager.getRemotePushClasses()) {
             final Object pushServiceProxy = proxyManager.getRemotePushServiceProxy(pushClass);
 
-            final Service service = ServerClientManager.getInstance().createService();
+            final Service service = ServerClientPluginRegistry.getInstance().createService();
             service.setServiceImplementation(pushServiceProxy);
             service.open(host, port);
 

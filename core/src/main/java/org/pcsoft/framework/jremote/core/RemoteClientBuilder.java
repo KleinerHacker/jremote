@@ -1,5 +1,8 @@
 package org.pcsoft.framework.jremote.core;
 
+import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
+import org.pcsoft.framework.jremote.core.internal.type.DefaultService;
+
 public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
     public static RemoteClientBuilder create(String host, int port) {
         return new RemoteClientBuilder(host, port);
@@ -9,6 +12,10 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
 
     private RemoteClientBuilder(String host, int port) {
         remoteClient = new RemoteClient(host, port);
+        remoteClient.getProxyManager().addRemoteDefaultClientProxy(
+                DefaultService.Registration, ServerClientPluginRegistry.getInstance().getRegistrationServiceClass());
+        remoteClient.getProxyManager().addRemoteDefaultClientProxy(
+                DefaultService.KeepAlive, ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass());
     }
 
     public final RemoteClientBuilder withRemoteModel(Class<?>... modelClasses) {
