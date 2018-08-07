@@ -63,7 +63,7 @@ public final class RemoteClient implements Remote {
 
             final Service service = ServerClientManager.getInstance().createService();
             service.setServiceImplementation(pushServiceProxy);
-            service.startService(host, port);
+            service.open(host, port);
 
             pushServiceList.add(service);
         }
@@ -71,7 +71,7 @@ public final class RemoteClient implements Remote {
 
     private void closeAndRemovePushServices() throws IOException {
         for (final Service service : pushServiceList) {
-            service.stopService();
+            service.close();
         }
         pushServiceList.clear();
     }

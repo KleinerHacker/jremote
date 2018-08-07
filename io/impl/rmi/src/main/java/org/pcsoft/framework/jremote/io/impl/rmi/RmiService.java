@@ -13,7 +13,7 @@ public final class RmiService extends ServiceBase {
     private Registry registry;
 
     @Override
-    public void startService(String host, int port) throws IOException {
+    public void open(String host, int port) throws IOException {
         if (getServiceImplementation() == null)
             throw new IllegalStateException("Service not ready yet: no service implementation was set");
         if (!(getServiceImplementation() instanceof Remote))
@@ -24,7 +24,7 @@ public final class RmiService extends ServiceBase {
     }
 
     @Override
-    public void stopService() throws IOException {
+    public void close() throws IOException {
         try {
             registry.unbind(getServiceImplementation().getClass().getName());
             registry = null;

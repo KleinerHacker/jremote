@@ -12,6 +12,6 @@ public final class RmiPlugin implements IoPlugin {
 
     @Override
     public Class<? extends Client> getClientClass() {
-        return null;
+        return RmiClient.class;
     }
 }

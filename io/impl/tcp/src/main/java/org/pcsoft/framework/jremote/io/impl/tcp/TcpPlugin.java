@@ -12,6 +12,6 @@ public final class TcpPlugin implements IoPlugin {
 
     @Override
     public Class<? extends Client> getClientClass() {
-        return null;
+        return TcpClient.class;
     }
 }
