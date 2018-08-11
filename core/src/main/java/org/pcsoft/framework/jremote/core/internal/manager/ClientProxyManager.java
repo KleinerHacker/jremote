@@ -95,7 +95,7 @@ public final class ClientProxyManager {
                 proxy = ProxyFactory.buildRemoteKeepAliveClientProxy(clazz);
                 break;
             case Registration:
-                proxy = ProxyFactory.buildRemoteRegistrationClientProxy(clazz);
+                proxy = ProxyFactory.buildRemoteClientProxy(clazz);
                 break;
             default:
                 throw new RuntimeException();

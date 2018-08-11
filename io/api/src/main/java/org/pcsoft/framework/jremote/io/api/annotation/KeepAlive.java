@@ -1,5 +1,7 @@
 package org.pcsoft.framework.jremote.io.api.annotation;
 
+import org.pcsoft.framework.jremote.api.internal.RemoteMethod;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,5 +12,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@RemoteMethod
 public @interface KeepAlive {
 }

@@ -10,12 +10,12 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Proxy;
 
-final class RemoteRegistrationServiceProxyBuilder {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RemoteRegistrationServiceProxyBuilder.class);
+final class RemoteClientServiceProxyBuilder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RemoteClientServiceProxyBuilder.class);
 
     @SuppressWarnings("unchecked")
     static <T> T buildProxy(Class<T> clazz, String host, int port) {
-        LOGGER.debug("Create registration client proxy for " + clazz.getName());
+        LOGGER.debug("Create client proxy for " + clazz.getName());
 
         if (clazz.getAnnotation(RemoteRegistrationService.class) == null)
             throw new JRemoteAnnotationException(String.format("Unable to find annotation %s on class %s", RemoteRegistrationService.class.getName(), clazz.getName()));

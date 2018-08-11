@@ -11,4 +11,12 @@
     <artifactId>jremote-io-api</artifactId>
     <packaging>jar</packaging>
 
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>jremote-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
 </project>

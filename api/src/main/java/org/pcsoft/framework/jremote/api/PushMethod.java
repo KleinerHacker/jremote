@@ -1,5 +1,6 @@
 package org.pcsoft.framework.jremote.api;
 
+import org.pcsoft.framework.jremote.api.internal.RemoteMethod;
 import org.pcsoft.framework.jremote.api.type.PushMethodType;
 
 import java.lang.annotation.ElementType;
@@ -12,6 +13,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@RemoteMethod
 public @interface PushMethod {
     /**
      * Type of push update, see {@link PushMethodType} for more information.
