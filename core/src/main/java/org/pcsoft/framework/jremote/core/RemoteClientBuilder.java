@@ -1,9 +1,6 @@
 package org.pcsoft.framework.jremote.core;
 
-import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
-import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
-import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteRegistrationClientWrapper;
 
 public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
     public static RemoteClientBuilder create(String host, int port) {
@@ -14,12 +11,8 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
 
     private RemoteClientBuilder(String host, int port) {
         remoteClient = new RemoteClient(host, port);
-        remoteClient.getProxyManager().setRemoteRegistrationClient(new RemoteRegistrationClientWrapper(
-                ProxyFactory.buildRemoteClientProxy(ServerClientPluginRegistry.getInstance().getRegistrationServiceClass(), host, port)
-        ));
-        remoteClient.getProxyManager().setRemoteKeepAliveClient(new RemoteKeepAliveClientWrapper(
-                ProxyFactory.buildRemoteClientProxy(ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass(), host, port)
-        ));
+        remoteClient.getProxyManager().setRemoteRegistrationClient(ServerClientPluginRegistry.getInstance().getRegistrationServiceClass(), host, port);
+        remoteClient.getProxyManager().setRemoteKeepAliveClient(ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass(), host, port);
     }
 
     public final RemoteClientBuilder withRemoteModel(Class<?>... modelClasses) {
@@ -39,6 +32,13 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
     public final RemoteClientBuilder withRemotePushService(Class<?>... pushServiceClasses) {
         for (final Class<?> pushServiceClass : pushServiceClasses) {
             remoteClient.getProxyManager().addRemotePushServiceProxy(pushServiceClass);
+        }
+        return this;
+    }
+
+    public final RemoteClientBuilder withRemoteControlClient(Class<?>... controlClientClasses) {
+        for (final Class<?> pushServiceClass : controlClientClasses) {
+            remoteClient.getProxyManager().addRemoteControlClientProxy(pushServiceClass, remoteClient.getHost(), remoteClient.getPort());
         }
         return this;
     }

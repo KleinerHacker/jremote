@@ -14,9 +14,11 @@ public final class ClientProxyManager {
     private final Map<Class<?>, Object> modelProxyMap = new HashMap<>();
     private final Map<Class<?>, Object> observerProxyMap = new HashMap<>();
     private final Map<Class<?>, Object> pushServiceProxyMap = new HashMap<>();
+    private final Map<Class<?>, Object> controlClientProxyMap = new HashMap<>();
     private RemoteRegistrationClientWrapper remoteRegistrationClient;
     private RemoteKeepAliveClientWrapper remoteKeepAliveClient;
 
+    //Data
     private final Map<PushMethodKey, Object> propertyValueMap = new HashMap<>();
     private final Map<PushMethodKey, List<ChangeListener>> observerListenerMap = new HashMap<>();
 
@@ -86,19 +88,41 @@ public final class ClientProxyManager {
     }
     //endregion
 
+    //region Control Client Proxy
+    public <T> void addRemoteControlClientProxy(Class<T> clazz, String host, int port) {
+        if (controlClientProxyMap.containsKey(clazz))
+            throw new IllegalStateException("Remote control client class already added: " + clazz.getName());
+
+        final T proxy = ProxyFactory.buildRemoteClientProxy(clazz, host, port);
+        controlClientProxyMap.put(clazz, proxy);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getRemoteControlClientProxy(Class<T> clazz) {
+        if (!controlClientProxyMap.containsKey(clazz))
+            throw new IllegalStateException("Unknown remote control client class: " + clazz.getName());
+
+        return (T) controlClientProxyMap.get(clazz);
+    }
+
+    public Class[] getRemoteControlClasses() {
+        return controlClientProxyMap.keySet().toArray(new Class[0]);
+    }
+    //endregion
+
     public RemoteRegistrationClientWrapper getRemoteRegistrationClient() {
         return remoteRegistrationClient;
     }
 
-    public void setRemoteRegistrationClient(RemoteRegistrationClientWrapper remoteRegistrationClient) {
-        this.remoteRegistrationClient = remoteRegistrationClient;
+    public void setRemoteRegistrationClient(Class<?> clazz, String host, int port) {
+        this.remoteRegistrationClient = new RemoteRegistrationClientWrapper(ProxyFactory.buildRemoteClientProxy(clazz, host, port));
     }
 
     public RemoteKeepAliveClientWrapper getRemoteKeepAliveClient() {
         return remoteKeepAliveClient;
     }
 
-    public void setRemoteKeepAliveClient(RemoteKeepAliveClientWrapper remoteKeepAliveClient) {
-        this.remoteKeepAliveClient = remoteKeepAliveClient;
+    public void setRemoteKeepAliveClient(Class<?> clazz, String host, int port) {
+        this.remoteKeepAliveClient = new RemoteKeepAliveClientWrapper(ProxyFactory.buildRemoteClientProxy(clazz, host, port));
     }
 }

@@ -24,7 +24,7 @@ final class RemoteModelProxyBuilder extends ProxyBuilder<ModelProperty, Map<Push
     }
 
     @Override
-    protected void assertMethod(ModelProperty annotation, Class<?> clazz, Method method) {
+    protected void assertMethod(ModelProperty annotation, Class<?> clazz, Method method, Object[] args) {
         assert method.getParameterCount() > 0 || method.getReturnType() == void.class;
     }
 

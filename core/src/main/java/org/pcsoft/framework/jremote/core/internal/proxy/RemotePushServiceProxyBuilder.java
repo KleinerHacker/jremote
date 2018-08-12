@@ -29,7 +29,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<PushMethod, Remot
     }
 
     @Override
-    protected void assertMethod(PushMethod pushMethod, Class<?> clazz, Method method) {
+    protected void assertMethod(PushMethod pushMethod, Class<?> clazz, Method method, Object[] args) {
         switch (pushMethod.type()) {
             case Simple:
             case CompleteList:

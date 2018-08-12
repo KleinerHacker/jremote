@@ -49,7 +49,7 @@ abstract class ProxyBuilder<A extends Annotation, D> {
 
                 assert false;
             } else {
-                assertMethod(annotation, clazz, method);
+                assertMethod(annotation, clazz, method, args);
             }
 
             return invokeMethod(annotation, data, clazz, method, args);
@@ -68,8 +68,9 @@ abstract class ProxyBuilder<A extends Annotation, D> {
      *
      * @param annotation
      * @param method
+     * @param args
      */
-    protected void assertMethod(A annotation, Class<?> clazz, Method method) {
+    protected void assertMethod(A annotation, Class<?> clazz, Method method, Object[] args) {
         //Empty, optional to overwrite
     }
 

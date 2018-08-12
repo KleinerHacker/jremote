@@ -1,5 +1,7 @@
 package org.pcsoft.framework.jremote.core;
 
+import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
+
 public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
     public static RemoteServerBuilder create(String host, int port) {
         return new RemoteServerBuilder(host, port);
@@ -9,6 +11,9 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
 
     private RemoteServerBuilder(String host, int port) {
         remoteServer = new RemoteServer(host, port);
+        remoteServer.getProxyManager().setRemoteRegistrationServiceProxy(
+                ServerClientPluginRegistry.getInstance().getRegistrationServiceClass()
+        );
     }
 
     @Override

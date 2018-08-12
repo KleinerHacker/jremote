@@ -19,6 +19,10 @@ public final class Validator {
         RemoteObserverAnnotationValidator.getInstance().validate(clazz);
     }
 
+    public static void validateForRemoteRegistrationService(Class<?> clazz) throws JRemoteAnnotationException {
+        RemoteRegistrationServiceAnnotationValidator.getInstance().validate(clazz);
+    }
+
     private Validator() {
     }
 }
