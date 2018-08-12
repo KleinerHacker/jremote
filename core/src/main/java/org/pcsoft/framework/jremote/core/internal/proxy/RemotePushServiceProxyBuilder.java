@@ -33,10 +33,10 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<PushMethod, Remot
         switch (pushMethod.type()) {
             case Simple:
             case CompleteList:
-                assert method.getParameterCount() != 1 || method.getReturnType() != void.class;
+                assert method.getParameterCount() == 1 && method.getReturnType() != void.class;
                 break;
             case SingleListItem:
-                assert method.getParameterCount() != 2 || method.getReturnType() != void.class;
+                assert method.getParameterCount() == 2 && method.getReturnType() != void.class;
                 break;
             default:
                 throw new RuntimeException();

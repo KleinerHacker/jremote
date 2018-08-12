@@ -18,6 +18,10 @@ public final class ClientRegistry {
         return clientMap.values().toArray(new Client[0]);
     }
 
+    public boolean containsClient(String uuid) {
+        return clientMap.containsKey(uuid);
+    }
+
     public static final class Client {
         private final String host;
         private final int port;

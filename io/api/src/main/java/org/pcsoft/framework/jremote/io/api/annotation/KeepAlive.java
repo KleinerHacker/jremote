@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marker annotation for an interface method in a remote keep alive service, see {@link KeepAliveService}
+ * Marker annotation for an interface method in a remote keep alive service, see {@link RemoteKeepAliveService}
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

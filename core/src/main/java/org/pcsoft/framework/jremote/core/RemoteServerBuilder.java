@@ -14,6 +14,9 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
         remoteServer.getProxyManager().setRemoteRegistrationServiceProxy(
                 ServerClientPluginRegistry.getInstance().getRegistrationServiceClass()
         );
+        remoteServer.getProxyManager().setRemoteKeepAliveServiceProxy(
+                ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass()
+        );
     }
 
     @Override

@@ -26,7 +26,7 @@ final class RemoteObserverProxyBuilder extends ProxyBuilder<ObserverListener, Ma
 
     @Override
     protected void assertMethod(ObserverListener annotation, Class<?> clazz, Method method, Object[] args) {
-        assert method.getParameterCount() != 1 || method.getParameterTypes()[0] != ChangeListener.class || method.getReturnType() != void.class;
+        assert method.getParameterCount() == 1 && method.getParameterTypes()[0] == ChangeListener.class && method.getReturnType() == void.class;
     }
 
     @Override

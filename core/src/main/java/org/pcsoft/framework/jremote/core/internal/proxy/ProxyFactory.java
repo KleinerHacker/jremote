@@ -29,6 +29,10 @@ public final class ProxyFactory {
         return RemoteRegistrationServiceProxyBuilder.getInstance().buildProxy(clazz, clientRegistry);
     }
 
+    public static <T>T buildRemoteKeepAliveServiceProxy(Class<T> clazz, ClientRegistry clientRegistry) {
+        return RemoteKeepAliveServiceProxyBuilder.getInstance().buildProxy(clazz, clientRegistry);
+    }
+
     private ProxyFactory() {
     }
 }
