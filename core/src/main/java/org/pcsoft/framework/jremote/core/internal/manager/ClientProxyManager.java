@@ -2,8 +2,9 @@ package org.pcsoft.framework.jremote.core.internal.manager;
 
 import org.pcsoft.framework.jremote.api.type.ChangeListener;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
-import org.pcsoft.framework.jremote.core.internal.type.DefaultService;
 import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
+import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
+import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteRegistrationClientWrapper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,8 @@ public final class ClientProxyManager {
     private final Map<Class<?>, Object> modelProxyMap = new HashMap<>();
     private final Map<Class<?>, Object> observerProxyMap = new HashMap<>();
     private final Map<Class<?>, Object> pushServiceProxyMap = new HashMap<>();
-    private final Map<DefaultService, Object> defaultClientProxyMap = new HashMap<>();
+    private RemoteRegistrationClientWrapper remoteRegistrationClient;
+    private RemoteKeepAliveClientWrapper remoteKeepAliveClient;
 
     private final Map<PushMethodKey, Object> propertyValueMap = new HashMap<>();
     private final Map<PushMethodKey, List<ChangeListener>> observerListenerMap = new HashMap<>();
@@ -84,35 +86,19 @@ public final class ClientProxyManager {
     }
     //endregion
 
-    //region Default Client Proxy
-    public <T> void addRemoteDefaultClientProxy(DefaultService defaultService, Class<T> clazz) {
-        if (defaultClientProxyMap.containsKey(defaultService))
-            throw new IllegalStateException("Remote default client class already added: " + defaultService + " (" + clazz.getName() + ")");
-
-        final T proxy;
-        switch (defaultService) {
-            case KeepAlive:
-                proxy = ProxyFactory.buildRemoteKeepAliveClientProxy(clazz);
-                break;
-            case Registration:
-                proxy = ProxyFactory.buildRemoteClientProxy(clazz);
-                break;
-            default:
-                throw new RuntimeException();
-        }
-        defaultClientProxyMap.put(defaultService, proxy);
+    public RemoteRegistrationClientWrapper getRemoteRegistrationClient() {
+        return remoteRegistrationClient;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getRemoteDefaultClientProxy(DefaultService defaultService) {
-        if (!defaultClientProxyMap.containsKey(defaultService))
-            throw new IllegalStateException("Unknown remote default client: " + defaultService);
-
-        return (T) defaultClientProxyMap.get(defaultService);
+    public void setRemoteRegistrationClient(RemoteRegistrationClientWrapper remoteRegistrationClient) {
+        this.remoteRegistrationClient = remoteRegistrationClient;
     }
 
-    public DefaultService[] getDefaultClients() {
-        return defaultClientProxyMap.keySet().toArray(new DefaultService[0]);
+    public RemoteKeepAliveClientWrapper getRemoteKeepAliveClient() {
+        return remoteKeepAliveClient;
     }
-    //endregion
+
+    public void setRemoteKeepAliveClient(RemoteKeepAliveClientWrapper remoteKeepAliveClient) {
+        this.remoteKeepAliveClient = remoteKeepAliveClient;
+    }
 }

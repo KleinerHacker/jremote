@@ -1,7 +1,9 @@
 package org.pcsoft.framework.jremote.core;
 
+import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
-import org.pcsoft.framework.jremote.core.internal.type.DefaultService;
+import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
+import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteRegistrationClientWrapper;
 
 public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
     public static RemoteClientBuilder create(String host, int port) {
@@ -12,10 +14,12 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
 
     private RemoteClientBuilder(String host, int port) {
         remoteClient = new RemoteClient(host, port);
-        remoteClient.getProxyManager().addRemoteDefaultClientProxy(
-                DefaultService.Registration, ServerClientPluginRegistry.getInstance().getRegistrationServiceClass());
-        remoteClient.getProxyManager().addRemoteDefaultClientProxy(
-                DefaultService.KeepAlive, ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass());
+        remoteClient.getProxyManager().setRemoteRegistrationClient(new RemoteRegistrationClientWrapper(
+                ProxyFactory.buildRemoteClientProxy(ServerClientPluginRegistry.getInstance().getRegistrationServiceClass(), host, port)
+        ));
+        remoteClient.getProxyManager().setRemoteKeepAliveClient(new RemoteKeepAliveClientWrapper(
+                ProxyFactory.buildRemoteClientProxy(ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass(), host, port)
+        ));
     }
 
     public final RemoteClientBuilder withRemoteModel(Class<?>... modelClasses) {

@@ -31,6 +31,7 @@ public final class ServerClientPluginRegistry extends PluginRegistry {
         serviceClass = serviceClientPlugin.getServiceClass();
         clientClass = serviceClientPlugin.getClientClass();
 
+        //TODO: Validate
         registrationServiceClass = serviceClientPlugin.getRegistrationServiceClass();
         keepAliveServiceClass = serviceClientPlugin.getKeepAliveServiceClass();
     }

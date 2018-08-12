@@ -1,42 +1,43 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
 import org.pcsoft.framework.jremote.api.ObserverListener;
-import org.pcsoft.framework.jremote.api.RemoteObserver;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.type.ChangeListener;
 import org.pcsoft.framework.jremote.api.type.ObserverListenerType;
 import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
+import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-final class RemoteObserverProxyBuilder {
+final class RemoteObserverProxyBuilder extends ProxyBuilder<ObserverListener, Map<PushMethodKey, List<ChangeListener>>> {
+    private static final RemoteObserverProxyBuilder INSTANCE = new RemoteObserverProxyBuilder();
 
-    @SuppressWarnings("unchecked")
-    static <T> T buildProxy(Class<T> clazz, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
-        if (clazz.getAnnotation(RemoteObserver.class) == null)
-            throw new JRemoteAnnotationException(String.format("unable to find annotation %s on class %s", RemoteObserver.class.getName(), clazz.getName()));
+    public static RemoteObserverProxyBuilder getInstance() {
+        return INSTANCE;
+    }
 
-        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, (proxy, method, args) -> {
-            final ObserverListener observerListener = method.getAnnotation(ObserverListener.class);
-            if (observerListener == null) {
-                if (method.isDefault())
-                    return method.invoke(proxy, args);
+    @Override
+    protected void validate(Class<?> clazz) throws JRemoteAnnotationException {
+        Validator.validateForRemoteObserver(clazz);
+    }
 
-                throw new JRemoteAnnotationException(String.format("Found not default method with missing annotation %s on %s#%s",
-                        ObserverListener.class.getName(), clazz.getName(), method.getName()));
-            } else {
-                if (method.getParameterCount() != 1 || !(args[0] instanceof ChangeListener) || method.getReturnType() != void.class)
-                    throw new JRemoteAnnotationException(String.format("Method signature wrong: need a one-parameter method (%s) with a void return value: %s#%s",
-                            ChangeListener.class.getName(), clazz.getName(), method.getName()));
-            }
+    @Override
+    protected void assertMethod(ObserverListener annotation, Class<?> clazz, Method method) {
+        assert method.getParameterCount() != 1 || method.getParameterTypes()[0] != ChangeListener.class || method.getReturnType() != void.class;
+    }
 
-            addOrRemoveListener(clazz, method, (ChangeListener) args[0], observerListener, listenerMap);
-            return null;
-        });
+    @Override
+    protected Object invokeMethod(ObserverListener observerListener, Map<PushMethodKey, List<ChangeListener>> listenerMap, Class<?> clazz, Method method, Object[] args) {
+        addOrRemoveListener(clazz, method, (ChangeListener) args[0], observerListener, listenerMap);
+        return null;
+    }
+
+    @Override
+    protected String getProxyName() {
+        return "Remote Observer";
     }
 
     private static <T> void addOrRemoveListener(Class<T> clazz, Method method, ChangeListener listener, ObserverListener observerListener,
@@ -88,5 +89,6 @@ final class RemoteObserverProxyBuilder {
     }
 
     private RemoteObserverProxyBuilder() {
+        super(ObserverListener.class);
     }
 }

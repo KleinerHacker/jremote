@@ -1,63 +1,60 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
 import org.pcsoft.framework.jremote.api.PushMethod;
-import org.pcsoft.framework.jremote.api.RemotePushService;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.type.ChangeListener;
 import org.pcsoft.framework.jremote.api.type.ItemUpdate;
 import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
+import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Proxy;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-final class RemotePushServiceProxyBuilder {
+final class RemotePushServiceProxyBuilder extends ProxyBuilder<PushMethod, RemotePushServiceProxyBuilder.DataHolder> {
+    private static final RemotePushServiceProxyBuilder INSTANCE = new RemotePushServiceProxyBuilder();
     private static final Logger LOGGER = LoggerFactory.getLogger(RemotePushServiceProxyBuilder.class);
 
-    @SuppressWarnings("unchecked")
-    static <T> T buildProxy(Class<T> clazz, Map<PushMethodKey, Object> dataMap, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
-        LOGGER.debug("Create push service proxy for " + clazz.getName());
+    public static RemotePushServiceProxyBuilder getInstance() {
+        return INSTANCE;
+    }
 
-        if (clazz.getAnnotation(RemotePushService.class) == null)
-            throw new JRemoteAnnotationException(String.format("Unable to find annotation %s on class %s", RemotePushService.class.getName(), clazz.getName()));
+    @Override
+    protected void validate(Class<?> clazz) throws JRemoteAnnotationException {
+        Validator.validateForRemoteService(clazz);
+        Validator.validateForRemotePushService(clazz);
+    }
 
-        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, (proxy, method, args) -> {
-            LOGGER.debug(String.format("Call push service method %s#%s", clazz.getName(), method.getName()));
+    @Override
+    protected void assertMethod(PushMethod pushMethod, Class<?> clazz, Method method) {
+        switch (pushMethod.type()) {
+            case Simple:
+            case CompleteList:
+                assert method.getParameterCount() != 1 || method.getReturnType() != void.class;
+                break;
+            case SingleListItem:
+                assert method.getParameterCount() != 2 || method.getReturnType() != void.class;
+                break;
+            default:
+                throw new RuntimeException();
+        }
+    }
 
-            final PushMethod pushMethod = method.getAnnotation(PushMethod.class);
-            if (pushMethod == null) {
-                if (method.isDefault())
-                    return method.invoke(proxy, args);
+    @Override
+    protected Object invokeMethod(PushMethod pushMethod, DataHolder data, Class<?> clazz, Method method, Object[] args) {
+        final PushMethodKey key = new PushMethodKey(clazz, method.getName());
+        updateData(pushMethod, key, args, data.getDataMap());
+        fireChange(key, data.getListenerMap());
 
-                throw new JRemoteAnnotationException(String.format("Found not default method with missing annotation %s on %s#%s",
-                        PushMethod.class.getName(), clazz.getName(), method.getName()));
-            } else {
-                switch (pushMethod.type()) {
-                    case Simple:
-                    case CompleteList:
-                        if (method.getParameterCount() != 1 || method.getReturnType() != void.class)
-                            throw new JRemoteAnnotationException(String.format("Method signature wrong: need a one-parameter method with a void return value: %s#%s",
-                                    clazz.getName(), method.getName()));
-                        break;
-                    case SingleListItem:
-                        if (method.getParameterCount() != 2 || method.getReturnType() != void.class)
-                            throw new JRemoteAnnotationException(String.format("Method signature wrong: need a two-parameter method with a void return value: %s#%s",
-                                    clazz.getName(), method.getName()));
-                        break;
-                    default:
-                        throw new RuntimeException();
-                }
-            }
+        return null;
+    }
 
-            final PushMethodKey key = new PushMethodKey(clazz, method.getName());
-            updateData(pushMethod, key, args, dataMap);
-            fireChange(key, listenerMap);
-
-            return null;
-        });
+    @Override
+    protected String getProxyName() {
+        return "Remote Push Service";
     }
 
     private static void fireChange(PushMethodKey key, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
@@ -121,5 +118,24 @@ final class RemotePushServiceProxyBuilder {
     }
 
     private RemotePushServiceProxyBuilder() {
+        super(PushMethod.class);
+    }
+
+    static final class DataHolder {
+        private final Map<PushMethodKey, Object> dataMap;
+        private final Map<PushMethodKey, List<ChangeListener>> listenerMap;
+
+        public DataHolder(Map<PushMethodKey, Object> dataMap, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
+            this.dataMap = dataMap;
+            this.listenerMap = listenerMap;
+        }
+
+        public Map<PushMethodKey, Object> getDataMap() {
+            return dataMap;
+        }
+
+        public Map<PushMethodKey, List<ChangeListener>> getListenerMap() {
+            return listenerMap;
+        }
     }
 }

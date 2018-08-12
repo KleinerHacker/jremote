@@ -9,15 +9,15 @@ import java.util.Map;
 public final class ProxyFactory {
 
     public static <T>T buildRemoteModelProxy(Class<T> clazz, Map<PushMethodKey, Object> dataMap) {
-        return RemoteModelProxyBuilder.buildProxy(clazz, dataMap);
+        return RemoteModelProxyBuilder.getInstance().buildProxy(clazz, dataMap);
     }
 
     public static <T>T buildRemoteObserverProxy(Class<T> clazz, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
-        return RemoteObserverProxyBuilder.buildProxy(clazz, listenerMap);
+        return RemoteObserverProxyBuilder.getInstance().buildProxy(clazz, listenerMap);
     }
 
     public static <T>T buildRemotePushServiceProxy(Class<T> clazz, Map<PushMethodKey, Object> dataMap, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
-        return RemotePushServiceProxyBuilder.buildProxy(clazz, dataMap, listenerMap);
+        return RemotePushServiceProxyBuilder.getInstance().buildProxy(clazz, new RemotePushServiceProxyBuilder.DataHolder(dataMap, listenerMap));
     }
 
     public static <T>T buildRemoteClientProxy(Class<T> clazz, String host, int port) {
