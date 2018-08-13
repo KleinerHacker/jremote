@@ -47,5 +47,7 @@ public class MainTest {
 
         remoteObserver.addNameListener(nameChangeCounter::incrementAndGet);
         remoteObserver.addValueListener(valueChangeCounter::incrementAndGet);
+
+        Thread.sleep(10000);
     }
 }

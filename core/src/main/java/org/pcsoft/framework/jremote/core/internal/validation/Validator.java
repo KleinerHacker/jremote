@@ -31,6 +31,10 @@ public final class Validator {
         RemoteKeepAliveServiceAnnotationValidator.getInstance().validate(clazz);
     }
 
+    public static void validateForRemoteControlService(Class<?> clazz) throws JRemoteAnnotationException {
+        RemoteControlServiceAnnotationValidator.getInstance().validate(clazz);
+    }
+
     private Validator() {
     }
 }

@@ -7,12 +7,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class ServerProxyManager {
+    private final Map<Class<?>, Object> controlServiceImplMap = new HashMap<>();
     private final Map<Class<?>, Object> pushClientProxyMap = new HashMap<>();
     private Object registrationServiceProxy;
     private Object keepAliveServiceProxy;
 
     //Data
     private final ClientRegistry clientRegistry = new ClientRegistry();
+
+    //region Push Client Proxy
+    public <T> void addRemoteControlServiceImpl(Class<T> clazz, Object impl) {
+        if (controlServiceImplMap.containsKey(clazz))
+            throw new IllegalStateException("Remote control service class already added: " + clazz.getName());
+
+        controlServiceImplMap.put(clazz, impl);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getRemoteControlServiceImpl(Class<T> clazz) {
+        if (!controlServiceImplMap.containsKey(clazz))
+            throw new IllegalStateException("Unknown remote control service class: " + clazz.getName());
+
+        return (T) controlServiceImplMap.get(clazz);
+    }
+
+    public Class[] getRemoteControlClasses() {
+        return controlServiceImplMap.keySet().toArray(new Class[0]);
+    }
+    //endregion
 
     //region Push Client Proxy
     public <T> void addRemotePushClientProxy(Class<T> clazz) {
