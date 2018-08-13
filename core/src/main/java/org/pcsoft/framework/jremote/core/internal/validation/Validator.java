@@ -7,6 +7,10 @@ public final class Validator {
         RemoteServiceAnnotationValidator.getInstance().validate(clazz);
     }
 
+    public static void validateForRemoteBroadcastService(Class<?> clazz) throws JRemoteAnnotationException {
+        RemoteBroadcastServiceAnnotationValidator.getInstance().validate(clazz);
+    }
+
     public static void validateForRemotePushService(Class<?> clazz) throws JRemoteAnnotationException {
         RemotePushServiceAnnotationValidator.getInstance().validate(clazz);
     }

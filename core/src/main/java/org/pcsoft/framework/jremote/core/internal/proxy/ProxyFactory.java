@@ -25,6 +25,10 @@ public final class ProxyFactory {
         return RemoteClientServiceProxyBuilder.buildProxy(clazz, host, port);
     }
 
+    public static <T>T buildRemoteBroadcastClientProxy(Class<T> clazz, ClientRegistry clientRegistry) {
+        return RemoteClientServiceProxyBuilder.buildBroadcastProxy(clazz, clientRegistry);
+    }
+
     public static <T>T buildRemoteRegistrationServiceProxy(Class<T> clazz, ClientRegistry clientRegistry) {
         return RemoteRegistrationServiceProxyBuilder.getInstance().buildProxy(clazz, clientRegistry);
     }

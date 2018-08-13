@@ -19,6 +19,13 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
         );
     }
 
+    public RemoteServerBuilder withPushClient(Class<?>... pushClientClasses) {
+        for (final Class<?> clazz : pushClientClasses) {
+            remoteServer.getProxyManager().addRemotePushClientProxy(clazz);
+        }
+        return this;
+    }
+
     @Override
     public RemoteServer build() {
         return remoteServer;

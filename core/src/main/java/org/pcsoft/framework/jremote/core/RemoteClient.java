@@ -3,12 +3,16 @@ package org.pcsoft.framework.jremote.core;
 import org.pcsoft.framework.jremote.core.internal.manager.ClientProxyManager;
 import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
 import org.pcsoft.framework.jremote.io.api.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class RemoteClient implements Remote {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RemoteClient.class);
+
     private final String host;
     private final int port;
 
@@ -49,15 +53,18 @@ public final class RemoteClient implements Remote {
 
     @Override
     public void open() throws IOException {
+        LOGGER.info("Open Remote Client on " + host + ":" + port);
         createAndOpenPushServices();
     }
 
     @Override
     public void close() throws Exception {
+        LOGGER.info("Close Remote Client on " + host + ":" + port);
         closeAndRemovePushServices();
     }
 
     private void createAndOpenPushServices() throws IOException {
+        LOGGER.debug("> Create and open push services");
         for (final Class<?> pushClass : proxyManager.getRemotePushClasses()) {
             final Object pushServiceProxy = proxyManager.getRemotePushServiceProxy(pushClass);
 
@@ -70,6 +77,7 @@ public final class RemoteClient implements Remote {
     }
 
     private void closeAndRemovePushServices() throws IOException {
+        LOGGER.debug("> Close and remove push services");
         for (final Service service : pushServiceList) {
             service.close();
         }

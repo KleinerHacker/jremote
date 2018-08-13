@@ -7,19 +7,27 @@ public final class ClientRegistry {
     private final Map<String, Client> clientMap = new HashMap<>();
 
     public void registerClient(String uuid, String host, int port) {
-        clientMap.put(uuid, new Client(host, port));
+        synchronized (clientMap) {
+            clientMap.put(uuid, new Client(host, port));
+        }
     }
 
     public void unregisterClient(String uuid) {
-        clientMap.remove(uuid);
+        synchronized (clientMap) {
+            clientMap.remove(uuid);
+        }
     }
 
     public Client[] getClients() {
-        return clientMap.values().toArray(new Client[0]);
+        synchronized (clientMap) {
+            return clientMap.values().toArray(new Client[0]);
+        }
     }
 
     public boolean containsClient(String uuid) {
-        return clientMap.containsKey(uuid);
+        synchronized (clientMap) {
+            return clientMap.containsKey(uuid);
+        }
     }
 
     public static final class Client {

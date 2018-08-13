@@ -1,19 +1,23 @@
 package org.pcsoft.framework.jremote.core.test;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.pcsoft.framework.jremote.core.RemoteClient;
 import org.pcsoft.framework.jremote.core.RemoteClientBuilder;
 import org.pcsoft.framework.jremote.core.test.api.TestPushService;
 import org.pcsoft.framework.jremote.core.test.api.TestRemoteModel;
 import org.pcsoft.framework.jremote.core.test.api.TestRemoteObserver;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.LogManager;
 
 public class MainTest {
     private RemoteClient remoteClient;
+
+    @BeforeClass
+    public static void i() throws IOException {
+        LogManager.getLogManager().readConfiguration(MainTest.class.getResourceAsStream("/logging.properties"));
+    }
 
     @Before
     public void init() throws Exception {
