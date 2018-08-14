@@ -81,8 +81,14 @@ public final class KeepAliveProcessor implements Processor {
             keepAliveRunning.set(true);
             try {
                 while (!keepAliveCanceled.get()) {
-                    runKeepAlive();
+                    try {
+                        runKeepAlive();
+                    } catch (Exception e) {
+                        LOGGER.error("Unknown exception while running keep alive, thread is continued", e);
+                    }
                 }
+            } catch (Throwable e) {
+                LOGGER.error("Unknown error while running keep alive thread, stop running now", e);
             } finally {
                 keepAliveRunning.set(false);
                 keepAliveCanceled.set(false);

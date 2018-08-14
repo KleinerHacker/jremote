@@ -3,6 +3,10 @@ package org.pcsoft.framework.jremote.commons.test;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -37,6 +41,18 @@ public class LoggingFormatter extends Formatter {
                 break;
         }
 
-        return StringUtils.leftPad(dateTime, 20) + " [" + StringUtils.leftPad(level, 5) + "] " + record.getMessage() + SystemUtils.LINE_SEPARATOR;
+        String stackTrace = "";
+        if (record.getThrown() != null) {
+            try (final ByteArrayOutputStream bout = new ByteArrayOutputStream()) {
+                try (final PrintStream printWriter = new PrintStream(bout, true, "UTF-8")) {
+                    record.getThrown().printStackTrace(printWriter);
+                }
+                stackTrace = new String(bout.toByteArray(), StandardCharsets.UTF_8);
+            } catch (IOException ignore) {
+            }
+        }
+
+        return StringUtils.leftPad(dateTime, 20) + " [" + StringUtils.leftPad(level, 5) + "] " + record.getMessage() + SystemUtils.LINE_SEPARATOR +
+                (StringUtils.isEmpty(stackTrace) ? "" : (stackTrace + SystemUtils.LINE_SEPARATOR));
     }
 }
