@@ -10,7 +10,7 @@
     <modules>
         <module>api</module>
         <module>core</module>
-        <module>sc</module>
+        <module>plugins</module>
     </modules>
 
     <build>

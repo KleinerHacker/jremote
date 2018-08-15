@@ -8,13 +8,11 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
-    <artifactId>jremote-sc</artifactId>
+    <artifactId>jremote-plugins</artifactId>
     <packaging>pom</packaging>
 	
 	<modules>
-		<module>api</module>
-		<module>impl</module>
-		<module>commons-test</module>
+		<module>sc</module>
 	</modules>
 
 </project>

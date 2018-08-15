@@ -20,7 +20,7 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>jremote-sc-api</artifactId>
+			<artifactId>jremote-plugins.sc-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
