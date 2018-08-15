@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core;
 
-public enum ConnectionState {
+public enum ClientState implements State {
     Unknown,
     Connected,
     Disconnected

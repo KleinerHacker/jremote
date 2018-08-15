@@ -62,7 +62,15 @@ public final class ServerProxyManager {
         registrationServiceProxy = ProxyFactory.buildRemoteRegistrationServiceProxy(clazz, clientRegistry);
     }
 
+    public Object getRemoteRegistrationServiceProxy() {
+        return registrationServiceProxy;
+    }
+
     public <T> void setRemoteKeepAliveServiceProxy(Class<T> clazz) {
-        registrationServiceProxy = ProxyFactory.buildRemoteKeepAliveServiceProxy(clazz, clientRegistry);
+        keepAliveServiceProxy = ProxyFactory.buildRemoteKeepAliveServiceProxy(clazz, clientRegistry);
+    }
+
+    public Object getRemoteKeepAliveServiceProxy() {
+        return keepAliveServiceProxy;
     }
 }

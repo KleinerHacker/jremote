@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.processor;
 
-import org.pcsoft.framework.jremote.core.ConnectionState;
+import org.pcsoft.framework.jremote.core.ClientState;
 import org.pcsoft.framework.jremote.core.RemoteClient;
 import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
 import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteRegistrationClientWrapper;
@@ -32,8 +32,8 @@ public final class KeepAliveProcessor implements Processor {
 
     private final AtomicInteger keepAliveDelay = new AtomicInteger(DEF_KEEP_ALIVE_DELAY);
     private final AtomicBoolean keepAliveCanceled = new AtomicBoolean(false), keepAliveRunning = new AtomicBoolean(false);
-    private final AtomicReference<ConnectionState> connectionState = new AtomicReference<>(ConnectionState.Unknown);
-    private final List<Consumer<ConnectionState>> stateChangedListenerList = new ArrayList<>();
+    private final AtomicReference<ClientState> connectionState = new AtomicReference<>(ClientState.Unknown);
+    private final List<Consumer<ClientState>> stateChangedListenerList = new ArrayList<>();
 
     private RemoteRegistrationClientWrapper registrationClientWrapper;
     private RemoteKeepAliveClientWrapper keepAliveClientWrapper;
@@ -49,15 +49,15 @@ public final class KeepAliveProcessor implements Processor {
         this.keepAliveDelay.set(keepAliveDelay);
     }
 
-    public ConnectionState getConnectionState() {
+    public ClientState getConnectionState() {
         return connectionState.get();
     }
 
-    public void addStateChangeListener(Consumer<ConnectionState> l) {
+    public void addStateChangeListener(Consumer<ClientState> l) {
         stateChangedListenerList.add(l);
     }
 
-    public void removeStateChangeListener(Consumer<ConnectionState> l) {
+    public void removeStateChangeListener(Consumer<ClientState> l) {
         stateChangedListenerList.remove(l);
     }
 
@@ -130,21 +130,21 @@ public final class KeepAliveProcessor implements Processor {
                 registrationClientWrapper.register(remoteClient.getUuid().toString(), remoteClient.getHost(), remoteClient.getPort());
             }
 
-            if (connectionState.get() != ConnectionState.Connected) {
+            if (connectionState.get() != ClientState.Connected) {
                 LOGGER.info("Connect client to server " + remoteClient.getHost() + ":" + remoteClient.getPort());
-                connectionState.set(ConnectionState.Connected);
-                fireStateChange(ConnectionState.Connected);
+                connectionState.set(ClientState.Connected);
+                fireStateChange();
             }
         } catch (Exception e) {
-            if (connectionState.get() == ConnectionState.Connected) {
+            if (connectionState.get() == ClientState.Connected) {
                 logWarnOptionalException("Unexpected disconnection from server", e);
-                connectionState.set(ConnectionState.Disconnected);
-                fireStateChange(ConnectionState.Disconnected);
+                connectionState.set(ClientState.Disconnected);
+                fireStateChange();
             } else {
                 logWarnOptionalException("Unable to connect to server " + remoteClient.getHost() + ":" + remoteClient.getPort() + ", try again...", e);
-                if (connectionState.get() != ConnectionState.Disconnected) {
-                    connectionState.set(ConnectionState.Disconnected);
-                    fireStateChange(ConnectionState.Disconnected);
+                if (connectionState.get() != ClientState.Disconnected) {
+                    connectionState.set(ClientState.Disconnected);
+                    fireStateChange();
                 }
             }
         } finally {
@@ -155,9 +155,9 @@ public final class KeepAliveProcessor implements Processor {
         }
     }
 
-    private void fireStateChange(final ConnectionState state) {
-        for (final Consumer<ConnectionState> l : stateChangedListenerList) {
-            l.accept(state);
+    private void fireStateChange() {
+        for (final Consumer<ClientState> l : stateChangedListenerList) {
+            l.accept(connectionState.get());
         }
     }
 

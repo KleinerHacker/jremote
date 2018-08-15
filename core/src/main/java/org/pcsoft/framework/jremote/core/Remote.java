@@ -3,12 +3,12 @@ package org.pcsoft.framework.jremote.core;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-public interface Remote extends AutoCloseable {
+public interface Remote<S extends State> extends AutoCloseable {
     void open() throws IOException;
 
-    ConnectionState getState();
-    void addStateChangeListener(Consumer<ConnectionState> l);
-    void removeStateChangeListener(Consumer<ConnectionState> l);
+    S getState();
+    void addStateChangeListener(Consumer<S> l);
+    void removeStateChangeListener(Consumer<S> l);
 
     String getHost();
     int getPort();

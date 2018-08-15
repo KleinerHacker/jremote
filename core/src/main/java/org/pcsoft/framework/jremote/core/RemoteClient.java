@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public final class RemoteClient implements Remote {
+public final class RemoteClient implements Remote<ClientState> {
     private static final Logger LOGGER = LoggerFactory.getLogger(RemoteClient.class);
 
     private final UUID uuid = UUID.randomUUID();
@@ -77,17 +77,17 @@ public final class RemoteClient implements Remote {
     }
 
     @Override
-    public ConnectionState getState() {
+    public ClientState getState() {
         return keepAliveProcessor.getConnectionState();
     }
 
     @Override
-    public void addStateChangeListener(Consumer<ConnectionState> l) {
+    public void addStateChangeListener(Consumer<ClientState> l) {
         keepAliveProcessor.addStateChangeListener(l);
     }
 
     @Override
-    public void removeStateChangeListener(Consumer<ConnectionState> l) {
+    public void removeStateChangeListener(Consumer<ClientState> l) {
         keepAliveProcessor.removeStateChangeListener(l);
     }
 
@@ -116,16 +116,17 @@ public final class RemoteClient implements Remote {
             service.setServiceImplementation(pushServiceProxy);
             service.open(host, port);
 
-            pushServiceList.add(service);
+            this.pushServiceList.add(service);
         }
     }
 
     private void closeAndRemovePushServices() throws IOException {
         LOGGER.debug("> Close and remove push services");
-        for (final Service service : pushServiceList) {
+
+        for (final Service service : this.pushServiceList) {
             service.close();
         }
-        pushServiceList.clear();
+        this.pushServiceList.clear();
     }
     //endregion
 
