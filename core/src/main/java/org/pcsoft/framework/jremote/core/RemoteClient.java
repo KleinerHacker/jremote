@@ -3,7 +3,7 @@ package org.pcsoft.framework.jremote.core;
 import org.pcsoft.framework.jremote.core.internal.manager.ClientProxyManager;
 import org.pcsoft.framework.jremote.core.internal.processor.KeepAliveProcessor;
 import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
-import org.pcsoft.framework.jremote.io.api.Service;
+import org.pcsoft.framework.jremote.sc.api.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

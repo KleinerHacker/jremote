@@ -1,4 +1,4 @@
-import org.pcsoft.framework.jremote.io.api.ServiceClientPlugin;
+import org.pcsoft.framework.jremote.sc.api.ServiceClientPlugin;
 
 module pcsoft.jremote.core {
     requires pcsoft.jremote.api;

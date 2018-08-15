@@ -4,7 +4,7 @@ import org.pcsoft.framework.jremote.api.internal.RemoteMethod;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
 import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
-import org.pcsoft.framework.jremote.io.api.Client;
+import org.pcsoft.framework.jremote.sc.api.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

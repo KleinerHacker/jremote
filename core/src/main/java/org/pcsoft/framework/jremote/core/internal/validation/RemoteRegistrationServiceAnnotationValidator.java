@@ -1,8 +1,8 @@
 package org.pcsoft.framework.jremote.core.internal.validation;
 
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
-import org.pcsoft.framework.jremote.io.api.annotation.Registration;
-import org.pcsoft.framework.jremote.io.api.annotation.RemoteRegistrationService;
+import org.pcsoft.framework.jremote.sc.api.annotation.Registration;
+import org.pcsoft.framework.jremote.sc.api.annotation.RemoteRegistrationService;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

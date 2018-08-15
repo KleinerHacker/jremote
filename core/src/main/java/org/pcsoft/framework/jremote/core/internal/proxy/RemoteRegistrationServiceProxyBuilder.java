@@ -3,7 +3,7 @@ package org.pcsoft.framework.jremote.core.internal.proxy;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
-import org.pcsoft.framework.jremote.io.api.annotation.Registration;
+import org.pcsoft.framework.jremote.sc.api.annotation.Registration;
 
 import java.lang.reflect.Method;
 

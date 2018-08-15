@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.type.wrapper;
 
-import org.pcsoft.framework.jremote.io.api.annotation.KeepAlive;
+import org.pcsoft.framework.jremote.sc.api.annotation.KeepAlive;
 
 public final class RemoteKeepAliveClientWrapper extends ClientWrapper {
     public RemoteKeepAliveClientWrapper(Object clientProxy) {
