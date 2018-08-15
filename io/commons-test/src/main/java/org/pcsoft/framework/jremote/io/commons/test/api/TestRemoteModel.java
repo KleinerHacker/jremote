@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.core.test.api;
+package org.pcsoft.framework.jremote.io.commons.test.api;
 
 import org.pcsoft.framework.jremote.api.ModelProperty;
 import org.pcsoft.framework.jremote.api.RemoteModel;

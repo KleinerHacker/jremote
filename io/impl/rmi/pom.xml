@@ -11,4 +11,19 @@
     <artifactId>jremote-io-impl-rmi</artifactId>
     <packaging>jar</packaging>
 
+	<dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>jremote-io-commons-test</artifactId>
+			<version>${project.version}</version>
+            <scope>test</scope>
+		</dependency>
+	</dependencies>
+
 </project>

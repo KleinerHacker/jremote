@@ -28,7 +28,7 @@ final class RemoteClientServiceProxyBuilder {
                     .anyMatch(a -> a.annotationType().getAnnotation(RemoteMethod.class) != null);
             assert hasRemoteMethodAnnotation || method.isDefault();
 
-            if (hasRemoteMethodAnnotation) {
+            if (!hasRemoteMethodAnnotation) {
                 if (method.isDefault())
                     return method.invoke(proxy, args);
 
@@ -50,7 +50,7 @@ final class RemoteClientServiceProxyBuilder {
                     .anyMatch(a -> a.annotationType().getAnnotation(RemoteMethod.class) != null);
             assert hasRemoteMethodAnnotation || method.isDefault();
 
-            if (hasRemoteMethodAnnotation) {
+            if (!hasRemoteMethodAnnotation) {
                 if (method.isDefault())
                     return method.invoke(proxy, args);
 
@@ -69,8 +69,8 @@ final class RemoteClientServiceProxyBuilder {
 
     private static <T> Object callClient(String host, int port, Class<T> clazz, Method method, Object[] args) throws IOException {
         try (final Client client = ServerClientPluginRegistry.getInstance().createClient()) {
-            client.open(host, port);
             client.setServiceClass(clazz);
+            client.open(host, port);
             return client.invokeRemote(method, args);
         }
     }

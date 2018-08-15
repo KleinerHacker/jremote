@@ -105,11 +105,15 @@ public final class KeepAliveProcessor implements Processor {
             return;
         }
 
+        final int timeout = (int) (keepAliveDelay.get() * KEEP_ALIVE_SHUTDOWN_TIMEOUT_FACTOR);
+        keepAliveCanceled.set(true);
         keepAliveExecutor.shutdown();
         try {
-            keepAliveExecutor.awaitTermination((int) (keepAliveDelay.get() * KEEP_ALIVE_SHUTDOWN_TIMEOUT_FACTOR), TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            LOGGER.warn("Keep alive thread could not finished after ");
+            final boolean terminated = keepAliveExecutor.awaitTermination(timeout, TimeUnit.MILLISECONDS);
+            if (!terminated) {
+                LOGGER.warn("Keep alive thread could not finished after " + timeout + " ms");
+            }
+        } catch (InterruptedException ignored) {
         }
         keepAliveExecutor = null;
     }
@@ -158,7 +162,7 @@ public final class KeepAliveProcessor implements Processor {
     }
 
     private static void logWarnOptionalException(String msg, Exception e) {
-        if (LOGGER.isDebugEnabled()) {
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.warn(msg, e);
         } else {
             LOGGER.warn(msg);
