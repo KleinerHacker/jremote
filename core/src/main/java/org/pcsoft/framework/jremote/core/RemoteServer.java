@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public final class RemoteServer implements Remote<ServerState> {
@@ -41,6 +42,28 @@ public final class RemoteServer implements Remote<ServerState> {
     public PushManager getPush() {
         return pushManager;
     }
+
+    //region Delegates
+    public Client[] getConnectedClients() {
+        return proxyManager.getConnectedClients();
+    }
+
+    public void addClientRegisteredListener(BiConsumer<String, Integer> l) {
+        proxyManager.addClientRegisteredListener(l);
+    }
+
+    public void removeClientRegisteredListener(BiConsumer<String, Integer> l) {
+        proxyManager.removeClientRegisteredListener(l);
+    }
+
+    public void addClientUnregisteredListener(BiConsumer<String, Integer> l) {
+        proxyManager.addClientUnregisteredListener(l);
+    }
+
+    public void removeClientUnregisteredListener(BiConsumer<String, Integer> l) {
+        proxyManager.removeClientUnregisteredListener(l);
+    }
+    //endregion
 
     @Override
     public String getHost() {

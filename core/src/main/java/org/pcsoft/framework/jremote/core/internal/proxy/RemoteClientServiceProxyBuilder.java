@@ -59,7 +59,7 @@ final class RemoteClientServiceProxyBuilder {
                 assert method.getReturnType() == void.class;
             }
 
-            for (final ClientRegistry.Client c : clientRegistry.getClients()) {
+            for (final org.pcsoft.framework.jremote.core.Client c : clientRegistry.getClients()) {
                 callClient(c.getHost(), c.getPort(), clazz, method, args);
             }
 

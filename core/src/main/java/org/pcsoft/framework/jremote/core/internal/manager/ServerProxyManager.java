@@ -1,10 +1,12 @@
 package org.pcsoft.framework.jremote.core.internal.manager;
 
+import org.pcsoft.framework.jremote.core.Client;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public final class ServerProxyManager {
     private final Map<Class<?>, Object> controlServiceImplMap = new HashMap<>();
@@ -73,4 +75,26 @@ public final class ServerProxyManager {
     public Object getRemoteKeepAliveServiceProxy() {
         return keepAliveServiceProxy;
     }
+
+    //region Delegates
+    public Client[] getConnectedClients() {
+        return clientRegistry.getClients().clone();
+    }
+
+    public void addClientRegisteredListener(BiConsumer<String, Integer> l) {
+        clientRegistry.addClientRegisteredListener(l);
+    }
+
+    public void removeClientRegisteredListener(BiConsumer<String, Integer> l) {
+        clientRegistry.removeClientRegisteredListener(l);
+    }
+
+    public void addClientUnregisteredListener(BiConsumer<String, Integer> l) {
+        clientRegistry.addClientUnregisteredListener(l);
+    }
+
+    public void removeClientUnregisteredListener(BiConsumer<String, Integer> l) {
+        clientRegistry.removeClientUnregisteredListener(l);
+    }
+    //endregion
 }
