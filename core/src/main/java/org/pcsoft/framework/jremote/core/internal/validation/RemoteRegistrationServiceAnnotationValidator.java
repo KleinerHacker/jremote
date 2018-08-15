@@ -51,7 +51,7 @@ final class RemoteRegistrationServiceAnnotationValidator extends SimpleAnnotatio
                         throw new JRemoteAnnotationException("[Registration, Register]: Wrong method signature: expected are three parameters: String (UUID), String (host), int (port), return void");
                     break;
                 case Unregister:
-                    if (method.getParameterCount() != 3 || method.getParameterTypes()[0] != String.class || method.getReturnType() != void.class)
+                    if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != String.class || method.getReturnType() != void.class)
                         throw new JRemoteAnnotationException("[Registration, Unregister]: Wrong method signature: expected are one parameter: String (UUID), return void");
                     break;
                 default:

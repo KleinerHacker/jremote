@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -45,7 +46,10 @@ abstract class ProxyBuilder<A extends Annotation, D> {
 
             if (annotation == null) {
                 if (method.isDefault())
-                    return method.invoke(proxy, args);
+                    return MethodHandles.privateLookupIn(method.getDeclaringClass(), MethodHandles.lookup())
+                            .unreflectSpecial(method, method.getDeclaringClass())
+                            .bindTo(proxy)
+                            .invokeWithArguments(args);
 
                 assert false;
             } else {

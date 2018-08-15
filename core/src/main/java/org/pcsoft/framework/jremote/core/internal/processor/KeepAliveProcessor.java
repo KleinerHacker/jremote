@@ -127,7 +127,7 @@ public final class KeepAliveProcessor implements Processor {
         try {
             final boolean known = keepAliveClientWrapper.ping(remoteClient.getUuid().toString());
             if (!known) {
-                registrationClientWrapper.register(remoteClient.getUuid().toString(), remoteClient.getHost(), remoteClient.getPort());
+                registrationClientWrapper.register(remoteClient.getUuid().toString(), remoteClient.getHost(), remoteClient.getOwnPort());
             }
 
             if (connectionState.get() != ClientState.Connected) {

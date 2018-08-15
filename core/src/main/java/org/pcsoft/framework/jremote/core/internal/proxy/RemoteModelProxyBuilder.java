@@ -25,12 +25,26 @@ final class RemoteModelProxyBuilder extends ProxyBuilder<ModelProperty, Map<Push
 
     @Override
     protected void assertMethod(ModelProperty annotation, Class<?> clazz, Method method, Object[] args) {
-        assert method.getParameterCount() > 0 && method.getReturnType() == void.class;
+        assert method.getParameterCount() == 0 && method.getReturnType() != void.class;
     }
 
     @Override
     protected Object invokeMethod(ModelProperty modelProperty, Map<PushMethodKey, Object> dataMap, Class<?> clazz, Method method, Object[] args) {
-        return dataMap.get(new PushMethodKey(modelProperty.sourcePushClass(), modelProperty.sourcePushMethod()));
+        final PushMethodKey key = new PushMethodKey(modelProperty.sourcePushClass(), modelProperty.sourcePushMethod());
+        final Object value = dataMap.get(key);
+        if (value == null) {
+            if (method.getReturnType() == char.class)
+                return '\u0000';
+            if (method.getReturnType() == byte.class || method.getReturnType() == short.class || method.getReturnType() == int.class ||
+                    method.getReturnType() == long.class)
+                return 0;
+            if (method.getReturnType() == double.class || method.getReturnType() == float.class)
+                return 0.0;
+            if (method.getReturnType() == boolean.class)
+                return false;
+        }
+
+        return value;
     }
 
     @Override

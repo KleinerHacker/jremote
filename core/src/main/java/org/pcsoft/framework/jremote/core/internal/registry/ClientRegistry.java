@@ -26,7 +26,7 @@ public final class ClientRegistry {
     }
 
     public void unregisterClient(String uuid) {
-        LOGGER.info("> Unregister new client <" + uuid + ">");
+        LOGGER.info("> Unregister client <" + uuid + ">");
         synchronized (clientMap) {
             final Client client = clientMap.get(uuid);
 

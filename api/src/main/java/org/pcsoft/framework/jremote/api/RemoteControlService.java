@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Mark an interface as remote control service. That controls the server. See {@link ControlMethod}
+ * Mark an interface as remote control service. That controls the server. See {@link Control}
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

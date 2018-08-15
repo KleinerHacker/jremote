@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.validation;
 
-import org.pcsoft.framework.jremote.api.ControlMethod;
+import org.pcsoft.framework.jremote.api.Control;
 import org.pcsoft.framework.jremote.api.RemoteControlService;
 
 import java.lang.annotation.Annotation;
@@ -29,7 +29,7 @@ final class RemoteControlServiceAnnotationValidator extends SimpleAnnotationVali
 
     @Override
     protected Class<? extends Annotation> getRemoteMethodAnnotation() {
-        return ControlMethod.class;
+        return Control.class;
     }
 
     private RemoteControlServiceAnnotationValidator() {

@@ -4,31 +4,18 @@
 
 	<parent>
 		<groupId>org.pcsoft.framework</groupId>
-		<artifactId>jremote-plugins.sc-impl</artifactId>
+		<artifactId>jremote</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
-    <artifactId>jremote-plugins.sc-impl.rmi</artifactId>
+    <artifactId>jremote-commons</artifactId>
     <packaging>jar</packaging>
 
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>jremote-commons</artifactId>
+			<artifactId>jremote-api</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>jremote-plugins.sc-commons-test</artifactId>
-			<version>${project.version}</version>
-            <scope>test</scope>
 		</dependency>
 	</dependencies>
 

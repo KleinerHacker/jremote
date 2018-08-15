@@ -3,14 +3,14 @@ package org.pcsoft.framework.jremote.core;
 import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
 
 public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
-    public static RemoteClientBuilder create(String host, int port) {
-        return new RemoteClientBuilder(host, port);
+    public static RemoteClientBuilder create(String host, int port, int ownPort) {
+        return new RemoteClientBuilder(host, port, ownPort);
     }
 
     private final RemoteClient remoteClient;
 
-    private RemoteClientBuilder(String host, int port) {
-        remoteClient = new RemoteClient(host, port);
+    private RemoteClientBuilder(String host, int port, int ownPort) {
+        remoteClient = new RemoteClient(host, port, ownPort);
         remoteClient.getProxyManager().setRemoteRegistrationClient(ServerClientPluginRegistry.getInstance().getRegistrationServiceClass(), host, port);
         remoteClient.getProxyManager().setRemoteKeepAliveClient(ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass(), host, port);
     }

@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @RemoteMethod
-public @interface PushMethod {
+public @interface Push {
     /**
      * Type of push update, see {@link PushMethodType} for more information.
      * @return

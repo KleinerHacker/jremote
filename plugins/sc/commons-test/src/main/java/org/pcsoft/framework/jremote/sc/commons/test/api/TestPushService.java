@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.sc.commons.test.api;
 
-import org.pcsoft.framework.jremote.api.PushMethod;
+import org.pcsoft.framework.jremote.api.Push;
 import org.pcsoft.framework.jremote.api.RemotePushService;
 
 import java.rmi.Remote;
@@ -8,10 +8,10 @@ import java.rmi.RemoteException;
 
 @RemotePushService
 public interface TestPushService extends Remote {
-    @PushMethod
+    @Push
     void pushName(String name) throws RemoteException;
 
-    @PushMethod
+    @Push
     void pushValue(int value) throws RemoteException;
 
     //Default test only

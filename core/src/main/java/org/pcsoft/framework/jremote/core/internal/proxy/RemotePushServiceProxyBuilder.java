@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
-import org.pcsoft.framework.jremote.api.PushMethod;
+import org.pcsoft.framework.jremote.api.Push;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.type.ChangeListener;
 import org.pcsoft.framework.jremote.api.type.ItemUpdate;
@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-final class RemotePushServiceProxyBuilder extends ProxyBuilder<PushMethod, RemotePushServiceProxyBuilder.DataHolder> {
+final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushServiceProxyBuilder.DataHolder> {
     private static final RemotePushServiceProxyBuilder INSTANCE = new RemotePushServiceProxyBuilder();
     private static final Logger LOGGER = LoggerFactory.getLogger(RemotePushServiceProxyBuilder.class);
 
@@ -29,14 +29,14 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<PushMethod, Remot
     }
 
     @Override
-    protected void assertMethod(PushMethod pushMethod, Class<?> clazz, Method method, Object[] args) {
-        switch (pushMethod.type()) {
+    protected void assertMethod(Push push, Class<?> clazz, Method method, Object[] args) {
+        switch (push.type()) {
             case Simple:
             case CompleteList:
-                assert method.getParameterCount() == 1 && method.getReturnType() != void.class;
+                assert method.getParameterCount() == 1 && method.getReturnType() == void.class;
                 break;
             case SingleListItem:
-                assert method.getParameterCount() == 2 && method.getReturnType() != void.class;
+                assert method.getParameterCount() == 2 && method.getReturnType() == void.class;
                 break;
             default:
                 throw new RuntimeException();
@@ -44,9 +44,9 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<PushMethod, Remot
     }
 
     @Override
-    protected Object invokeMethod(PushMethod pushMethod, DataHolder data, Class<?> clazz, Method method, Object[] args) {
+    protected Object invokeMethod(Push push, DataHolder data, Class<?> clazz, Method method, Object[] args) {
         final PushMethodKey key = new PushMethodKey(clazz, method.getName());
-        updateData(pushMethod, key, args, data.getDataMap());
+        updateData(push, key, args, data.getDataMap());
         fireChange(key, data.getListenerMap());
 
         return null;
@@ -68,24 +68,20 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<PushMethod, Remot
         }
     }
 
-    private static void updateData(PushMethod pushMethod, PushMethodKey key, Object[] args, Map<PushMethodKey, Object> dataMap) {
-        if (dataMap.containsKey(key)) {
-            LOGGER.debug("> Setup value into model for " + key.toString(false));
-            switch (pushMethod.type()) {
-                case Simple:
-                    handleSimplePush(dataMap, args[0], key);
-                    break;
-                case CompleteList:
-                    handleCompleteListPush((Collection) dataMap.get(key), args[0]);
-                    break;
-                case SingleListItem:
-                    handleSingleListItemPush((Collection) dataMap.get(key), args[0], (ItemUpdate) args[1]);
-                    break;
-                default:
-                    throw new RuntimeException();
-            }
-        } else {
-            LOGGER.trace("> Ignore model update, key not found: " + key.toString(false));
+    private static void updateData(Push push, PushMethodKey key, Object[] args, Map<PushMethodKey, Object> dataMap) {
+        LOGGER.debug("> Setup value into model for " + key.toString(false));
+        switch (push.type()) {
+            case Simple:
+                handleSimplePush(dataMap, args[0], key);
+                break;
+            case CompleteList:
+                handleCompleteListPush((Collection) dataMap.get(key), args[0]);
+                break;
+            case SingleListItem:
+                handleSingleListItemPush((Collection) dataMap.get(key), args[0], (ItemUpdate) args[1]);
+                break;
+            default:
+                throw new RuntimeException();
         }
     }
 
@@ -118,7 +114,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<PushMethod, Remot
     }
 
     private RemotePushServiceProxyBuilder() {
-        super(PushMethod.class);
+        super(Push.class);
     }
 
     static final class DataHolder {

@@ -17,7 +17,7 @@ public final class ServerProxyManager {
     //Data
     private final ClientRegistry clientRegistry = new ClientRegistry();
 
-    //region Push Client Proxy
+    //region Control Client Proxy
     public <T> void addRemoteControlServiceImpl(Class<T> clazz, Object impl) {
         if (controlServiceImplMap.containsKey(clazz))
             throw new IllegalStateException("Remote control service class already added: " + clazz.getName());

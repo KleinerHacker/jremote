@@ -1,4 +1,4 @@
-module pcsoft.jremote.io.commons.test {
+open module pcsoft.jremote.io.commons.test {
     requires commons.lang;
     requires java.logging;
     requires pcsoft.jremote.core;

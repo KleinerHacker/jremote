@@ -1,10 +1,8 @@
 package org.pcsoft.framework.jremote.core.internal.validation;
 
-import org.pcsoft.framework.jremote.api.internal.RemoteMethod;
-import org.pcsoft.framework.jremote.api.internal.RemoteService;
+import org.pcsoft.framework.jremote.commons.AnnotationUtils;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 abstract class RemoteServiceAnnotationValidatorBase extends AnnotationValidator {
     @Override
@@ -19,13 +17,11 @@ abstract class RemoteServiceAnnotationValidatorBase extends AnnotationValidator 
 
     @Override
     protected boolean validateClassAnnotation(Class<?> clazz) {
-        return Arrays.stream(clazz.getAnnotations())
-                .anyMatch(a -> a.annotationType().getAnnotation(RemoteService.class) != null);
+        return AnnotationUtils.isRemoteService(clazz);
     }
 
     @Override
     protected boolean validateMethodAnnotation(Method method) {
-        return Arrays.stream(method.getAnnotations())
-                .anyMatch(a -> a.annotationType().getAnnotation(RemoteMethod.class) != null);
+        return AnnotationUtils.isRemoteMethod(method);
     }
 }

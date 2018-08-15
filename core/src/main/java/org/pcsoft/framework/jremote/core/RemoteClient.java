@@ -18,7 +18,7 @@ public final class RemoteClient implements Remote<ClientState> {
 
     private final UUID uuid = UUID.randomUUID();
     private final String host;
-    private final int port;
+    private final int port, ownPort;
 
     private final ClientProxyManager proxyManager;
     private final DataManager dataManager = new DataManager();
@@ -27,9 +27,10 @@ public final class RemoteClient implements Remote<ClientState> {
     private final List<Service> pushServiceList = new ArrayList<>();
     private final KeepAliveProcessor keepAliveProcessor = new KeepAliveProcessor();
 
-    RemoteClient(String host, int port) {
+    RemoteClient(String host, int port, int ownPort) {
         this.host = host;
         this.port = port;
+        this.ownPort = ownPort;
 
         this.proxyManager = new ClientProxyManager();
     }
@@ -60,9 +61,13 @@ public final class RemoteClient implements Remote<ClientState> {
         return port;
     }
 
+    public int getOwnPort() {
+        return ownPort;
+    }
+
     @Override
     public void open() throws IOException {
-        LOGGER.info("Open Remote Client on " + host + ":" + port);
+        LOGGER.info("Open Remote Client on " + host + ":" + port + " (push on " + ownPort + ")");
 
         createAndOpenPushServices();
         startKeepAlive();
@@ -105,6 +110,7 @@ public final class RemoteClient implements Remote<ClientState> {
         if (keepAliveProcessor.isRunning()) {
             keepAliveProcessor.stop();
         }
+        proxyManager.getRemoteRegistrationClient().unregister(uuid.toString());
     }
 
     private void createAndOpenPushServices() throws IOException {
@@ -114,7 +120,7 @@ public final class RemoteClient implements Remote<ClientState> {
 
             final Service service = ServerClientPluginRegistry.getInstance().createService();
             service.setServiceImplementation(pushServiceProxy);
-            service.open(host, port);
+            service.open(host, ownPort);
 
             this.pushServiceList.add(service);
         }

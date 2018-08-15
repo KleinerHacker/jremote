@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -30,7 +31,10 @@ final class RemoteClientServiceProxyBuilder {
 
             if (!hasRemoteMethodAnnotation) {
                 if (method.isDefault())
-                    return method.invoke(proxy, args);
+                    return MethodHandles.privateLookupIn(method.getDeclaringClass(), MethodHandles.lookup())
+                        .unreflectSpecial(method, method.getDeclaringClass())
+                        .bindTo(proxy)
+                        .invokeWithArguments(args);
 
                 assert false;
             }
@@ -40,7 +44,7 @@ final class RemoteClientServiceProxyBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    static <T>T buildBroadcastProxy(Class<T> clazz, ClientRegistry clientRegistry) {
+    static <T> T buildBroadcastProxy(Class<T> clazz, ClientRegistry clientRegistry) {
         LOGGER.debug("Create broadcast client proxy for " + clazz.getName());
 
         Validator.validateForRemoteBroadcastService(clazz);

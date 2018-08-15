@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.validation;
 
-import org.pcsoft.framework.jremote.api.PushMethod;
+import org.pcsoft.framework.jremote.api.Push;
 import org.pcsoft.framework.jremote.api.RemotePushService;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 
@@ -31,7 +31,7 @@ final class RemotePushServiceAnnotationValidator extends SimpleAnnotationValidat
 
     @Override
     protected Class<? extends Annotation> getRemoteMethodAnnotation() {
-        return PushMethod.class;
+        return Push.class;
     }
 
     @Override
@@ -39,10 +39,10 @@ final class RemotePushServiceAnnotationValidator extends SimpleAnnotationValidat
         if (!super.validateMethodAnnotation(method))
             return false;
 
-        final PushMethod pushMethod = method.getAnnotation(PushMethod.class);
-        assert pushMethod != null;
+        final Push push = method.getAnnotation(Push.class);
+        assert push != null;
 
-        switch (pushMethod.type()) {
+        switch (push.type()) {
             case Simple:
             case CompleteList:
                 if (method.getParameterCount() != 1 || method.getReturnType() != void.class)
