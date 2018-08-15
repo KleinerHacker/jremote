@@ -1,7 +1,7 @@
 package org.pcsoft.framework.jremote.sc.api;
 
 /**
- * Interface for IO plugin mechanism
+ * Interface for server client plugin mechanism
  */
 public interface ServiceClientPlugin {
     /**
