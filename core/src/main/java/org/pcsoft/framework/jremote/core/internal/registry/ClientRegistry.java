@@ -8,20 +8,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public final class ClientRegistry {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientRegistry.class);
 
     private final Map<String, Client> clientMap = new HashMap<>();
-    private final List<BiConsumer<String, Integer>> clientRegisteredListenerList = new ArrayList<>();
-    private final List<BiConsumer<String, Integer>> clientUnregisteredListenerList = new ArrayList<>();
+    private final List<Consumer<Client>> clientRegisteredListenerList = new ArrayList<>();
+    private final List<Consumer<Client>> clientUnregisteredListenerList = new ArrayList<>();
 
     public void registerClient(String uuid, String host, int port) {
         LOGGER.info("> Register new client <" + uuid + "> from " + host + ":" + port);
         synchronized (clientMap) {
-            clientMap.put(uuid, new Client(host, port));
-            fireClientRegistered(host, port);
+            final Client client = new Client(host, port);
+            clientMap.put(uuid, client);
+            fireClientRegistered(client);
         }
     }
 
@@ -31,7 +32,7 @@ public final class ClientRegistry {
             final Client client = clientMap.get(uuid);
 
             clientMap.remove(uuid);
-            fireClientUnregistered(client.getHost(), client.getPort());
+            fireClientUnregistered(client);
         }
     }
 
@@ -47,31 +48,31 @@ public final class ClientRegistry {
         }
     }
 
-    public void addClientRegisteredListener(BiConsumer<String, Integer> l) {
+    public void addClientRegisteredListener(Consumer<Client> l) {
         clientRegisteredListenerList.add(l);
     }
 
-    public void removeClientRegisteredListener(BiConsumer<String, Integer> l) {
+    public void removeClientRegisteredListener(Consumer<Client> l) {
         clientRegisteredListenerList.add(l);
     }
 
-    public void addClientUnregisteredListener(BiConsumer<String, Integer> l) {
+    public void addClientUnregisteredListener(Consumer<Client> l) {
         clientUnregisteredListenerList.add(l);
     }
 
-    public void removeClientUnregisteredListener(BiConsumer<String, Integer> l) {
+    public void removeClientUnregisteredListener(Consumer<Client> l) {
         clientUnregisteredListenerList.add(l);
     }
 
-    private void fireClientRegistered(String host, int port) {
-        for (final BiConsumer<String, Integer> l : clientRegisteredListenerList) {
-            l.accept(host, port);
+    private void fireClientRegistered(Client client) {
+        for (final Consumer<Client> l : clientRegisteredListenerList) {
+            l.accept(client);
         }
     }
 
-    private void fireClientUnregistered(String host, int port) {
-        for (final BiConsumer<String, Integer> l : clientUnregisteredListenerList) {
-            l.accept(host, port);
+    private void fireClientUnregistered(Client client) {
+        for (final Consumer<Client> l : clientUnregisteredListenerList) {
+            l.accept(client);
         }
     }
 }

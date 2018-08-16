@@ -21,6 +21,7 @@ public abstract class RemoteMainTestBase {
         remoteServer = RemoteServerBuilder.create("localhost", 9998)
                 .withPushClient(TestPushService.class)
                 .withControlService(new TestControllerImpl(() -> remoteServer.getPush().getPushClient(TestPushService.class)))
+                .withModelData(TestRemoteModelData.class)
                 .build();
 
         remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
@@ -32,6 +33,8 @@ public abstract class RemoteMainTestBase {
 
         remoteServer.open();
         remoteClient.open();
+
+        Thread.sleep(1000);
     }
 
     @AfterEach
@@ -57,8 +60,8 @@ public abstract class RemoteMainTestBase {
         remoteObserver.addValueListener(valueChangeCounter::incrementAndGet);
 
         //TODO: Move values on registration to client
-        Assertions.assertNull(remoteModel.getName());
-        Assertions.assertEquals(0, remoteModel.getValue());
+        Assertions.assertEquals("Initial", remoteModel.getName());
+        Assertions.assertEquals(-3, remoteModel.getValue());
 
         Assertions.assertEquals(0, nameChangeCounter.get());
         Assertions.assertEquals(0, valueChangeCounter.get());

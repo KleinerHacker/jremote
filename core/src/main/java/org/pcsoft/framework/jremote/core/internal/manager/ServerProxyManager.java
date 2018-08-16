@@ -3,16 +3,18 @@ package org.pcsoft.framework.jremote.core.internal.manager;
 import org.pcsoft.framework.jremote.core.Client;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
+import org.pcsoft.framework.jremote.core.internal.type.PushModelHandler;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public final class ServerProxyManager {
     private final Map<Class<?>, Object> controlServiceImplMap = new HashMap<>();
     private final Map<Class<?>, Object> pushClientProxyMap = new HashMap<>();
     private Object registrationServiceProxy;
     private Object keepAliveServiceProxy;
+    private final Map<Class<?>, PushModelHandler> modelHandlerMap = new HashMap<>();
 
     //Data
     private final ClientRegistry clientRegistry = new ClientRegistry();
@@ -60,6 +62,27 @@ public final class ServerProxyManager {
     }
     //endregion
 
+    //region Model Data
+    public <T> void addModelHandler(Class<T> clazz, Object impl) {
+        if (modelHandlerMap.containsKey(clazz))
+            throw new IllegalStateException("Model data class already added: " + clazz.getName());
+
+        modelHandlerMap.put(clazz, new PushModelHandler(impl, pushClientProxyMap::get));
+    }
+
+    @SuppressWarnings("unchecked")
+    public PushModelHandler getModelHandler(Class<?> clazz) {
+        if (!modelHandlerMap.containsKey(clazz))
+            throw new IllegalStateException("Unknown model data class: " + clazz.getName());
+
+        return modelHandlerMap.get(clazz);
+    }
+
+    public Class[] getModelHandlerClasses() {
+        return modelHandlerMap.keySet().toArray(new Class[0]);
+    }
+    //endregion
+
     public <T> void setRemoteRegistrationServiceProxy(Class<T> clazz) {
         registrationServiceProxy = ProxyFactory.buildRemoteRegistrationServiceProxy(clazz, clientRegistry);
     }
@@ -81,19 +104,19 @@ public final class ServerProxyManager {
         return clientRegistry.getClients().clone();
     }
 
-    public void addClientRegisteredListener(BiConsumer<String, Integer> l) {
+    public void addClientRegisteredListener(Consumer<Client> l) {
         clientRegistry.addClientRegisteredListener(l);
     }
 
-    public void removeClientRegisteredListener(BiConsumer<String, Integer> l) {
+    public void removeClientRegisteredListener(Consumer<Client> l) {
         clientRegistry.removeClientRegisteredListener(l);
     }
 
-    public void addClientUnregisteredListener(BiConsumer<String, Integer> l) {
+    public void addClientUnregisteredListener(Consumer<Client> l) {
         clientRegistry.addClientUnregisteredListener(l);
     }
 
-    public void removeClientUnregisteredListener(BiConsumer<String, Integer> l) {
+    public void removeClientUnregisteredListener(Consumer<Client> l) {
         clientRegistry.removeClientUnregisteredListener(l);
     }
     //endregion

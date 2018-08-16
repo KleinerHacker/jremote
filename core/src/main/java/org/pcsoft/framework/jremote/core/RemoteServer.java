@@ -2,6 +2,7 @@ package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.core.internal.manager.ServerProxyManager;
 import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
+import org.pcsoft.framework.jremote.core.internal.type.PushModelHandler;
 import org.pcsoft.framework.jremote.sc.api.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public final class RemoteServer implements Remote<ServerState> {
@@ -33,6 +33,12 @@ public final class RemoteServer implements Remote<ServerState> {
         this.port = port;
 
         this.proxyManager = new ServerProxyManager();
+        this.proxyManager.addClientRegisteredListener(c -> {
+            for (final Class<?> clazz : this.proxyManager.getModelHandlerClasses()) {
+                final PushModelHandler modelHandler = this.proxyManager.getModelHandler(clazz);
+                modelHandler.pushModelData(c);
+            }
+        });
     }
 
     ServerProxyManager getProxyManager() {
@@ -48,19 +54,19 @@ public final class RemoteServer implements Remote<ServerState> {
         return proxyManager.getConnectedClients();
     }
 
-    public void addClientRegisteredListener(BiConsumer<String, Integer> l) {
+    public void addClientRegisteredListener(Consumer<Client> l) {
         proxyManager.addClientRegisteredListener(l);
     }
 
-    public void removeClientRegisteredListener(BiConsumer<String, Integer> l) {
+    public void removeClientRegisteredListener(Consumer<Client> l) {
         proxyManager.removeClientRegisteredListener(l);
     }
 
-    public void addClientUnregisteredListener(BiConsumer<String, Integer> l) {
+    public void addClientUnregisteredListener(Consumer<Client> l) {
         proxyManager.addClientUnregisteredListener(l);
     }
 
-    public void removeClientUnregisteredListener(BiConsumer<String, Integer> l) {
+    public void removeClientUnregisteredListener(Consumer<Client> l) {
         proxyManager.removeClientUnregisteredListener(l);
     }
     //endregion
