@@ -3,7 +3,7 @@ package org.pcsoft.framework.jremote.core.internal.manager;
 import org.pcsoft.framework.jremote.core.Client;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
-import org.pcsoft.framework.jremote.core.internal.type.PushModelHandler;
+import org.pcsoft.framework.jremote.core.internal.handler.PushModelHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +67,7 @@ public final class ServerProxyManager {
         if (modelHandlerMap.containsKey(clazz))
             throw new IllegalStateException("Model data class already added: " + clazz.getName());
 
-        modelHandlerMap.put(clazz, new PushModelHandler(impl, pushClientProxyMap::get));
+        modelHandlerMap.put(clazz, new PushModelHandler(impl));
     }
 
     @SuppressWarnings("unchecked")
