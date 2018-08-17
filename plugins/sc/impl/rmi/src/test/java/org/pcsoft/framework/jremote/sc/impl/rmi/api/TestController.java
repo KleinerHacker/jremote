@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.sc.commons.test.api;
+package org.pcsoft.framework.jremote.sc.impl.rmi.api;
 
 import org.pcsoft.framework.jremote.api.Control;
 import org.pcsoft.framework.jremote.api.RemoteControlService;
@@ -13,9 +13,4 @@ public interface TestController extends Remote {
 
     @Control
     void changeValue(int value) throws RemoteException;
-
-    //Default test only
-    default int calc(int x, int y) throws RemoteException {
-        return x * y;
-    }
 }

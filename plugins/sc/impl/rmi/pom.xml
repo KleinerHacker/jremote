@@ -18,18 +18,19 @@
 			<version>${project.version}</version>
 		</dependency>
 
+        <!-- test -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <scope>test</scope>
         </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>jremote-plugins.sc-commons-test</artifactId>
-			<version>${project.version}</version>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jremote-core</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
-		</dependency>
+        </dependency>
 	</dependencies>
 
 </project>

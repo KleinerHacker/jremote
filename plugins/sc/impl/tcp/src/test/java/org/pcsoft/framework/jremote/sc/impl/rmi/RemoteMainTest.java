@@ -1,8 +1,14 @@
 package org.pcsoft.framework.jremote.sc.impl.rmi;
 
 import org.junit.jupiter.api.Disabled;
-import org.pcsoft.framework.jremote.sc.commons.test.RemoteMainTestBase;
+import org.junit.jupiter.api.Test;
 
 @Disabled
-class RemoteMainTest extends RemoteMainTestBase {
+class RemoteMainTest {
+
+    @Test
+    void test() {
+
+    }
+
 }

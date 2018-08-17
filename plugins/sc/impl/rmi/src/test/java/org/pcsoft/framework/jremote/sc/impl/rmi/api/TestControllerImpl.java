@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.sc.commons.test.api;
+package org.pcsoft.framework.jremote.sc.impl.rmi.api;
 
 import java.rmi.RemoteException;
 import java.util.function.Supplier;

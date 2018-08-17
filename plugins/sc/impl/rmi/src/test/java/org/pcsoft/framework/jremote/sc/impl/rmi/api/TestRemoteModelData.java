@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.sc.commons.test.api;
+package org.pcsoft.framework.jremote.sc.impl.rmi.api;
 
 public class TestRemoteModelData implements TestRemoteModel {
     @Override

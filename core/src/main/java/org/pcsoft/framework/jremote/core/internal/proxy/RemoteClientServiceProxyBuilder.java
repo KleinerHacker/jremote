@@ -32,9 +32,9 @@ final class RemoteClientServiceProxyBuilder {
             if (!hasRemoteMethodAnnotation) {
                 if (method.isDefault())
                     return MethodHandles.privateLookupIn(method.getDeclaringClass(), MethodHandles.lookup())
-                        .unreflectSpecial(method, method.getDeclaringClass())
-                        .bindTo(proxy)
-                        .invokeWithArguments(args);
+                            .unreflectSpecial(method, method.getDeclaringClass())
+                            .bindTo(proxy)
+                            .invokeWithArguments(args);
 
                 assert false;
             }
@@ -56,7 +56,10 @@ final class RemoteClientServiceProxyBuilder {
 
             if (!hasRemoteMethodAnnotation) {
                 if (method.isDefault())
-                    return method.invoke(proxy, args);
+                    return MethodHandles.privateLookupIn(method.getDeclaringClass(), MethodHandles.lookup())
+                            .unreflectSpecial(method, method.getDeclaringClass())
+                            .bindTo(proxy)
+                            .invokeWithArguments(args);
 
                 assert false;
             } else {
