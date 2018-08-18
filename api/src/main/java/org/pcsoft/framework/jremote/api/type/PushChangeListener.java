@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.api.type;
 
 @FunctionalInterface
-public interface ChangeListener {
+public interface PushChangeListener {
     void onChange();
 }

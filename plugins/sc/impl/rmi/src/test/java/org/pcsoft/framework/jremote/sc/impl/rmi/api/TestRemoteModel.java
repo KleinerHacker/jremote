@@ -1,13 +1,13 @@
 package org.pcsoft.framework.jremote.sc.impl.rmi.api;
 
-import org.pcsoft.framework.jremote.api.ModelProperty;
-import org.pcsoft.framework.jremote.api.RemoteModel;
+import org.pcsoft.framework.jremote.api.PushModelProperty;
+import org.pcsoft.framework.jremote.api.RemotePushModel;
 
-@RemoteModel
+@RemotePushModel
 public interface TestRemoteModel {
-    @ModelProperty(sourcePushClass = TestPushService.class, sourcePushMethod = "pushName")
+    @PushModelProperty(sourcePushClass = TestPushService.class, sourcePushMethod = "pushName")
     String getName();
 
-    @ModelProperty(sourcePushClass = TestPushService.class, sourcePushMethod = "pushValue")
+    @PushModelProperty(sourcePushClass = TestPushService.class, sourcePushMethod = "pushValue")
     int getValue();
 }

@@ -1,20 +1,20 @@
 package org.pcsoft.framework.jremote.sc.impl.rmi.api;
 
-import org.pcsoft.framework.jremote.api.ObserverListener;
-import org.pcsoft.framework.jremote.api.RemoteObserver;
-import org.pcsoft.framework.jremote.api.type.ChangeListener;
+import org.pcsoft.framework.jremote.api.PushObserverListener;
+import org.pcsoft.framework.jremote.api.RemotePushObserver;
+import org.pcsoft.framework.jremote.api.type.PushChangeListener;
 
-@RemoteObserver
+@RemotePushObserver
 public interface TestRemoteObserver {
-    @ObserverListener(pushClass = TestPushService.class, pushMethod = "pushName")
-    void addNameListener(ChangeListener listener);
+    @PushObserverListener(pushClass = TestPushService.class, pushMethod = "pushName")
+    void addNameListener(PushChangeListener listener);
 
-    @ObserverListener(pushClass = TestPushService.class, pushMethod = "pushName")
-    void removeNameListener(ChangeListener listener);
+    @PushObserverListener(pushClass = TestPushService.class, pushMethod = "pushName")
+    void removeNameListener(PushChangeListener listener);
 
-    @ObserverListener(pushClass = TestPushService.class, pushMethod = "pushValue")
-    void addValueListener(ChangeListener listener);
+    @PushObserverListener(pushClass = TestPushService.class, pushMethod = "pushValue")
+    void addValueListener(PushChangeListener listener);
 
-    @ObserverListener(pushClass = TestPushService.class, pushMethod = "pushValue")
-    void removeValueListener(ChangeListener listener);
+    @PushObserverListener(pushClass = TestPushService.class, pushMethod = "pushValue")
+    void removeValueListener(PushChangeListener listener);
 }

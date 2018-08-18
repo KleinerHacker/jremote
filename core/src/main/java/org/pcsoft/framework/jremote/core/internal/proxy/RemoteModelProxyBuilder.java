@@ -1,6 +1,7 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
-import org.pcsoft.framework.jremote.api.ModelProperty;
+import org.pcsoft.framework.jremote.api.PushModelProperty;
+import org.pcsoft.framework.jremote.api.RemotePushModel;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
@@ -9,9 +10,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * Creator for a {@link org.pcsoft.framework.jremote.api.RemoteModel} annotated interface
+ * Creator for a {@link RemotePushModel} annotated interface
  */
-final class RemoteModelProxyBuilder extends ProxyBuilder<ModelProperty, Map<PushMethodKey, Object>> {
+final class RemoteModelProxyBuilder extends ProxyBuilder<PushModelProperty, Map<PushMethodKey, Object>> {
     private static final RemoteModelProxyBuilder INSTANCE = new RemoteModelProxyBuilder();
 
     public static RemoteModelProxyBuilder getInstance() {
@@ -24,12 +25,12 @@ final class RemoteModelProxyBuilder extends ProxyBuilder<ModelProperty, Map<Push
     }
 
     @Override
-    protected void assertMethod(ModelProperty annotation, Class<?> clazz, Method method, Object[] args) {
+    protected void assertMethod(PushModelProperty annotation, Class<?> clazz, Method method, Object[] args) {
         assert method.getParameterCount() == 0 && method.getReturnType() != void.class;
     }
 
     @Override
-    protected Object invokeMethod(ModelProperty modelProperty, Map<PushMethodKey, Object> dataMap, Class<?> clazz, Method method, Object[] args) {
+    protected Object invokeMethod(PushModelProperty modelProperty, Map<PushMethodKey, Object> dataMap, Class<?> clazz, Method method, Object[] args) {
         final PushMethodKey key = new PushMethodKey(modelProperty.sourcePushClass(), modelProperty.sourcePushMethod());
         final Object value = dataMap.get(key);
         if (value == null) {
@@ -53,6 +54,6 @@ final class RemoteModelProxyBuilder extends ProxyBuilder<ModelProperty, Map<Push
     }
 
     private RemoteModelProxyBuilder() {
-        super(ModelProperty.class);
+        super(PushModelProperty.class);
     }
 }

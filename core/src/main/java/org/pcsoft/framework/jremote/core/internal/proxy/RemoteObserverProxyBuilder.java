@@ -1,8 +1,8 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
-import org.pcsoft.framework.jremote.api.ObserverListener;
+import org.pcsoft.framework.jremote.api.PushObserverListener;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
-import org.pcsoft.framework.jremote.api.type.ChangeListener;
+import org.pcsoft.framework.jremote.api.type.PushChangeListener;
 import org.pcsoft.framework.jremote.api.type.ObserverListenerType;
 import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-final class RemoteObserverProxyBuilder extends ProxyBuilder<ObserverListener, Map<PushMethodKey, List<ChangeListener>>> {
+final class RemoteObserverProxyBuilder extends ProxyBuilder<PushObserverListener, Map<PushMethodKey, List<PushChangeListener>>> {
     private static final RemoteObserverProxyBuilder INSTANCE = new RemoteObserverProxyBuilder();
 
     public static RemoteObserverProxyBuilder getInstance() {
@@ -25,13 +25,13 @@ final class RemoteObserverProxyBuilder extends ProxyBuilder<ObserverListener, Ma
     }
 
     @Override
-    protected void assertMethod(ObserverListener annotation, Class<?> clazz, Method method, Object[] args) {
-        assert method.getParameterCount() == 1 && method.getParameterTypes()[0] == ChangeListener.class && method.getReturnType() == void.class;
+    protected void assertMethod(PushObserverListener annotation, Class<?> clazz, Method method, Object[] args) {
+        assert method.getParameterCount() == 1 && method.getParameterTypes()[0] == PushChangeListener.class && method.getReturnType() == void.class;
     }
 
     @Override
-    protected Object invokeMethod(ObserverListener observerListener, Map<PushMethodKey, List<ChangeListener>> listenerMap, Class<?> clazz, Method method, Object[] args) {
-        addOrRemoveListener(clazz, method, (ChangeListener) args[0], observerListener, listenerMap);
+    protected Object invokeMethod(PushObserverListener observerListener, Map<PushMethodKey, List<PushChangeListener>> listenerMap, Class<?> clazz, Method method, Object[] args) {
+        addOrRemoveListener(clazz, method, (PushChangeListener) args[0], observerListener, listenerMap);
         return null;
     }
 
@@ -40,8 +40,8 @@ final class RemoteObserverProxyBuilder extends ProxyBuilder<ObserverListener, Ma
         return "Remote Observer";
     }
 
-    private static <T> void addOrRemoveListener(Class<T> clazz, Method method, ChangeListener listener, ObserverListener observerListener,
-                                                Map<PushMethodKey, List<ChangeListener>> listenerMap) {
+    private static <T> void addOrRemoveListener(Class<T> clazz, Method method, PushChangeListener listener, PushObserverListener observerListener,
+                                                Map<PushMethodKey, List<PushChangeListener>> listenerMap) {
         final PushMethodKey key = new PushMethodKey(observerListener.pushClass(), observerListener.pushMethod());
         final ObserverListenerType type = extractListenerType(clazz, method, observerListener);
         switch (type) {
@@ -57,7 +57,7 @@ final class RemoteObserverProxyBuilder extends ProxyBuilder<ObserverListener, Ma
         }
     }
 
-    private static void doAddListener(PushMethodKey key, ChangeListener listener, Map<PushMethodKey, List<ChangeListener>> dataMap) {
+    private static void doAddListener(PushMethodKey key, PushChangeListener listener, Map<PushMethodKey, List<PushChangeListener>> dataMap) {
         if (!dataMap.containsKey(key)) {
             dataMap.put(key, new ArrayList<>());
         }
@@ -65,7 +65,7 @@ final class RemoteObserverProxyBuilder extends ProxyBuilder<ObserverListener, Ma
         dataMap.get(key).add(listener);
     }
 
-    private static void doRemoveListener(PushMethodKey key, ChangeListener listener, Map<PushMethodKey, List<ChangeListener>> dataMap) {
+    private static void doRemoveListener(PushMethodKey key, PushChangeListener listener, Map<PushMethodKey, List<PushChangeListener>> dataMap) {
         if (!dataMap.containsKey(key)) {
             dataMap.put(key, new ArrayList<>());
         }
@@ -73,7 +73,7 @@ final class RemoteObserverProxyBuilder extends ProxyBuilder<ObserverListener, Ma
         dataMap.get(key).remove(listener);
     }
 
-    private static <T> ObserverListenerType extractListenerType(Class<T> clazz, Method method, ObserverListener observerListener) {
+    private static <T> ObserverListenerType extractListenerType(Class<T> clazz, Method method, PushObserverListener observerListener) {
         final ObserverListenerType type;
         if (observerListener.listenerType() == ObserverListenerType.AutoDetection) {
             if (method.getName().toLowerCase().startsWith("add")) {
@@ -89,6 +89,6 @@ final class RemoteObserverProxyBuilder extends ProxyBuilder<ObserverListener, Ma
     }
 
     private RemoteObserverProxyBuilder() {
-        super(ObserverListener.class);
+        super(PushObserverListener.class);
     }
 }

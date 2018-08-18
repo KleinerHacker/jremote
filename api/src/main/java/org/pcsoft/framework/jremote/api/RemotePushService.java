@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Mark an interface as remote push service to push data into {@link RemoteModel} and {@link RemoteObserver}, see {@link Push}
+ * Mark an interface as remote push service to push data into {@link RemotePushModel} and {@link RemotePushObserver}, see {@link Push}
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

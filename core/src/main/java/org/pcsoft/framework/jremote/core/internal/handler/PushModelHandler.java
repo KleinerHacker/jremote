@@ -1,7 +1,8 @@
 package org.pcsoft.framework.jremote.core.internal.handler;
 
-import org.pcsoft.framework.jremote.api.ModelProperty;
+import org.pcsoft.framework.jremote.api.PushModelProperty;
 import org.pcsoft.framework.jremote.api.Push;
+import org.pcsoft.framework.jremote.api.RemotePushModel;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.exception.JRemoteExecutionException;
 import org.pcsoft.framework.jremote.commons.AnnotationUtils;
@@ -29,7 +30,7 @@ public final class PushModelHandler {
     /**
      * Creates handler
      *
-     * @param model Implementation of a {@link org.pcsoft.framework.jremote.api.RemoteModel} with values to push to client
+     * @param model Implementation of a {@link RemotePushModel} with values to push to client
      */
     public PushModelHandler(Object model) {
         if (ReflectionUtils.findInterfaces(model.getClass(), AnnotationUtils::isRemoteModel).isEmpty())
@@ -39,7 +40,7 @@ public final class PushModelHandler {
     }
 
     /**
-     * Push all data to a concrete client. Search in the given model for {@link ModelProperty} methods and invoke there. At the end
+     * Push all data to a concrete client. Search in the given model for {@link PushModelProperty} methods and invoke there. At the end
      * the push client and the push method is searched for and invoke with get value from model.
      *
      * @param client Client to push with data
@@ -51,7 +52,7 @@ public final class PushModelHandler {
         //Find all property methods
         final List<Method> propertyMethods = AnnotationUtils.getModelProperties(model.getClass());
         for (final Method propertyMethod : propertyMethods) {
-            final ModelProperty modelProperty = propertyMethod.getAnnotation(ModelProperty.class);
+            final PushModelProperty modelProperty = propertyMethod.getAnnotation(PushModelProperty.class);
             assert modelProperty != null;
 
             //Create a push invoke object (containing a method to invoke push method)
@@ -79,12 +80,12 @@ public final class PushModelHandler {
      * Creates a push invoke object to call found method directly via {@link PushInvoke#invoke(Object)} method
      *
      * @param client             Client to push data to
-     * @param modelProperty      Property in {@link org.pcsoft.framework.jremote.api.RemoteModel}
-     * @param propertyMethod     Method of property in {@link org.pcsoft.framework.jremote.api.RemoteModel}
+     * @param modelProperty      Property in {@link RemotePushModel}
+     * @param propertyMethod     Method of property in {@link RemotePushModel}
      * @param pushClientProxyMap Map of proxies (only for re-use, performance)
      * @return The created push invoke
      */
-    private PushInvoke createPushInvoke(final Client client, final ModelProperty modelProperty, final Method propertyMethod,
+    private PushInvoke createPushInvoke(final Client client, final PushModelProperty modelProperty, final Method propertyMethod,
                                         final Map<Class<?>, Object> pushClientProxyMap) {
         if (!pushClientProxyMap.containsKey(modelProperty.sourcePushClass())) {
             final Object proxy = ProxyFactory.buildRemoteClientProxy(modelProperty.sourcePushClass(), client.getHost(), client.getPort());

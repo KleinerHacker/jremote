@@ -1,9 +1,9 @@
 package org.pcsoft.framework.jremote.core.internal.validation;
 
-import org.pcsoft.framework.jremote.api.ObserverListener;
-import org.pcsoft.framework.jremote.api.RemoteObserver;
+import org.pcsoft.framework.jremote.api.PushObserverListener;
+import org.pcsoft.framework.jremote.api.RemotePushObserver;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
-import org.pcsoft.framework.jremote.api.type.ChangeListener;
+import org.pcsoft.framework.jremote.api.type.PushChangeListener;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -20,21 +20,21 @@ final class RemoteObserverAnnotationValidator extends SimpleAnnotationValidator 
         if (!super.validateMethodAnnotation(method))
             return false;
 
-        if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != ChangeListener.class || method.getReturnType() != void.class)
+        if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != PushChangeListener.class || method.getReturnType() != void.class)
             throw new JRemoteAnnotationException(String.format("Method signature wrong: need a one-parameter method (%s) with a void return value: %s#%s",
-                    ChangeListener.class.getName(), method.getDeclaringClass().getName(), method.getName()));
+                    PushChangeListener.class.getName(), method.getDeclaringClass().getName(), method.getName()));
 
         return true;
     }
 
     @Override
     protected Class<? extends Annotation> getRemoteServiceAnnotation() {
-        return RemoteObserver.class;
+        return RemotePushObserver.class;
     }
 
     @Override
     protected Class<? extends Annotation> getRemoteMethodAnnotation() {
-        return ObserverListener.class;
+        return PushObserverListener.class;
     }
 
     @Override

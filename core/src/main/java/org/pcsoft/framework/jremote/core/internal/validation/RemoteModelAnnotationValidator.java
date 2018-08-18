@@ -1,7 +1,7 @@
 package org.pcsoft.framework.jremote.core.internal.validation;
 
-import org.pcsoft.framework.jremote.api.ModelProperty;
-import org.pcsoft.framework.jremote.api.RemoteModel;
+import org.pcsoft.framework.jremote.api.PushModelProperty;
+import org.pcsoft.framework.jremote.api.RemotePushModel;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 
 import java.lang.annotation.Annotation;
@@ -28,12 +28,12 @@ final class RemoteModelAnnotationValidator extends SimpleAnnotationValidator {
 
     @Override
     protected Class<? extends Annotation> getRemoteServiceAnnotation() {
-        return RemoteModel.class;
+        return RemotePushModel.class;
     }
 
     @Override
     protected Class<? extends Annotation> getRemoteMethodAnnotation() {
-        return ModelProperty.class;
+        return PushModelProperty.class;
     }
 
     @Override

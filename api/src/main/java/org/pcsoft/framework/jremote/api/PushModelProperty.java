@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Mark a getter method in an interface as model based property. The interface must be annotated with {@link RemoteModel}.
+ * Mark a getter method in an interface as model based property. The interface must be annotated with {@link RemotePushModel}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface ModelProperty {
+public @interface PushModelProperty {
     /**
      * Class of push with method to observe, must be annotated with {@link RemotePushService}
      * @return

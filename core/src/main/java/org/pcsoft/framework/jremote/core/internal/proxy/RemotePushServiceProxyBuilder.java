@@ -2,8 +2,8 @@ package org.pcsoft.framework.jremote.core.internal.proxy;
 
 import org.pcsoft.framework.jremote.api.Push;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
-import org.pcsoft.framework.jremote.api.type.ChangeListener;
-import org.pcsoft.framework.jremote.api.type.ItemUpdate;
+import org.pcsoft.framework.jremote.api.type.PushChangeListener;
+import org.pcsoft.framework.jremote.api.type.PushItemUpdate;
 import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 import org.slf4j.Logger;
@@ -57,10 +57,10 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
         return "Remote Push Service";
     }
 
-    private static void fireChange(PushMethodKey key, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
+    private static void fireChange(PushMethodKey key, Map<PushMethodKey, List<PushChangeListener>> listenerMap) {
         if (listenerMap.containsKey(key)) {
             LOGGER.debug("> Fire change event for " + key.toString(false));
-            for (final ChangeListener listener : listenerMap.get(key)) {
+            for (final PushChangeListener listener : listenerMap.get(key)) {
                 listener.onChange();
             }
         } else {
@@ -78,7 +78,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
                 handleCompleteListPush((Collection) dataMap.get(key), args[0]);
                 break;
             case SingleListItem:
-                handleSingleListItemPush((Collection) dataMap.get(key), args[0], (ItemUpdate) args[1]);
+                handleSingleListItemPush((Collection) dataMap.get(key), args[0], (PushItemUpdate) args[1]);
                 break;
             default:
                 throw new RuntimeException();
@@ -86,7 +86,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
     }
 
     @SuppressWarnings("unchecked")
-    private static void handleSingleListItemPush(Collection collection, Object item, ItemUpdate itemUpdate) {
+    private static void handleSingleListItemPush(Collection collection, Object item, PushItemUpdate itemUpdate) {
         switch (itemUpdate) {
             case Add:
                 collection.add(item);
@@ -119,9 +119,9 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
 
     static final class DataHolder {
         private final Map<PushMethodKey, Object> dataMap;
-        private final Map<PushMethodKey, List<ChangeListener>> listenerMap;
+        private final Map<PushMethodKey, List<PushChangeListener>> listenerMap;
 
-        public DataHolder(Map<PushMethodKey, Object> dataMap, Map<PushMethodKey, List<ChangeListener>> listenerMap) {
+        public DataHolder(Map<PushMethodKey, Object> dataMap, Map<PushMethodKey, List<PushChangeListener>> listenerMap) {
             this.dataMap = dataMap;
             this.listenerMap = listenerMap;
         }
@@ -130,7 +130,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
             return dataMap;
         }
 
-        public Map<PushMethodKey, List<ChangeListener>> getListenerMap() {
+        public Map<PushMethodKey, List<PushChangeListener>> getListenerMap() {
             return listenerMap;
         }
     }

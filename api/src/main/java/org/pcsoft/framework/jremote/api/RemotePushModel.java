@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Mark an interface as remote model. In it all pushes ({@link RemotePushService}) are stored in defined properties, see {@link ModelProperty}.
+ * Mark an interface as remote model. In it all pushes ({@link RemotePushService}) are stored in defined properties, see {@link PushModelProperty}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface RemoteModel {
+public @interface RemotePushModel {
 }

@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.manager;
 
-import org.pcsoft.framework.jremote.api.type.ChangeListener;
+import org.pcsoft.framework.jremote.api.type.PushChangeListener;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
 import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
@@ -20,7 +20,7 @@ public final class ClientProxyManager {
 
     //Data
     private final Map<PushMethodKey, Object> propertyValueMap = new HashMap<>();
-    private final Map<PushMethodKey, List<ChangeListener>> observerListenerMap = new HashMap<>();
+    private final Map<PushMethodKey, List<PushChangeListener>> observerListenerMap = new HashMap<>();
 
     //region Model Proxy
     public <T> void addRemoteModelProxy(Class<T> clazz) {
