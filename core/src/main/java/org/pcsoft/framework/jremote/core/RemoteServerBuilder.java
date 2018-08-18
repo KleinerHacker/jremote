@@ -35,6 +35,13 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
         return this;
     }
 
+    public RemoteServerBuilder withEventClient(Class<?>... eventClientClasses) {
+        for (final Class<?> clazz : eventClientClasses) {
+            remoteServer.getProxyManager().addRemoteEventClientProxy(clazz);
+        }
+        return this;
+    }
+
     public RemoteServerBuilder withControlService(Class<?>... controlServiceImplClasses) {
         final Object[] impls = Arrays.stream(controlServiceImplClasses)
                 .map(cl -> {
@@ -78,8 +85,8 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
         return this;
     }
 
-    public RemoteServerBuilder withModelData(Class<?>... modelDataClasses) {
-        final Object[] impls = Arrays.stream(modelDataClasses)
+    public RemoteServerBuilder withPushModelData(Class<?>... pushModelDataClasses) {
+        final Object[] impls = Arrays.stream(pushModelDataClasses)
                 .map(cl -> {
                     if (cl.isInterface() || Modifier.isAbstract(cl.getModifiers()) || cl.isMemberClass())
                         throw new JRemoteAnnotationException("Unable to use an abstract class, an interface or a member class as model data. " +
@@ -95,11 +102,11 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
                 })
                 .toArray(Object[]::new);
 
-        return withModelData(impls);
+        return withPushModelData(impls);
     }
 
-    public RemoteServerBuilder withModelData(Object... modelDataList) {
-        for (final Object impl : modelDataList) {
+    public RemoteServerBuilder withPushModelData(Object... pushModelDataList) {
+        for (final Object impl : pushModelDataList) {
             final List<Class<?>> classList = ReflectionUtils.findInterfaces(impl.getClass(), clazz -> {
                 try {
                     Validator.validateForRemotePushModel(clazz);
@@ -112,7 +119,7 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
                 throw new JRemoteAnnotationException("Unable to find any implemented remote model interface: " + impl.getClass().getName());
 
             for (final Class<?> modelDataClass : classList) {
-                remoteServer.getProxyManager().addModelHandler(modelDataClass, impl);
+                remoteServer.getProxyManager().addPushModelHandler(modelDataClass, impl);
             }
         }
 

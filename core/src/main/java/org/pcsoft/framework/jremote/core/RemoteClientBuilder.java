@@ -15,16 +15,23 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
         remoteClient.getProxyManager().setRemoteKeepAliveClient(ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass(), host, port);
     }
 
-    public final RemoteClientBuilder withRemoteModel(Class<?>... modelClasses) {
-        for (final Class<?> modelClass : modelClasses) {
-            remoteClient.getProxyManager().addRemoteModelProxy(modelClass);
+    public final RemoteClientBuilder withPushRemoteModel(Class<?>... pushModelClasses) {
+        for (final Class<?> modelClass : pushModelClasses) {
+            remoteClient.getProxyManager().addRemotePushModelProxy(modelClass);
         }
         return this;
     }
 
-    public final RemoteClientBuilder withRemoteObserver(Class<?>... observerClasses) {
-        for (final Class<?> observerClass : observerClasses) {
-            remoteClient.getProxyManager().addRemoteObserverProxy(observerClass);
+    public final RemoteClientBuilder withRemotePushObserver(Class<?>... pushObserverClasses) {
+        for (final Class<?> observerClass : pushObserverClasses) {
+            remoteClient.getProxyManager().addRemotePushObserverProxy(observerClass);
+        }
+        return this;
+    }
+
+    public final RemoteClientBuilder withRemoteEventObserver(Class<?>... eventObserverClasses) {
+        for (final Class<?> observerClass : eventObserverClasses) {
+            remoteClient.getProxyManager().addRemoteEventObserverProxy(observerClass);
         }
         return this;
     }
@@ -32,6 +39,13 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
     public final RemoteClientBuilder withRemotePushService(Class<?>... pushServiceClasses) {
         for (final Class<?> pushServiceClass : pushServiceClasses) {
             remoteClient.getProxyManager().addRemotePushServiceProxy(pushServiceClass);
+        }
+        return this;
+    }
+
+    public final RemoteClientBuilder withRemoteEventService(Class<?>... eventServiceClasses) {
+        for (final Class<?> pushServiceClass : eventServiceClasses) {
+            remoteClient.getProxyManager().addRemoteEventServiceProxy(pushServiceClass);
         }
         return this;
     }

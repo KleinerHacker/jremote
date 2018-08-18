@@ -22,15 +22,15 @@ public class MainTest {
         remoteServer = RemoteServerBuilder.create("localhost", 9998)
                 .withPushClient(TestPushService.class, TestEventService.class)
                 .withControlService(new TestControllerImpl(
-                        () -> remoteServer.getPush().getPushClient(TestPushService.class),
-                        () -> remoteServer.getPush().getPushClient(TestEventService.class)
+                        () -> remoteServer.getBroadcast().getPushClient(TestPushService.class),
+                        () -> remoteServer.getBroadcast().getPushClient(TestEventService.class)
                 ))
-                .withModelData(TestRemoteModelData.class)
+                .withPushModelData(TestRemoteModelData.class)
                 .build();
 
         remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
-                .withRemoteModel(TestRemoteModel.class)
-                .withRemoteObserver(TestRemoteObserver.class)
+                .withPushRemoteModel(TestRemoteModel.class)
+                .withRemotePushObserver(TestRemoteObserver.class)
                 .withRemotePushService(TestPushService.class, TestEventService.class)
                 .withRemoteControlClient(TestController.class)
                 .build();
@@ -53,10 +53,10 @@ public class MainTest {
         final AtomicInteger valueChangeCounter = new AtomicInteger(0);
         final AtomicInteger logCounter = new AtomicInteger(0);
 
-        final TestRemoteModel remoteModel = remoteClient.getData().getRemoteModel(TestRemoteModel.class);
+        final TestRemoteModel remoteModel = remoteClient.getData().getRemotePushModel(TestRemoteModel.class);
         Assertions.assertNotNull(remoteModel);
         Assertions.assertEquals(5 + 7, remoteModel.calc(5, 7));
-        final TestRemoteObserver remoteObserver = remoteClient.getData().getRemoteObserver(TestRemoteObserver.class);
+        final TestRemoteObserver remoteObserver = remoteClient.getData().getRemotePushObserver(TestRemoteObserver.class);
         Assertions.assertNotNull(remoteObserver);
         Assertions.assertEquals((int) Math.pow(5 + 7, 2), remoteObserver.calc(5, 7));
         final TestController controlClient = remoteClient.getControl().getControlClient(TestController.class);

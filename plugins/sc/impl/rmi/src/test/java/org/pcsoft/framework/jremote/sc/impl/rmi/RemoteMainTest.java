@@ -21,13 +21,13 @@ public class RemoteMainTest {
     public void init() throws Exception {
         remoteServer = RemoteServerBuilder.create("localhost", 9998)
                 .withPushClient(TestPushService.class)
-                .withControlService(new TestControllerImpl(() -> remoteServer.getPush().getPushClient(TestPushService.class)))
-                .withModelData(TestRemoteModelData.class)
+                .withControlService(new TestControllerImpl(() -> remoteServer.getBroadcast().getPushClient(TestPushService.class)))
+                .withPushModelData(TestRemoteModelData.class)
                 .build();
 
         remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
-                .withRemoteModel(TestRemoteModel.class)
-                .withRemoteObserver(TestRemoteObserver.class)
+                .withPushRemoteModel(TestRemoteModel.class)
+                .withRemotePushObserver(TestRemoteObserver.class)
                 .withRemotePushService(TestPushService.class)
                 .withRemoteControlClient(TestController.class)
                 .build();
@@ -49,9 +49,9 @@ public class RemoteMainTest {
         final AtomicInteger nameChangeCounter = new AtomicInteger(0);
         final AtomicInteger valueChangeCounter = new AtomicInteger(0);
 //
-        final TestRemoteModel remoteModel = remoteClient.getData().getRemoteModel(TestRemoteModel.class);
+        final TestRemoteModel remoteModel = remoteClient.getData().getRemotePushModel(TestRemoteModel.class);
         Assertions.assertNotNull(remoteModel);
-        final TestRemoteObserver remoteObserver = remoteClient.getData().getRemoteObserver(TestRemoteObserver.class);
+        final TestRemoteObserver remoteObserver = remoteClient.getData().getRemotePushObserver(TestRemoteObserver.class);
         Assertions.assertNotNull(remoteObserver);
         final TestController controlClient = remoteClient.getControl().getControlClient(TestController.class);
         Assertions.assertNotNull(controlClient);

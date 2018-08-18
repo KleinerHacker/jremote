@@ -19,7 +19,7 @@ public final class RemoteServer implements Remote<ServerState> {
     private final int port;
 
     private final ServerProxyManager proxyManager;
-    private final PushManager pushManager = new PushManager();
+    private final BroadcastManager broadcastManager = new BroadcastManager();
 
     private Service registrationService = null;
     private Service keepAliveService = null;
@@ -34,8 +34,8 @@ public final class RemoteServer implements Remote<ServerState> {
 
         this.proxyManager = new ServerProxyManager();
         this.proxyManager.addClientRegisteredListener(c -> {
-            for (final Class<?> clazz : this.proxyManager.getModelHandlerClasses()) {
-                final PushModelHandler modelHandler = this.proxyManager.getModelHandler(clazz);
+            for (final Class<?> clazz : this.proxyManager.getPushModelHandlerClasses()) {
+                final PushModelHandler modelHandler = this.proxyManager.getPushModelHandler(clazz);
                 modelHandler.pushModelData(c);
             }
         });
@@ -45,8 +45,8 @@ public final class RemoteServer implements Remote<ServerState> {
         return proxyManager;
     }
 
-    public PushManager getPush() {
-        return pushManager;
+    public BroadcastManager getBroadcast() {
+        return broadcastManager;
     }
 
     //region Delegates
@@ -192,12 +192,16 @@ public final class RemoteServer implements Remote<ServerState> {
     //endregion
 
     //region Helper Classes
-    public final class PushManager {
-        private PushManager() {
+    public final class BroadcastManager {
+        private BroadcastManager() {
         }
 
         public <T> T getPushClient(Class<T> clazz) {
             return proxyManager.getRemotePushClientProxy(clazz);
+        }
+
+        public <T> T getEventClient(Class<T> clazz) {
+            return proxyManager.getRemoteEventClientProxy(clazz);
         }
     }
     //endregion

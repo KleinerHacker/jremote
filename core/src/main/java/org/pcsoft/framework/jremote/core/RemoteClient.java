@@ -141,12 +141,16 @@ public final class RemoteClient implements Remote<ClientState> {
         private DataManager() {
         }
 
-        public <T> T getRemoteModel(Class<T> clazz) {
-            return proxyManager.getRemoteModelProxy(clazz);
+        public <T> T getRemotePushModel(Class<T> clazz) {
+            return proxyManager.getRemotePushModelProxy(clazz);
         }
 
-        public <T> T getRemoteObserver(Class<T> clazz) {
-            return proxyManager.getRemoteObserverProxy(clazz);
+        public <T> T getRemotePushObserver(Class<T> clazz) {
+            return proxyManager.getRemotePushObserverProxy(clazz);
+        }
+
+        public <T> T getRemoteEventObserver(Class<T> clazz) {
+            return proxyManager.getRemoteEventObserverProxy(clazz);
         }
     }
 

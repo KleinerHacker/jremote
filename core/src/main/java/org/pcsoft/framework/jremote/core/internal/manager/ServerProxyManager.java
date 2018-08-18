@@ -12,9 +12,10 @@ import java.util.function.Consumer;
 public final class ServerProxyManager {
     private final Map<Class<?>, Object> controlServiceImplMap = new HashMap<>();
     private final Map<Class<?>, Object> pushClientProxyMap = new HashMap<>();
+    private final Map<Class<?>, Object> eventClientProxyMap = new HashMap<>();
     private Object registrationServiceProxy;
     private Object keepAliveServiceProxy;
-    private final Map<Class<?>, PushModelHandler> modelHandlerMap = new HashMap<>();
+    private final Map<Class<?>, PushModelHandler> pushModelHandlerMap = new HashMap<>();
 
     //Data
     private final ClientRegistry clientRegistry = new ClientRegistry();
@@ -62,24 +63,46 @@ public final class ServerProxyManager {
     }
     //endregion
 
-    //region Model Data
-    public <T> void addModelHandler(Class<T> clazz, Object impl) {
-        if (modelHandlerMap.containsKey(clazz))
-            throw new IllegalStateException("Model data class already added: " + clazz.getName());
+    //region Event Client Proxy
+    public <T> void addRemoteEventClientProxy(Class<T> clazz) {
+        if (eventClientProxyMap.containsKey(clazz))
+            throw new IllegalStateException("Remote event client class already added: " + clazz.getName());
 
-        modelHandlerMap.put(clazz, new PushModelHandler(impl));
+        final T proxy = ProxyFactory.buildRemoteBroadcastClientProxy(clazz, clientRegistry);
+        eventClientProxyMap.put(clazz, proxy);
     }
 
     @SuppressWarnings("unchecked")
-    public PushModelHandler getModelHandler(Class<?> clazz) {
-        if (!modelHandlerMap.containsKey(clazz))
-            throw new IllegalStateException("Unknown model data class: " + clazz.getName());
+    public <T> T getRemoteEventClientProxy(Class<T> clazz) {
+        if (!eventClientProxyMap.containsKey(clazz))
+            throw new IllegalStateException("Unknown remote event client class: " + clazz.getName());
 
-        return modelHandlerMap.get(clazz);
+        return (T) eventClientProxyMap.get(clazz);
     }
 
-    public Class[] getModelHandlerClasses() {
-        return modelHandlerMap.keySet().toArray(new Class[0]);
+    public Class[] getRemoteEventClasses() {
+        return eventClientProxyMap.keySet().toArray(new Class[0]);
+    }
+    //endregion
+
+    //region Push Model Data
+    public <T> void addPushModelHandler(Class<T> clazz, Object impl) {
+            if (pushModelHandlerMap.containsKey(clazz))
+            throw new IllegalStateException("Push model data class already added: " + clazz.getName());
+
+        pushModelHandlerMap.put(clazz, new PushModelHandler(impl));
+    }
+
+    @SuppressWarnings("unchecked")
+    public PushModelHandler getPushModelHandler(Class<?> clazz) {
+        if (!pushModelHandlerMap.containsKey(clazz))
+            throw new IllegalStateException("Unknown push model data class: " + clazz.getName());
+
+        return pushModelHandlerMap.get(clazz);
+    }
+
+    public Class[] getPushModelHandlerClasses() {
+        return pushModelHandlerMap.keySet().toArray(new Class[0]);
     }
     //endregion
 
