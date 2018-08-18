@@ -8,10 +8,10 @@ import org.pcsoft.framework.jremote.api.type.PushChangeListener;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-final class RemoteObserverAnnotationValidator extends SimpleAnnotationValidator {
-    private static final RemoteObserverAnnotationValidator INSTANCE = new RemoteObserverAnnotationValidator();
+final class RemotePushObserverAnnotationValidator extends SimpleAnnotationValidator {
+    private static final RemotePushObserverAnnotationValidator INSTANCE = new RemotePushObserverAnnotationValidator();
 
-    public static RemoteObserverAnnotationValidator getInstance() {
+    public static RemotePushObserverAnnotationValidator getInstance() {
         return INSTANCE;
     }
 
@@ -39,14 +39,14 @@ final class RemoteObserverAnnotationValidator extends SimpleAnnotationValidator 
 
     @Override
     protected String getServiceName() {
-        return "Remote Observer";
+        return "Remote Push Observer";
     }
 
     @Override
     protected String getServiceMethodName() {
-        return "Observer Listener Method";
+        return "Push Observer Listener Method";
     }
 
-    private RemoteObserverAnnotationValidator() {
+    private RemotePushObserverAnnotationValidator() {
     }
 }

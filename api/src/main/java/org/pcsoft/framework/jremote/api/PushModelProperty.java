@@ -13,12 +13,14 @@ import java.lang.annotation.Target;
 public @interface PushModelProperty {
     /**
      * Class of push with method to observe, must be annotated with {@link RemotePushService}
+     *
      * @return
      */
     Class<?> sourcePushClass();
 
     /**
      * Method name of push class to observe
+     *
      * @return
      */
     String sourcePushMethod();

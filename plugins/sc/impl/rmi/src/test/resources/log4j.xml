@@ -8,24 +8,23 @@
     <!-- STDOUT APPENDER -->
 
     <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
-        <param name="Target" value="System.out" />
+        <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%15.15t] %50.50c> %d{yyyy.MM.dd HH:mm:ss} %-5p - %m%n" />
+            <param name="ConversionPattern" value="[%15.15t] %50.50c> %d{yyyy.MM.dd HH:mm:ss} %-5p - %m%n"/>
         </layout>
     </appender>
 
     <!-- FILE APPENDER -->
 
     <!--<appender name="file" class="org.apache.log4j.RollingFileAppender">-->
-        <!--<param name="File" value="logs/log.log" />-->
-        <!--<param name="Append" value="true" />-->
-        <!--<param name="MaxFileSize" value="100MB" />-->
-        <!--<param name="MaxBackupIndex" value="10"/>-->
-        <!--<layout class="org.apache.log4j.PatternLayout">-->
-            <!--<param name="ConversionPattern" value="[%15.15t] %50.50c> %d{yyyy.MM.dd HH:mm:ss.SSS} %-5p - %m%n" />-->
-        <!--</layout>-->
+    <!--<param name="File" value="logs/log.log" />-->
+    <!--<param name="Append" value="true" />-->
+    <!--<param name="MaxFileSize" value="100MB" />-->
+    <!--<param name="MaxBackupIndex" value="10"/>-->
+    <!--<layout class="org.apache.log4j.PatternLayout">-->
+    <!--<param name="ConversionPattern" value="[%15.15t] %50.50c> %d{yyyy.MM.dd HH:mm:ss.SSS} %-5p - %m%n" />-->
+    <!--</layout>-->
     <!--</appender>-->
-
 
 
     <!-- ######### Logger configuration -->
@@ -36,8 +35,8 @@
     </logger>
 
     <root>
-        <priority value="error" />
-        <appender-ref ref="stdout" />
+        <priority value="error"/>
+        <appender-ref ref="stdout"/>
     </root>
 
 </log4j:configuration>

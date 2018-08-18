@@ -1,7 +1,7 @@
 package org.pcsoft.framework.jremote.core.internal.handler;
 
-import org.pcsoft.framework.jremote.api.PushModelProperty;
 import org.pcsoft.framework.jremote.api.Push;
+import org.pcsoft.framework.jremote.api.PushModelProperty;
 import org.pcsoft.framework.jremote.api.RemotePushModel;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.exception.JRemoteExecutionException;

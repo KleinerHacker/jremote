@@ -7,10 +7,10 @@ import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-final class RemoteModelAnnotationValidator extends SimpleAnnotationValidator {
-    private static final RemoteModelAnnotationValidator INSTANCE = new RemoteModelAnnotationValidator();
+final class RemotePushModelAnnotationValidator extends SimpleAnnotationValidator {
+    private static final RemotePushModelAnnotationValidator INSTANCE = new RemotePushModelAnnotationValidator();
 
-    public static RemoteModelAnnotationValidator getInstance() {
+    public static RemotePushModelAnnotationValidator getInstance() {
         return INSTANCE;
     }
 
@@ -38,14 +38,14 @@ final class RemoteModelAnnotationValidator extends SimpleAnnotationValidator {
 
     @Override
     protected String getServiceName() {
-        return "Remote Model";
+        return "Remote Push Model";
     }
 
     @Override
     protected String getServiceMethodName() {
-        return "Model Property Method";
+        return "Push Model Property Method";
     }
 
-    private RemoteModelAnnotationValidator() {
+    private RemotePushModelAnnotationValidator() {
     }
 }

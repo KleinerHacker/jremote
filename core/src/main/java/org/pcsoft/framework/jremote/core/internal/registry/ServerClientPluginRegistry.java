@@ -1,8 +1,8 @@
 package org.pcsoft.framework.jremote.core.internal.registry;
 
 import org.pcsoft.framework.jremote.sc.api.Client;
-import org.pcsoft.framework.jremote.sc.api.ServiceClientPlugin;
 import org.pcsoft.framework.jremote.sc.api.Service;
+import org.pcsoft.framework.jremote.sc.api.ServiceClientPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,8 +1,8 @@
 package org.pcsoft.framework.jremote.core;
 
+import org.pcsoft.framework.jremote.core.internal.handler.PushModelHandler;
 import org.pcsoft.framework.jremote.core.internal.manager.ServerProxyManager;
 import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
-import org.pcsoft.framework.jremote.core.internal.handler.PushModelHandler;
 import org.pcsoft.framework.jremote.sc.api.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -196,7 +196,7 @@ public final class RemoteServer implements Remote<ServerState> {
         private PushManager() {
         }
 
-        public <T>T getPushClient(Class<T> clazz) {
+        public <T> T getPushClient(Class<T> clazz) {
             return proxyManager.getRemotePushClientProxy(clazz);
         }
     }

@@ -1,7 +1,6 @@
 package org.pcsoft.framework.jremote.api;
 
 import org.pcsoft.framework.jremote.api.type.ObserverListenerType;
-import org.pcsoft.framework.jremote.api.type.PushChangeListener;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,18 +18,21 @@ import java.lang.annotation.Target;
 public @interface EventObserverListener {
     /**
      * Class of event with method to observe, must be annotated with {@link RemoteEventService}
+     *
      * @return
      */
     Class<?> eventClass();
 
     /**
      * Method name of event class to observe
+     *
      * @return
      */
     String eventMethod();
 
     /**
      * Setup the type of listener method like 'add' or 'remove' (Default is {@link ObserverListenerType#AutoDetection})
+     *
      * @return
      */
     ObserverListenerType listenerType() default ObserverListenerType.AutoDetection;

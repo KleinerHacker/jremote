@@ -15,12 +15,20 @@ public final class Validator {
         RemotePushServiceAnnotationValidator.getInstance().validate(clazz);
     }
 
-    public static void validateForRemoteModel(Class<?> clazz) throws JRemoteAnnotationException {
-        RemoteModelAnnotationValidator.getInstance().validate(clazz);
+    public static void validateForRemoteEventService(Class<?> clazz) throws JRemoteAnnotationException {
+        RemoteEventServiceAnnotationValidator.getInstance().validate(clazz);
     }
 
-    public static void validateForRemoteObserver(Class<?> clazz) throws JRemoteAnnotationException {
-        RemoteObserverAnnotationValidator.getInstance().validate(clazz);
+    public static void validateForRemotePushModel(Class<?> clazz) throws JRemoteAnnotationException {
+        RemotePushModelAnnotationValidator.getInstance().validate(clazz);
+    }
+
+    public static void validateForRemotePushObserver(Class<?> clazz) throws JRemoteAnnotationException {
+        RemotePushObserverAnnotationValidator.getInstance().validate(clazz);
+    }
+
+    public static void validateForRemoteEventObserver(Class<?> clazz) throws JRemoteAnnotationException {
+        RemoteEventObserverAnnotationValidator.getInstance().validate(clazz);
     }
 
     public static void validateForRemoteRegistrationService(Class<?> clazz) throws JRemoteAnnotationException {

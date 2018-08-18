@@ -102,7 +102,7 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
         for (final Object impl : modelDataList) {
             final List<Class<?>> classList = ReflectionUtils.findInterfaces(impl.getClass(), clazz -> {
                 try {
-                    Validator.validateForRemoteModel(clazz);
+                    Validator.validateForRemotePushModel(clazz);
                     return true;
                 } catch (JRemoteAnnotationException e) {
                     return false;

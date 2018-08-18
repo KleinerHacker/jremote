@@ -3,7 +3,7 @@ package org.pcsoft.framework.jremote.core.internal.proxy;
 import org.pcsoft.framework.jremote.api.PushModelProperty;
 import org.pcsoft.framework.jremote.api.RemotePushModel;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
-import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
+import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 
 import java.lang.reflect.Method;
@@ -12,16 +12,16 @@ import java.util.Map;
 /**
  * Creator for a {@link RemotePushModel} annotated interface
  */
-final class RemoteModelProxyBuilder extends ProxyBuilder<PushModelProperty, Map<PushMethodKey, Object>> {
-    private static final RemoteModelProxyBuilder INSTANCE = new RemoteModelProxyBuilder();
+final class RemotePushModelProxyBuilder extends ProxyBuilder<PushModelProperty, Map<MethodKey, Object>> {
+    private static final RemotePushModelProxyBuilder INSTANCE = new RemotePushModelProxyBuilder();
 
-    public static RemoteModelProxyBuilder getInstance() {
+    public static RemotePushModelProxyBuilder getInstance() {
         return INSTANCE;
     }
 
     @Override
     protected void validate(Class<?> clazz) throws JRemoteAnnotationException {
-        Validator.validateForRemoteModel(clazz);
+        Validator.validateForRemotePushModel(clazz);
     }
 
     @Override
@@ -30,8 +30,8 @@ final class RemoteModelProxyBuilder extends ProxyBuilder<PushModelProperty, Map<
     }
 
     @Override
-    protected Object invokeMethod(PushModelProperty modelProperty, Map<PushMethodKey, Object> dataMap, Class<?> clazz, Method method, Object[] args) {
-        final PushMethodKey key = new PushMethodKey(modelProperty.sourcePushClass(), modelProperty.sourcePushMethod());
+    protected Object invokeMethod(PushModelProperty modelProperty, Map<MethodKey, Object> dataMap, Class<?> clazz, Method method, Object[] args) {
+        final MethodKey key = new MethodKey(modelProperty.sourcePushClass(), modelProperty.sourcePushMethod());
         final Object value = dataMap.get(key);
         if (value == null) {
             if (method.getReturnType() == char.class)
@@ -53,7 +53,7 @@ final class RemoteModelProxyBuilder extends ProxyBuilder<PushModelProperty, Map<
         return "Remote Model";
     }
 
-    private RemoteModelProxyBuilder() {
+    private RemotePushModelProxyBuilder() {
         super(PushModelProperty.class);
     }
 }

@@ -19,12 +19,14 @@ abstract class SimpleAnnotationValidator extends AnnotationValidator {
 
     /**
      * Returns the default annotation for the service (class annotation)
+     *
      * @return
      */
     protected abstract Class<? extends Annotation> getRemoteServiceAnnotation();
 
     /**
      * Returns the default annotation for a method (method annotation)
+     *
      * @return
      */
     protected abstract Class<? extends Annotation> getRemoteMethodAnnotation();

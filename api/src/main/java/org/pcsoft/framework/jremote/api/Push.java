@@ -17,6 +17,7 @@ import java.lang.annotation.Target;
 public @interface Push {
     /**
      * Type of push update, see {@link PushMethodType} for more information.
+     *
      * @return
      */
     PushMethodType type() default PushMethodType.Simple;

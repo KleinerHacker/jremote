@@ -5,7 +5,7 @@ package org.pcsoft.framework.jremote.api.type;
  * Method with this parameter must be annotated with {@link org.pcsoft.framework.jremote.api.EventObserverListener}.
  */
 @FunctionalInterface
-public interface EventChangeListener<T> {
+public interface EventChangeListener<T> extends ChangeListener {
     /**
      * Is called if the linked event is called, see {@link org.pcsoft.framework.jremote.api.EventObserverListener}
      *

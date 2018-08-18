@@ -4,7 +4,7 @@ import org.pcsoft.framework.jremote.api.Push;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.type.PushChangeListener;
 import org.pcsoft.framework.jremote.api.type.PushItemUpdate;
-import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
+import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
 
     @Override
     protected Object invokeMethod(Push push, DataHolder data, Class<?> clazz, Method method, Object[] args) {
-        final PushMethodKey key = new PushMethodKey(clazz, method.getName());
+        final MethodKey key = new MethodKey(clazz, method.getName());
         updateData(push, key, args, data.getDataMap());
         fireChange(key, data.getListenerMap());
 
@@ -57,7 +57,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
         return "Remote Push Service";
     }
 
-    private static void fireChange(PushMethodKey key, Map<PushMethodKey, List<PushChangeListener>> listenerMap) {
+    private static void fireChange(MethodKey key, Map<MethodKey, List<PushChangeListener>> listenerMap) {
         if (listenerMap.containsKey(key)) {
             LOGGER.debug("> Fire change event for " + key.toString(false));
             for (final PushChangeListener listener : listenerMap.get(key)) {
@@ -68,7 +68,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
         }
     }
 
-    private static void updateData(Push push, PushMethodKey key, Object[] args, Map<PushMethodKey, Object> dataMap) {
+    private static void updateData(Push push, MethodKey key, Object[] args, Map<MethodKey, Object> dataMap) {
         LOGGER.debug("> Setup value into model for " + key.toString(false));
         switch (push.type()) {
             case Simple:
@@ -109,7 +109,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
         collection.addAll((Collection) item);
     }
 
-    private static void handleSimplePush(Map<PushMethodKey, Object> dataMap, Object data, PushMethodKey key) {
+    private static void handleSimplePush(Map<MethodKey, Object> dataMap, Object data, MethodKey key) {
         dataMap.put(key, data);
     }
 
@@ -118,19 +118,19 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
     }
 
     static final class DataHolder {
-        private final Map<PushMethodKey, Object> dataMap;
-        private final Map<PushMethodKey, List<PushChangeListener>> listenerMap;
+        private final Map<MethodKey, Object> dataMap;
+        private final Map<MethodKey, List<PushChangeListener>> listenerMap;
 
-        public DataHolder(Map<PushMethodKey, Object> dataMap, Map<PushMethodKey, List<PushChangeListener>> listenerMap) {
+        public DataHolder(Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangeListener>> listenerMap) {
             this.dataMap = dataMap;
             this.listenerMap = listenerMap;
         }
 
-        public Map<PushMethodKey, Object> getDataMap() {
+        public Map<MethodKey, Object> getDataMap() {
             return dataMap;
         }
 
-        public Map<PushMethodKey, List<PushChangeListener>> getListenerMap() {
+        public Map<MethodKey, List<PushChangeListener>> getListenerMap() {
             return listenerMap;
         }
     }

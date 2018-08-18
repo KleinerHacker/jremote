@@ -11,6 +11,7 @@ import java.util.Arrays;
 abstract class AnnotationValidator {
     /**
      * Run validation
+     *
      * @param clazz
      * @throws JRemoteAnnotationException
      */
@@ -39,18 +40,21 @@ abstract class AnnotationValidator {
 
     /**
      * Returns the service name
+     *
      * @return
      */
     protected abstract String getServiceName();
 
     /**
      * Returns the service method name
+     *
      * @return
      */
     protected abstract String getServiceMethodName();
 
     /**
      * Run validation for class annotation(s)
+     *
      * @param clazz
      * @return
      */
@@ -58,6 +62,7 @@ abstract class AnnotationValidator {
 
     /**
      * Run validation for method annotation(s)
+     *
      * @param method
      * @return
      */

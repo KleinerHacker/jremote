@@ -1,8 +1,8 @@
 package org.pcsoft.framework.jremote.sc.impl.rmi;
 
 import org.pcsoft.framework.jremote.sc.api.Client;
-import org.pcsoft.framework.jremote.sc.api.ServiceClientPlugin;
 import org.pcsoft.framework.jremote.sc.api.Service;
+import org.pcsoft.framework.jremote.sc.api.ServiceClientPlugin;
 import org.pcsoft.framework.jremote.sc.impl.rmi.interf.RmiKeepAliveService;
 import org.pcsoft.framework.jremote.sc.impl.rmi.interf.RmiRegistrationService;
 

@@ -2,7 +2,7 @@ package org.pcsoft.framework.jremote.core.internal.manager;
 
 import org.pcsoft.framework.jremote.api.type.PushChangeListener;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
-import org.pcsoft.framework.jremote.core.internal.type.PushMethodKey;
+import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
 import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
 import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteRegistrationClientWrapper;
 
@@ -19,15 +19,15 @@ public final class ClientProxyManager {
     private RemoteKeepAliveClientWrapper remoteKeepAliveClient;
 
     //Data
-    private final Map<PushMethodKey, Object> propertyValueMap = new HashMap<>();
-    private final Map<PushMethodKey, List<PushChangeListener>> observerListenerMap = new HashMap<>();
+    private final Map<MethodKey, Object> propertyValueMap = new HashMap<>();
+    private final Map<MethodKey, List<PushChangeListener>> observerListenerMap = new HashMap<>();
 
     //region Model Proxy
     public <T> void addRemoteModelProxy(Class<T> clazz) {
         if (modelProxyMap.containsKey(clazz))
             throw new IllegalStateException("Remote model class already added: " + clazz.getName());
 
-        final T proxy = ProxyFactory.buildRemoteModelProxy(clazz, propertyValueMap);
+        final T proxy = ProxyFactory.buildRemotePushModelProxy(clazz, propertyValueMap);
         modelProxyMap.put(clazz, proxy);
     }
 
@@ -49,7 +49,7 @@ public final class ClientProxyManager {
         if (observerProxyMap.containsKey(clazz))
             throw new IllegalStateException("Remote observer class already added: " + clazz.getName());
 
-        final T proxy = ProxyFactory.buildRemoteObserverProxy(clazz, observerListenerMap);
+        final T proxy = ProxyFactory.buildRemotePushObserverProxy(clazz, observerListenerMap);
         observerProxyMap.put(clazz, proxy);
     }
 

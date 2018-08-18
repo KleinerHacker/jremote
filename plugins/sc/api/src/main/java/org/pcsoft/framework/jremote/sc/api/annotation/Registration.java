@@ -16,6 +16,7 @@ import java.lang.annotation.Target;
 public @interface Registration {
     /**
      * Type of registration method
+     *
      * @return
      */
     RegistrationType value();

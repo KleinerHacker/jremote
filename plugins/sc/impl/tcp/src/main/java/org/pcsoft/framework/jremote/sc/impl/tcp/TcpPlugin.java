@@ -1,8 +1,8 @@
 package org.pcsoft.framework.jremote.sc.impl.tcp;
 
 import org.pcsoft.framework.jremote.sc.api.Client;
-import org.pcsoft.framework.jremote.sc.api.ServiceClientPlugin;
 import org.pcsoft.framework.jremote.sc.api.Service;
+import org.pcsoft.framework.jremote.sc.api.ServiceClientPlugin;
 
 public final class TcpPlugin implements ServiceClientPlugin {
     @Override

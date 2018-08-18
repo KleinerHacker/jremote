@@ -3,7 +3,7 @@ package org.pcsoft.framework.jremote.sc.impl.tcp.internal.type;
 import java.util.stream.Stream;
 
 public enum Type {
-    Void((byte)0, void.class),
+    Void((byte) 0, void.class),
     Byte((byte) 1, byte.class),
     ByteType((byte) 2, Byte.class),
     Short((byte) 3, short.class),
