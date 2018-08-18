@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.core.test.api;
+package org.pcsoft.framework.jremote.sc.impl.rmi.api;
 
 import org.pcsoft.framework.jremote.api.Control;
 import org.pcsoft.framework.jremote.api.RemoteControlService;
@@ -7,7 +7,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 @RemoteControlService
-public interface TestController extends Remote {
+public interface TestRemoteController extends Remote {
     @Control
     void changeName(String newValue) throws RemoteException;
 
@@ -16,9 +16,4 @@ public interface TestController extends Remote {
 
     @Control
     void log(String msg) throws RemoteException;
-
-    //Default test only
-    default int calc(int x, int y) throws RemoteException {
-        return x * y;
-    }
 }

@@ -7,7 +7,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 @RemotePushService
-public interface TestPushService extends Remote {
+public interface TestRemotePushService extends Remote {
     @Push
     void pushName(String name) throws RemoteException;
 

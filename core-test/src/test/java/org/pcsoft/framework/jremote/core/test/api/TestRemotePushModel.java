@@ -4,11 +4,11 @@ import org.pcsoft.framework.jremote.api.PushModelProperty;
 import org.pcsoft.framework.jremote.api.RemotePushModel;
 
 @RemotePushModel
-public interface TestRemoteModel {
-    @PushModelProperty(sourcePushClass = TestPushService.class, sourcePushMethod = "pushName")
+public interface TestRemotePushModel {
+    @PushModelProperty(sourcePushClass = TestRemotePushService.class, sourcePushMethod = "pushName")
     String getName();
 
-    @PushModelProperty(sourcePushClass = TestPushService.class, sourcePushMethod = "pushValue")
+    @PushModelProperty(sourcePushClass = TestRemotePushService.class, sourcePushMethod = "pushValue")
     int getValue();
 
     //Default test only

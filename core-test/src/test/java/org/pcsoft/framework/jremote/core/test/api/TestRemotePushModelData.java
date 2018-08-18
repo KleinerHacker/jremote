@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core.test.api;
 
-public class TestRemoteModelData implements TestRemoteModel {
+public class TestRemotePushModelData implements TestRemotePushModel {
     @Override
     public String getName() {
         return "Initial";

@@ -15,7 +15,7 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
         remoteClient.getProxyManager().setRemoteKeepAliveClient(ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass(), host, port);
     }
 
-    public final RemoteClientBuilder withPushRemoteModel(Class<?>... pushModelClasses) {
+    public final RemoteClientBuilder withRemotePushModel(Class<?>... pushModelClasses) {
         for (final Class<?> modelClass : pushModelClasses) {
             remoteClient.getProxyManager().addRemotePushModelProxy(modelClass);
         }

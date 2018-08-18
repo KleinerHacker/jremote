@@ -4,7 +4,6 @@ import org.pcsoft.framework.jremote.api.EventObserverListener;
 import org.pcsoft.framework.jremote.api.RemoteEventObserver;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.type.EventChangeListener;
-import org.pcsoft.framework.jremote.api.type.PushChangeListener;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -21,7 +20,7 @@ final class RemoteEventObserverAnnotationValidator extends SimpleAnnotationValid
         if (!super.validateMethodAnnotation(method))
             return false;
 
-        if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != PushChangeListener.class || method.getReturnType() != void.class)
+        if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != EventChangeListener.class || method.getReturnType() != void.class)
             throw new JRemoteAnnotationException(String.format("Method signature wrong: need a one-parameter method (%s) with a void return value: %s#%s",
                     EventChangeListener.class.getName(), method.getDeclaringClass().getName(), method.getName()));
 

@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Assertions;
 import java.rmi.RemoteException;
 import java.util.function.Supplier;
 
-public class TestControllerImpl implements TestController {
-    private final Supplier<TestPushService> pushServiceSupplier;
-    private final Supplier<TestEventService> eventServiceSupplier;
+public class TestRemoteControllerImpl implements TestRemoteController {
+    private final Supplier<TestRemotePushService> pushServiceSupplier;
+    private final Supplier<TestRemoteEventService> eventServiceSupplier;
 
-    public TestControllerImpl(Supplier<TestPushService> pushServiceSupplier, Supplier<TestEventService> eventServiceSupplier) {
+    public TestRemoteControllerImpl(Supplier<TestRemotePushService> pushServiceSupplier, Supplier<TestRemoteEventService> eventServiceSupplier) {
         this.pushServiceSupplier = pushServiceSupplier;
         this.eventServiceSupplier = eventServiceSupplier;
     }
@@ -29,7 +29,7 @@ public class TestControllerImpl implements TestController {
     @Override
     public void log(String msg) throws RemoteException {
         assertionForEvent();
-        this.eventServiceSupplier.get().pushLog(msg);
+        this.eventServiceSupplier.get().fireLog(msg);
     }
 
     private void assertionForPush() {

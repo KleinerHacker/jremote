@@ -25,6 +25,7 @@ public final class RemoteClient implements Remote<ClientState> {
     private final ControlManager controlManager = new ControlManager();
 
     private final List<Service> pushServiceList = new ArrayList<>();
+    private final List<Service> eventServiceList = new ArrayList<>();
     private final KeepAliveProcessor keepAliveProcessor = new KeepAliveProcessor();
 
     RemoteClient(String host, int port, int ownPort) {
@@ -70,6 +71,7 @@ public final class RemoteClient implements Remote<ClientState> {
         LOGGER.info("Open Remote Client on " + host + ":" + port + " (push on " + ownPort + ")");
 
         createAndOpenPushServices();
+        createAndOpenEventServices();
         startKeepAlive();
     }
 
@@ -78,6 +80,7 @@ public final class RemoteClient implements Remote<ClientState> {
         LOGGER.info("Close Remote Client on " + host + ":" + port);
 
         stopKeepAlive();
+        closeAndRemoveEventServices();
         closeAndRemovePushServices();
     }
 
@@ -133,6 +136,28 @@ public final class RemoteClient implements Remote<ClientState> {
             service.close();
         }
         this.pushServiceList.clear();
+    }
+
+    private void createAndOpenEventServices() throws IOException {
+        LOGGER.debug("> Create and open event services");
+        for (final Class<?> pushClass : proxyManager.getRemoteEventClasses()) {
+            final Object eventServiceProxy = proxyManager.getRemoteEventServiceProxy(pushClass);
+
+            final Service service = ServerClientPluginRegistry.getInstance().createService();
+            service.setServiceImplementation(eventServiceProxy);
+            service.open(host, ownPort);
+
+            this.eventServiceList.add(service);
+        }
+    }
+
+    private void closeAndRemoveEventServices() throws IOException {
+        LOGGER.debug("> Close and remove event services");
+
+        for (final Service service : this.eventServiceList) {
+            service.close();
+        }
+        this.eventServiceList.clear();
     }
     //endregion
 

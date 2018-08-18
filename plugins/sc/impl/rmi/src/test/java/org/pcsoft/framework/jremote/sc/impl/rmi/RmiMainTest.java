@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.core.test;
+package org.pcsoft.framework.jremote.sc.impl.rmi;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -8,13 +8,13 @@ import org.pcsoft.framework.jremote.core.RemoteClient;
 import org.pcsoft.framework.jremote.core.RemoteClientBuilder;
 import org.pcsoft.framework.jremote.core.RemoteServer;
 import org.pcsoft.framework.jremote.core.RemoteServerBuilder;
-import org.pcsoft.framework.jremote.core.test.api.*;
+import org.pcsoft.framework.jremote.sc.impl.rmi.api.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings("Duplicates")
-public class MainTest {
+public class RmiMainTest {
     private RemoteServer remoteServer;
     private RemoteClient remoteClient;
 
@@ -22,12 +22,12 @@ public class MainTest {
     public void init() throws Exception {
         remoteServer = RemoteServerBuilder.create("localhost", 9998)
                 .withPushClient(TestRemotePushService.class)
+                .withPushModelData(TestRemotePushModelData.class)
                 .withEventClient(TestRemoteEventService.class)
                 .withControlService(new TestRemoteControllerImpl(
                         () -> remoteServer.getBroadcast().getPushClient(TestRemotePushService.class),
                         () -> remoteServer.getBroadcast().getEventClient(TestRemoteEventService.class)
                 ))
-                .withPushModelData(TestRemotePushModelData.class)
                 .build();
 
         remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
@@ -60,16 +60,12 @@ public class MainTest {
 
         final TestRemotePushModel remotePushModel = remoteClient.getData().getRemotePushModel(TestRemotePushModel.class);
         Assertions.assertNotNull(remotePushModel);
-        Assertions.assertEquals(5 + 7, remotePushModel.calc(5, 7));
         final TestRemotePushObserver remotePushObserver = remoteClient.getData().getRemotePushObserver(TestRemotePushObserver.class);
         Assertions.assertNotNull(remotePushObserver);
-        Assertions.assertEquals((int) Math.pow(5 + 7, 2), remotePushObserver.calc(5, 7));
         final TestRemoteEventObserver remoteEventObserver = remoteClient.getData().getRemoteEventObserver(TestRemoteEventObserver.class);
         Assertions.assertNotNull(remoteEventObserver);
-        Assertions.assertEquals((int) Math.pow(5 + 7, 3), remoteEventObserver.calc(5, 7));
         final TestRemoteController controlClient = remoteClient.getControl().getControlClient(TestRemoteController.class);
         Assertions.assertNotNull(controlClient);
-        Assertions.assertEquals(5 * 7, controlClient.calc(5, 7));
 
         remotePushObserver.addNameListener(nameChangeCounter::incrementAndGet);
         remotePushObserver.addValueListener(valueChangeCounter::incrementAndGet);
