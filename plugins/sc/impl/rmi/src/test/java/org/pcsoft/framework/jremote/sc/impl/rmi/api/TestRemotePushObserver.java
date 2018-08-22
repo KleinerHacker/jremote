@@ -17,4 +17,16 @@ public interface TestRemotePushObserver {
 
     @PushObserverListener(modelClass = TestRemotePushModel.class, property = "value")
     void removeValueListener(PushChangedListener listener);
+
+    @PushObserverListener(modelClass = TestRemotePushModel.class, property = "words")
+    void addWordListListener(PushChangedListener listener);
+
+    @PushObserverListener(modelClass = TestRemotePushModel.class, property = "words")
+    void removeWordListListener(PushChangedListener listener);
+
+    @PushObserverListener(modelClass = TestRemotePushModel.class, property = "sizes")
+    void addSizeListListener(PushChangedListener listener);
+
+    @PushObserverListener(modelClass = TestRemotePushModel.class, property = "sizes")
+    void removeSizeListListener(PushChangedListener listener);
 }

@@ -5,15 +5,11 @@ package org.pcsoft.framework.jremote.api.type;
  */
 public enum PushMethodType {
     /**
-     * A simple field is pushed / updated
+     * A default field is pushed / updated (contains complete list and array updates)
      */
-    Simple,
+    Default,
     /**
-     * A single item of a list is pushed / updated
+     * A single item of a list / array is pushed / updated
      */
-    SingleListItem,
-    /**
-     * The complete list is pushed / updated
-     */
-    CompleteList
+    SingleListItem
 }

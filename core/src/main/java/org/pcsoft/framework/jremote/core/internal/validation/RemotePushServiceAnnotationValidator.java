@@ -43,8 +43,7 @@ final class RemotePushServiceAnnotationValidator extends SimpleAnnotationValidat
         assert push != null;
 
         switch (push.type()) {
-            case Simple:
-            case CompleteList:
+            case Default:
                 if (method.getParameterCount() != 1 || method.getReturnType() != void.class)
                     throw new JRemoteAnnotationException(String.format("[Remote Push Service]: Method signature wrong: need a one-parameter method with a void return value: %s#%s",
                             method.getDeclaringClass().getName(), method.getName()));

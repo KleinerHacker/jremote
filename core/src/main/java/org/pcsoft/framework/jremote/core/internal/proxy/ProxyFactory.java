@@ -7,6 +7,7 @@ import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public final class ProxyFactory {
 
@@ -22,8 +23,8 @@ public final class ProxyFactory {
         return RemoteEventReceiverProxyBuilder.getInstance().buildProxy(clazz, listenerMap);
     }
 
-    public static <T> T buildRemotePushServiceProxy(Class<T> clazz, Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangedListener>> listenerMap) {
-        return RemotePushServiceProxyBuilder.getInstance().buildProxy(clazz, new RemotePushServiceProxyBuilder.DataHolder(dataMap, listenerMap));
+    public static <T> T buildRemotePushServiceProxy(Class<T> clazz, Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangedListener>> listenerMap, Supplier<Class<?>[]> modelClassesSupplier) {
+        return RemotePushServiceProxyBuilder.getInstance().buildProxy(clazz, new RemotePushServiceProxyBuilder.DataHolder(dataMap, listenerMap, modelClassesSupplier));
     }
 
     public static <T> T buildRemoteEventServiceProxy(Class<T> clazz, Map<MethodKey, List<EventReceivedListener>> listenerMap) {

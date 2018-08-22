@@ -75,7 +75,7 @@ public final class ClientProxyManager {
         if (pushServiceProxyMap.containsKey(clazz))
             throw new IllegalStateException("Remote push service class already added: " + clazz.getName());
 
-        final T proxy = ProxyFactory.buildRemotePushServiceProxy(clazz, propertyValueMap, pushObserverListenerMap);
+        final T proxy = ProxyFactory.buildRemotePushServiceProxy(clazz, propertyValueMap, pushObserverListenerMap, this::getRemotePushModelClasses);
         pushServiceProxyMap.put(clazz, proxy);
     }
 

@@ -56,7 +56,12 @@ abstract class ProxyBuilder<A extends Annotation, D> {
                 assertMethod(annotation, clazz, method, args);
             }
 
-            return invokeMethod(annotation, data, clazz, method, args);
+            try {
+                return invokeMethod(annotation, data, clazz, method, args);
+            } catch (Throwable e) {
+                LOGGER.error("Invocation exception in proxy " + getProxyName() + "!", e);
+                throw e;
+            }
         });
     }
 

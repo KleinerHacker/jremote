@@ -1,5 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.pcsoft.framework.jremote.api.PushModelProperty;
 import org.pcsoft.framework.jremote.api.RemotePushModel;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
@@ -43,6 +44,20 @@ final class RemotePushModelProxyBuilder extends ProxyBuilder<PushModelProperty, 
                 return 0.0;
             if (method.getReturnType() == boolean.class)
                 return false;
+
+            return null;
+        }
+
+        if (value.getClass().isArray()) {
+            if (method.getReturnType().getComponentType() == byte.class ||
+                    method.getReturnType().getComponentType() == short.class ||
+                    method.getReturnType().getComponentType() == int.class ||
+                    method.getReturnType().getComponentType() == long.class ||
+                    method.getReturnType().getComponentType() == float.class ||
+                    method.getReturnType().getComponentType() == double.class ||
+                    method.getReturnType().getComponentType() == boolean.class ||
+                    method.getReturnType().getComponentType() == char.class)
+                return ArrayUtils.toPrimitive(value);
         }
 
         return value;

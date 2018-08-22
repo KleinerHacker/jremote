@@ -144,9 +144,8 @@ public final class PushModelHandler {
          */
         private void invoke(Object value) {
             switch (push.type()) {
-                case Simple:
-                case CompleteList:
-                    pushToSimpleField(pushClient, pushMethod, value);
+                case Default:
+                    pushToDefaultField(pushClient, pushMethod, value);
                     break;
                 case SingleListItem:
                     //Not supported for initial pushing
@@ -156,7 +155,7 @@ public final class PushModelHandler {
             }
         }
 
-        private void pushToSimpleField(Object pushClient, Method pushMethod, Object value) {
+        private void pushToDefaultField(Object pushClient, Method pushMethod, Object value) {
             try {
                 pushMethod.invoke(pushClient, value);
             } catch (IllegalAccessException e) {

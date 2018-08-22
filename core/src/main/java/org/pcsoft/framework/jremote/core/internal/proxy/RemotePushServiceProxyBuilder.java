@@ -2,7 +2,9 @@ package org.pcsoft.framework.jremote.core.internal.proxy;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.pcsoft.framework.jremote.api.Push;
+import org.pcsoft.framework.jremote.api.PushModelProperty;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
+import org.pcsoft.framework.jremote.api.exception.JRemoteExecutionException;
 import org.pcsoft.framework.jremote.api.type.PushChangedListener;
 import org.pcsoft.framework.jremote.api.type.PushItemUpdate;
 import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
@@ -10,10 +12,13 @@ import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushServiceProxyBuilder.DataHolder> {
     private static final RemotePushServiceProxyBuilder INSTANCE = new RemotePushServiceProxyBuilder();
@@ -32,8 +37,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
     @Override
     protected void assertMethod(Push push, Class<?> clazz, Method method, Object[] args) {
         switch (push.type()) {
-            case Simple:
-            case CompleteList:
+            case Default:
                 assert method.getParameterCount() == 1 && method.getReturnType() == void.class;
                 break;
             case SingleListItem:
@@ -47,7 +51,8 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
     @Override
     protected Object invokeMethod(Push push, DataHolder data, Class<?> clazz, Method method, Object[] args) {
         final MethodKey key = new MethodKey(push.modelClass(), push.property());
-        updateData(push, key, args, data.getDataMap());
+        final Class<?> targetType = findTypeFor(push, method, data.getRemoteModelClassesSupplier().get());
+        updateData(push, key, targetType, args, data.getDataMap());
         fireChange(key, data.getListenerMap());
 
         return null;
@@ -56,6 +61,19 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
     @Override
     protected String getProxyName() {
         return "Remote Push Service";
+    }
+
+    private static Class<?> findTypeFor(Push push, Method pushMethod, Class<?>[] modelClasses) {
+        final Method propertyMethod = Arrays.stream(modelClasses)
+                .filter(c -> c == push.modelClass())
+                .map(Class::getDeclaredMethods)
+                .flatMap(Stream::of)
+                .filter(m -> m.getAnnotation(PushModelProperty.class) != null)
+                .filter(m -> m.getAnnotation(PushModelProperty.class).value().equals(push.property()))
+                .findFirst().orElseThrow(() -> new JRemoteAnnotationException(String.format("Unable to find push target %s > %s: %s#%s",
+                        push.modelClass().getName(), push.property(), pushMethod.getDeclaringClass().getName(), pushMethod.getName())));
+
+        return propertyMethod.getReturnType();
     }
 
     private static void fireChange(MethodKey key, Map<MethodKey, List<PushChangedListener>> listenerMap) {
@@ -69,31 +87,54 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
         }
     }
 
-    private static void updateData(Push push, MethodKey key, Object[] args, Map<MethodKey, Object> dataMap) {
+    private static void updateData(Push push, MethodKey key, Class<?> targetType, Object[] args, Map<MethodKey, Object> dataMap) {
         LOGGER.debug("> Setup value into model for " + key.toString(false));
         switch (push.type()) {
-            case Simple:
-                handleSimplePush(dataMap, args[0], key);
-                break;
-            case CompleteList:
-                if (dataMap.get(key) instanceof Collection) {
+            case Default:
+                if (Collection.class.isAssignableFrom(targetType)) {
+                    if (!dataMap.containsKey(key)) {
+                        try {
+                            dataMap.put(key, createCollection(targetType));
+                        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+                            throw new JRemoteAnnotationException(String.format("Unable to find a public empty constructor or class is abstract for %s, see %s > %s",
+                                    targetType.getName(), push.modelClass().getName(), push.property()), e);
+                        } catch (InvocationTargetException e) {
+                            throw new JRemoteExecutionException(String.format("Unable to create new instance (throws exception) of collection %s, see %s > %s",
+                                    targetType.getName(), push.modelClass().getName(), push.property()), e);
+                        }
+                    }
                     handleCompleteCollectionPush((Collection) dataMap.get(key), args[0]);
-                } else if (dataMap.get(key).getClass().isArray()) {
+                } else if (targetType.isArray()) {
+                    if (!dataMap.containsKey(key)) {
+                        dataMap.put(key, Array.newInstance(Object.class, 0));
+                    }
                     dataMap.put(key, handleCompleteArrayPush((Object[]) dataMap.get(key), args[0]));
-                } else
-                    throw new JRemoteAnnotationException("List pushes only allowed for collections and arrays: " + push.modelClass().getName() + " > " + push.property());
+                } else {
+                    handleDefaultPush(dataMap, args[0], key);
+                }
                 break;
             case SingleListItem:
                 if (dataMap.get(key) instanceof Collection) {
                     handleSingleCollectionItemPush((Collection) dataMap.get(key), args[0], (PushItemUpdate) args[1], push);
                 } else if (dataMap.get(key).getClass().isArray()) {
-                    dataMap.put(key, handleSingleArrayItemPush((Object[])dataMap.get(key), args[0], (PushItemUpdate) args[1], push));
+                    dataMap.put(key, handleSingleArrayItemPush((Object[]) dataMap.get(key), args[0], (PushItemUpdate) args[1], push));
                 } else
                     throw new JRemoteAnnotationException("List pushes only allowed for collections and arrays: " + push.modelClass().getName() + " > " + push.property());
                 break;
             default:
                 throw new RuntimeException();
         }
+    }
+
+    private static Object createCollection(Class<?> targetType) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        if (!Modifier.isAbstract(targetType.getModifiers()) && !Modifier.isInterface(targetType.getModifiers()))
+            return targetType.getConstructor().newInstance();
+        else if (List.class.isAssignableFrom(targetType))
+            return new ArrayList();
+        else if (Set.class.isAssignableFrom(targetType))
+            return new HashSet();
+        else
+            throw new InstantiationException("Unsupported collection type: " + targetType.getName() + ", is abstract or interface");
     }
 
     private static Object[] handleSingleArrayItemPush(Object[] array, Object item, PushItemUpdate itemUpdate, Push push) {
@@ -115,6 +156,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
         if (index < 0) {
             LOGGER.warn("Unable to find item in array to update model: " + push.modelClass().getName() + " > " + push.property());
             LOGGER.warn("Ignore update");
+
             return;
         }
 
@@ -122,6 +164,27 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
     }
 
     private static Object[] handleCompleteArrayPush(Object[] array, Object item) {
+        if (!item.getClass().isArray())
+            throw new JRemoteExecutionException("Wrong object item received: " + item + ", expected is array");
+
+        if (item.getClass().getComponentType() == byte.class) {
+            return ArrayUtils.toObject((byte[]) item);
+        } else if (item.getClass().getComponentType() == short.class) {
+            return ArrayUtils.toObject((short[]) item);
+        } else if (item.getClass().getComponentType() == int.class) {
+            return ArrayUtils.toObject((int[]) item);
+        } else if (item.getClass().getComponentType() == long.class) {
+            return ArrayUtils.toObject((long[]) item);
+        } else if (item.getClass().getComponentType() == double.class) {
+            return ArrayUtils.toObject((double[]) item);
+        } else if (item.getClass().getComponentType() == float.class) {
+            return ArrayUtils.toObject((float[]) item);
+        } else if (item.getClass().getComponentType() == boolean.class) {
+            return ArrayUtils.toObject((boolean[]) item);
+        } else if (item.getClass().getComponentType() == char.class) {
+            return ArrayUtils.toObject((char[]) item);
+        }
+
         return (Object[]) item;
     }
 
@@ -148,10 +211,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
             final int index = ((List) collection).indexOf(item);
             if (index < 0) {
                 LOGGER.warn("Unable to find item in list to update model: " + push.modelClass().getName() + " > " + push.property());
-                LOGGER.warn("Use default algorithm instead");
-
-                collection.remove(item);
-                collection.add(item);
+                LOGGER.warn("Ignore update");
 
                 return;
             }
@@ -169,7 +229,7 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
         collection.addAll((Collection) item);
     }
 
-    private static void handleSimplePush(Map<MethodKey, Object> dataMap, Object data, MethodKey key) {
+    private static void handleDefaultPush(Map<MethodKey, Object> dataMap, Object data, MethodKey key) {
         dataMap.put(key, data);
     }
 
@@ -180,10 +240,12 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
     static final class DataHolder {
         private final Map<MethodKey, Object> dataMap;
         private final Map<MethodKey, List<PushChangedListener>> listenerMap;
+        private final Supplier<Class<?>[]> remoteModelClassesSupplier;
 
-        public DataHolder(Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangedListener>> listenerMap) {
+        public DataHolder(Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangedListener>> listenerMap, Supplier<Class<?>[]> remoteModelClassesSupplier) {
             this.dataMap = dataMap;
             this.listenerMap = listenerMap;
+            this.remoteModelClassesSupplier = remoteModelClassesSupplier;
         }
 
         public Map<MethodKey, Object> getDataMap() {
@@ -192,6 +254,10 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
 
         public Map<MethodKey, List<PushChangedListener>> getListenerMap() {
             return listenerMap;
+        }
+
+        public Supplier<Class<?>[]> getRemoteModelClassesSupplier() {
+            return remoteModelClassesSupplier;
         }
     }
 }

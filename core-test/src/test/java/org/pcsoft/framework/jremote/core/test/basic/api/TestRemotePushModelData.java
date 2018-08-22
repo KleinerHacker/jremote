@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.sc.impl.rmi.api;
+package org.pcsoft.framework.jremote.core.test.basic.api;
 
 import java.util.List;
 

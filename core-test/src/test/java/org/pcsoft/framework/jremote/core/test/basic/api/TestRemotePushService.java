@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.sc.impl.rmi.api;
+package org.pcsoft.framework.jremote.core.test.basic.api;
 
 import org.pcsoft.framework.jremote.api.Push;
 import org.pcsoft.framework.jremote.api.RemotePushService;
@@ -28,4 +28,9 @@ public interface TestRemotePushService extends Remote {
 
     @Push(modelClass = TestRemotePushModel.class, property = "sizes", type = PushMethodType.SingleListItem)
     void pushSize(int size, PushItemUpdate update) throws RemoteException;
+
+    //Default test only
+    default int calc(int x, int y) throws RemoteException {
+        return x - y;
+    }
 }

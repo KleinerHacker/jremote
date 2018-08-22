@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.core.test.api;
+package org.pcsoft.framework.jremote.core.test.basic.api;
 
 import org.pcsoft.framework.jremote.api.EventReceiverListener;
 import org.pcsoft.framework.jremote.api.RemoteEventReceiver;

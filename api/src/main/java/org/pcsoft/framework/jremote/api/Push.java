@@ -32,5 +32,5 @@ public @interface Push {
      *
      * @return
      */
-    PushMethodType type() default PushMethodType.Simple;
+    PushMethodType type() default PushMethodType.Default;
 }
