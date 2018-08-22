@@ -1,5 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.pcsoft.framework.jremote.api.Push;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.type.PushChangedListener;
@@ -75,25 +76,63 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
                 handleSimplePush(dataMap, args[0], key);
                 break;
             case CompleteList:
-                handleCompleteListPush((Collection) dataMap.get(key), args[0]);
+                if (dataMap.get(key) instanceof Collection) {
+                    handleCompleteCollectionPush((Collection) dataMap.get(key), args[0]);
+                } else if (dataMap.get(key).getClass().isArray()) {
+                    dataMap.put(key, handleCompleteArrayPush((Object[]) dataMap.get(key), args[0]));
+                } else
+                    throw new JRemoteAnnotationException("List pushes only allowed for collections and arrays: " + push.modelClass().getName() + " > " + push.property());
                 break;
             case SingleListItem:
-                handleSingleListItemPush((Collection) dataMap.get(key), args[0], (PushItemUpdate) args[1]);
+                if (dataMap.get(key) instanceof Collection) {
+                    handleSingleCollectionItemPush((Collection) dataMap.get(key), args[0], (PushItemUpdate) args[1], push);
+                } else if (dataMap.get(key).getClass().isArray()) {
+                    dataMap.put(key, handleSingleArrayItemPush((Object[])dataMap.get(key), args[0], (PushItemUpdate) args[1], push));
+                } else
+                    throw new JRemoteAnnotationException("List pushes only allowed for collections and arrays: " + push.modelClass().getName() + " > " + push.property());
                 break;
             default:
                 throw new RuntimeException();
         }
     }
 
+    private static Object[] handleSingleArrayItemPush(Object[] array, Object item, PushItemUpdate itemUpdate, Push push) {
+        switch (itemUpdate) {
+            case Add:
+                return ArrayUtils.add(array, item);
+            case Update:
+                handleArrayUpdate(array, item, push);
+                return array;
+            case Remove:
+                return ArrayUtils.remove(array, ArrayUtils.indexOf(array, item));
+            default:
+                throw new RuntimeException();
+        }
+    }
+
+    private static void handleArrayUpdate(Object[] array, Object item, Push push) {
+        final int index = ArrayUtils.indexOf(array, item);
+        if (index < 0) {
+            LOGGER.warn("Unable to find item in array to update model: " + push.modelClass().getName() + " > " + push.property());
+            LOGGER.warn("Ignore update");
+            return;
+        }
+
+        array[index] = item;
+    }
+
+    private static Object[] handleCompleteArrayPush(Object[] array, Object item) {
+        return (Object[]) item;
+    }
+
     @SuppressWarnings("unchecked")
-    private static void handleSingleListItemPush(Collection collection, Object item, PushItemUpdate itemUpdate) {
+    private static void handleSingleCollectionItemPush(Collection collection, Object item, PushItemUpdate itemUpdate, Push push) {
         switch (itemUpdate) {
             case Add:
                 collection.add(item);
                 break;
             case Update:
-                collection.remove(item);
-                collection.add(item);
+                handleCollectionUpdate(collection, item, push);
                 break;
             case Remove:
                 collection.remove(item);
@@ -104,7 +143,28 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
     }
 
     @SuppressWarnings("unchecked")
-    private static void handleCompleteListPush(Collection collection, Object item) {
+    private static void handleCollectionUpdate(Collection collection, Object item, Push push) {
+        if (collection instanceof List) {
+            final int index = ((List) collection).indexOf(item);
+            if (index < 0) {
+                LOGGER.warn("Unable to find item in list to update model: " + push.modelClass().getName() + " > " + push.property());
+                LOGGER.warn("Use default algorithm instead");
+
+                collection.remove(item);
+                collection.add(item);
+
+                return;
+            }
+            collection.remove(item);
+            ((List) collection).add(index, item);
+        } else {
+            collection.remove(item);
+            collection.add(item);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void handleCompleteCollectionPush(Collection collection, Object item) {
         collection.clear();
         collection.addAll((Collection) item);
     }

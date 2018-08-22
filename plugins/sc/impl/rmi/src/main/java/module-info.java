@@ -6,7 +6,7 @@ module pcsoft.jremote.io.impl.rmi {
     requires java.rmi;
     requires org.slf4j;
     requires pcsoft.jremote.commons;
-    requires commons.lang;
+    requires org.apache.commons.lang3;
 
     provides ServiceClientPlugin with RmiPlugin;
 }

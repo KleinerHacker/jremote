@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.sc.impl.rmi;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.pcsoft.framework.jremote.commons.AnnotationUtils;
 import org.pcsoft.framework.jremote.commons.ReflectionUtils;
 import org.pcsoft.framework.jremote.sc.api.ServiceBase;
