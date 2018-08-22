@@ -1,5 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.registry;
 
+import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 import org.pcsoft.framework.jremote.sc.api.Client;
 import org.pcsoft.framework.jremote.sc.api.Service;
 import org.pcsoft.framework.jremote.sc.api.ServiceClientPlugin;
@@ -38,9 +39,13 @@ public final class ServerClientPluginRegistry extends PluginRegistry {
         serviceClass = serviceClientPlugin.getServiceClass();
         clientClass = serviceClientPlugin.getClientClass();
 
-        //TODO: Validate
         registrationServiceClass = serviceClientPlugin.getRegistrationServiceClass();
+        Validator.validateForRemoteService(registrationServiceClass);
+        Validator.validateForRemoteRegistrationService(registrationServiceClass);
+
         keepAliveServiceClass = serviceClientPlugin.getKeepAliveServiceClass();
+        Validator.validateForRemoteService(keepAliveServiceClass);
+        Validator.validateForRemoteKeepAliveService(keepAliveServiceClass);
     }
 
     public Service createService() {

@@ -5,6 +5,7 @@ import org.pcsoft.framework.jremote.api.PushModelProperty;
 import org.pcsoft.framework.jremote.api.RemotePushModel;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.exception.JRemoteExecutionException;
+import org.pcsoft.framework.jremote.api.type.PushMethodType;
 import org.pcsoft.framework.jremote.commons.AnnotationUtils;
 import org.pcsoft.framework.jremote.commons.ReflectionUtils;
 import org.pcsoft.framework.jremote.core.Client;
@@ -97,6 +98,7 @@ public final class PushModelHandler {
                 .flatMap(Stream::of)
                 .filter(m -> m.getAnnotation(Push.class) != null)
                 .filter(m -> m.getAnnotation(Push.class).property().equals(modelProperty.value()) && m.getAnnotation(Push.class).modelClass() == propertyMethod.getDeclaringClass())
+                .filter(m -> m.getAnnotation(Push.class).type() != PushMethodType.SingleListItem)
                 .findFirst().orElse(null);
         if (pushMethod == null) {
             LOGGER.warn("Unable to find any push method for model property " + modelProperty.value() + " (" + propertyMethod.getDeclaringClass().getName() + "#" + propertyMethod.getName() + ")");
@@ -147,8 +149,8 @@ public final class PushModelHandler {
                     pushToSimpleField(pushClient, pushMethod, value);
                     break;
                 case SingleListItem:
-                    //TODO
-                    break;
+                    //Not supported for initial pushing
+                    return;
                 default:
                     throw new RuntimeException();
             }

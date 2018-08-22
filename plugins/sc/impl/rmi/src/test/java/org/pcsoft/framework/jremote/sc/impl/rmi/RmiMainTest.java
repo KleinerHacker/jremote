@@ -76,7 +76,6 @@ public class RmiMainTest {
             logCounter.incrementAndGet();
         });
 
-        //TODO: Move values on registration to client
         Assertions.assertEquals("Initial", remotePushModel.getName());
         Assertions.assertEquals(-3, remotePushModel.getValue());
 
