@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * Handler to push all model data to client with given values (from implementation)
@@ -26,17 +28,19 @@ public final class PushModelHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(PushModelHandler.class);
 
     private final Object model;
+    private final Supplier<Class<?>[]> pushClassesFunc;
 
     /**
      * Creates handler
      *
      * @param model Implementation of a {@link RemotePushModel} with values to push to client
      */
-    public PushModelHandler(Object model) {
+    public PushModelHandler(Object model, Supplier<Class<?>[]> pushClassesFunc) {
         if (ReflectionUtils.findInterfaces(model.getClass(), AnnotationUtils::isRemoteModel).isEmpty())
             throw new JRemoteAnnotationException("Given object is not a remote model: " + model.getClass().getName());
 
         this.model = model;
+        this.pushClassesFunc = pushClassesFunc;
     }
 
     /**
@@ -87,27 +91,26 @@ public final class PushModelHandler {
      */
     private PushInvoke createPushInvoke(final Client client, final PushModelProperty modelProperty, final Method propertyMethod,
                                         final Map<Class<?>, Object> pushClientProxyMap) {
-        if (!pushClientProxyMap.containsKey(modelProperty.sourcePushClass())) {
-            final Object proxy = ProxyFactory.buildRemoteClientProxy(modelProperty.sourcePushClass(), client.getHost(), client.getPort());
-            pushClientProxyMap.put(modelProperty.sourcePushClass(), proxy);
-        }
-
-        //Search for push client (see annotation value)
-        final Object pushClient = pushClientProxyMap.get(modelProperty.sourcePushClass());
-        if (pushClient == null) {
-            LOGGER.warn("Unable to find push client for " + modelProperty.sourcePushClass() + ", ignore model data push");
-            return null;
-        }
-        //Find push method, based on push class
-        final Method pushMethod = Arrays.stream(modelProperty.sourcePushClass().getDeclaredMethods())
-                .filter(m -> m.getName().equals(modelProperty.sourcePushMethod()))
+        //Search for fit push method via push annotation
+        final Method pushMethod = Arrays.stream(pushClassesFunc.get())
+                .map(Class::getDeclaredMethods)
+                .flatMap(Stream::of)
+                .filter(m -> m.getAnnotation(Push.class) != null)
+                .filter(m -> m.getAnnotation(Push.class).property().equals(modelProperty.value()) && m.getAnnotation(Push.class).modelClass() == propertyMethod.getDeclaringClass())
                 .findFirst().orElse(null);
         if (pushMethod == null) {
-            LOGGER.warn(String.format("Unable to find push method %s#%s, defined in %s#%s",
-                    modelProperty.sourcePushClass().getName(), modelProperty.sourcePushMethod(),
-                    propertyMethod.getDeclaringClass().getName(), propertyMethod.getName()));
+            LOGGER.warn("Unable to find any push method for model property " + modelProperty.value() + " (" + propertyMethod.getDeclaringClass().getName() + "#" + propertyMethod.getName() + ")");
             return null;
         }
+        final Class<?> pushClass = pushMethod.getDeclaringClass();
+
+        //Create new push proxy for single client, if not exists
+        if (!pushClientProxyMap.containsKey(pushClass)) {
+            final Object proxy = ProxyFactory.buildRemoteClientProxy(pushClass, client.getHost(), client.getPort());
+            pushClientProxyMap.put(pushClass, proxy);
+        }
+        final Object pushClient = pushClientProxyMap.get(pushClass);
+
         //Extract push annotation
         final Push push = pushMethod.getAnnotation(Push.class);
         assert push != null;

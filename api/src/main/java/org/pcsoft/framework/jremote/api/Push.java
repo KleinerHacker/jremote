@@ -16,6 +16,18 @@ import java.lang.annotation.Target;
 @RemoteMethod
 public @interface Push {
     /**
+     * The name of the {@link RemotePushModel} property the observer listener listen to, see {@link PushModelProperty#value()}
+     * @return
+     */
+    String property();
+
+    /**
+     * The class of the {@link RemotePushModel} within the {@link #property()} the observer listener listen to, see {@link PushModelProperty}
+     * @return
+     */
+    Class<?> modelClass();
+
+    /**
      * Type of push update, see {@link PushMethodType} for more information.
      *
      * @return

@@ -34,7 +34,7 @@ public class RmiMainTest {
                 .withRemotePushModel(TestRemotePushModel.class)
                 .withRemotePushObserver(TestRemotePushObserver.class)
                 .withRemotePushService(TestRemotePushService.class)
-                .withRemoteEventObserver(TestRemoteEventObserver.class)
+                .withRemoteEventObserver(TestRemoteEventReceiver.class)
                 .withRemoteEventService(TestRemoteEventService.class)
                 .withRemoteControlClient(TestRemoteController.class)
                 .build();
@@ -49,6 +49,8 @@ public class RmiMainTest {
     public void done() throws Exception {
         remoteClient.close();
         remoteServer.close();
+
+        Thread.sleep(1000);
     }
 
     @Test
@@ -62,7 +64,7 @@ public class RmiMainTest {
         Assertions.assertNotNull(remotePushModel);
         final TestRemotePushObserver remotePushObserver = remoteClient.getData().getRemotePushObserver(TestRemotePushObserver.class);
         Assertions.assertNotNull(remotePushObserver);
-        final TestRemoteEventObserver remoteEventObserver = remoteClient.getData().getRemoteEventObserver(TestRemoteEventObserver.class);
+        final TestRemoteEventReceiver remoteEventObserver = remoteClient.getData().getRemoteEventObserver(TestRemoteEventReceiver.class);
         Assertions.assertNotNull(remoteEventObserver);
         final TestRemoteController controlClient = remoteClient.getControl().getControlClient(TestRemoteController.class);
         Assertions.assertNotNull(controlClient);

@@ -4,19 +4,19 @@ import java.util.Objects;
 
 public final class MethodKey {
     private final Class<?> clazz;
-    private final String method;
+    private final String identifier;
 
-    public MethodKey(Class<?> clazz, String method) {
+    public MethodKey(Class<?> clazz, String identifier) {
         this.clazz = clazz;
-        this.method = method;
+        this.identifier = identifier;
     }
 
     public Class<?> getClazz() {
         return clazz;
     }
 
-    public String getMethod() {
-        return method;
+    public String getIdentifier() {
+        return identifier;
     }
 
     @Override
@@ -25,22 +25,22 @@ public final class MethodKey {
         if (o == null || getClass() != o.getClass()) return false;
         MethodKey that = (MethodKey) o;
         return Objects.equals(clazz, that.clazz) &&
-                Objects.equals(method, that.method);
+                Objects.equals(identifier, that.identifier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clazz, method);
+        return Objects.hash(clazz, identifier);
     }
 
     public String toString(boolean full) {
         if (full)
             return "MethodKey{" +
                     "clazz=" + clazz +
-                    ", method='" + method + '\'' +
+                    ", identifier='" + identifier + '\'' +
                     '}';
 
-        return clazz.getName() + "#" + method;
+        return clazz.getName() + "#" + identifier;
     }
 
     @Override

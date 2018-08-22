@@ -34,7 +34,7 @@ public class MainTest {
                 .withRemotePushModel(TestRemotePushModel.class)
                 .withRemotePushObserver(TestRemotePushObserver.class)
                 .withRemotePushService(TestRemotePushService.class)
-                .withRemoteEventObserver(TestRemoteEventObserver.class)
+                .withRemoteEventObserver(TestRemoteEventReceiver.class)
                 .withRemoteEventService(TestRemoteEventService.class)
                 .withRemoteControlClient(TestRemoteController.class)
                 .build();
@@ -64,7 +64,7 @@ public class MainTest {
         final TestRemotePushObserver remotePushObserver = remoteClient.getData().getRemotePushObserver(TestRemotePushObserver.class);
         Assertions.assertNotNull(remotePushObserver);
         Assertions.assertEquals((int) Math.pow(5 + 7, 2), remotePushObserver.calc(5, 7));
-        final TestRemoteEventObserver remoteEventObserver = remoteClient.getData().getRemoteEventObserver(TestRemoteEventObserver.class);
+        final TestRemoteEventReceiver remoteEventObserver = remoteClient.getData().getRemoteEventObserver(TestRemoteEventReceiver.class);
         Assertions.assertNotNull(remoteEventObserver);
         Assertions.assertEquals((int) Math.pow(5 + 7, 3), remoteEventObserver.calc(5, 7));
         final TestRemoteController controlClient = remoteClient.getControl().getControlClient(TestRemoteController.class);

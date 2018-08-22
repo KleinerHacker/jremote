@@ -6,7 +6,7 @@ package org.pcsoft.framework.jremote.api.type;
  * Method with this parameter must be annotated with {@link org.pcsoft.framework.jremote.api.PushObserverListener}.
  */
 @FunctionalInterface
-public interface PushChangeListener extends ChangeListener {
+public interface PushChangedListener extends RemoteListener {
     /**
      * Is called if the linked value has changed, see {@link org.pcsoft.framework.jremote.api.PushObserverListener}
      */

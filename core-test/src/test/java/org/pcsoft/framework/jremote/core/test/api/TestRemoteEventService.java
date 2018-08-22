@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 
 @RemoteEventService
 public interface TestRemoteEventService extends Remote {
-    @Event
+    @Event(eventClass = TestRemoteEventReceiver.class, event = "log")
     void fireLog(String msg) throws RemoteException;
 
     default int calc(int x, int y) throws RemoteException {

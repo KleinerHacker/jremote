@@ -2,7 +2,7 @@ package org.pcsoft.framework.jremote.core.internal.proxy;
 
 import org.pcsoft.framework.jremote.api.Event;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
-import org.pcsoft.framework.jremote.api.type.EventChangeListener;
+import org.pcsoft.framework.jremote.api.type.EventReceivedListener;
 import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-final class RemoteEventServiceProxyBuilder extends ProxyBuilder<Event, Map<MethodKey, List<EventChangeListener>>> {
+final class RemoteEventServiceProxyBuilder extends ProxyBuilder<Event, Map<MethodKey, List<EventReceivedListener>>> {
     private static final RemoteEventServiceProxyBuilder INSTANCE = new RemoteEventServiceProxyBuilder();
     private static final Logger LOGGER = LoggerFactory.getLogger(RemoteEventServiceProxyBuilder.class);
 
@@ -32,8 +32,8 @@ final class RemoteEventServiceProxyBuilder extends ProxyBuilder<Event, Map<Metho
     }
 
     @Override
-    protected Object invokeMethod(Event event, Map<MethodKey, List<EventChangeListener>> listenerMap, Class<?> clazz, Method method, Object[] args) {
-        final MethodKey key = new MethodKey(clazz, method.getName());
+    protected Object invokeMethod(Event event, Map<MethodKey, List<EventReceivedListener>> listenerMap, Class<?> clazz, Method method, Object[] args) {
+        final MethodKey key = new MethodKey(event.eventClass(), event.event());
         fireEvent(key, listenerMap, args[0]);
 
         return null;
@@ -45,10 +45,10 @@ final class RemoteEventServiceProxyBuilder extends ProxyBuilder<Event, Map<Metho
     }
 
     @SuppressWarnings("unchecked")
-    private static void fireEvent(MethodKey key, Map<MethodKey, List<EventChangeListener>> listenerMap, Object value) {
+    private static void fireEvent(MethodKey key, Map<MethodKey, List<EventReceivedListener>> listenerMap, Object value) {
         if (listenerMap.containsKey(key)) {
             LOGGER.debug("> Fire remote event for " + key.toString(false));
-            for (final EventChangeListener listener : listenerMap.get(key)) {
+            for (final EventReceivedListener listener : listenerMap.get(key)) {
                 listener.onChange(value);
             }
         } else {

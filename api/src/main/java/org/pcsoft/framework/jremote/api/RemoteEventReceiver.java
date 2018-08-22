@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Mark an interface as remote observer for observing data via event methods ({@link RemoteEventService}), see {@link EventObserverListener}.
+ * Mark an interface as remote observer for observing data via event methods ({@link RemoteEventService}), see {@link EventReceiverListener}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface RemoteEventObserver {
+public @interface RemoteEventReceiver {
 }

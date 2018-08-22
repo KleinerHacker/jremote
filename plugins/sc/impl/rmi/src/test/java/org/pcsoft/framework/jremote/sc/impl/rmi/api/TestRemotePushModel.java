@@ -5,9 +5,9 @@ import org.pcsoft.framework.jremote.api.RemotePushModel;
 
 @RemotePushModel
 public interface TestRemotePushModel {
-    @PushModelProperty(sourcePushClass = TestRemotePushService.class, sourcePushMethod = "pushName")
+    @PushModelProperty("name")
     String getName();
 
-    @PushModelProperty(sourcePushClass = TestRemotePushService.class, sourcePushMethod = "pushValue")
+    @PushModelProperty("value")
     int getValue();
 }

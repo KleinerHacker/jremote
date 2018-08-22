@@ -1,7 +1,7 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
-import org.pcsoft.framework.jremote.api.type.ChangeListener;
+import org.pcsoft.framework.jremote.api.type.RemoteListener;
 import org.pcsoft.framework.jremote.api.type.ObserverListenerType;
 import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
 
@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-abstract class RemoteObserverProxyBuilder<A extends Annotation, D> extends ProxyBuilder<A, D> {
-    public RemoteObserverProxyBuilder(Class<A> methodAnnotationClass) {
+abstract class RemoteListenerProxyBuilder<A extends Annotation, D> extends ProxyBuilder<A, D> {
+    public RemoteListenerProxyBuilder(Class<A> methodAnnotationClass) {
         super(methodAnnotationClass);
     }
 
-    protected static <T extends ChangeListener> void addOrRemoveListener(Class<?> clazz, Method method, T listener,
+    protected static <T extends RemoteListener> void addOrRemoveListener(Class<?> clazz, Method method, T listener,
                                                                          MethodKey methodKey, ObserverListenerType listenerType,
                                                                          Map<MethodKey, List<T>> listenerMap) {
         final ObserverListenerType type = extractListenerType(clazz, method, listenerType);
@@ -48,7 +48,7 @@ abstract class RemoteObserverProxyBuilder<A extends Annotation, D> extends Proxy
         return type;
     }
 
-    private static <T extends ChangeListener> void doAddListener(MethodKey key, T listener, Map<MethodKey, List<T>> dataMap) {
+    private static <T extends RemoteListener> void doAddListener(MethodKey key, T listener, Map<MethodKey, List<T>> dataMap) {
         if (!dataMap.containsKey(key)) {
             dataMap.put(key, new ArrayList<>());
         }
@@ -56,7 +56,7 @@ abstract class RemoteObserverProxyBuilder<A extends Annotation, D> extends Proxy
         dataMap.get(key).add(listener);
     }
 
-    private static <T extends ChangeListener> void doRemoveListener(MethodKey key, T listener, Map<MethodKey, List<T>> dataMap) {
+    private static <T extends RemoteListener> void doRemoveListener(MethodKey key, T listener, Map<MethodKey, List<T>> dataMap) {
         if (!dataMap.containsKey(key)) {
             dataMap.put(key, new ArrayList<>());
         }

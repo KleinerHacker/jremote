@@ -14,4 +14,15 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @RemoteMethod
 public @interface Event {
+    /**
+     * The name of the event in {@link RemoteEventReceiver} to deliver to, see {@link EventReceiverListener#value()}
+     * @return
+     */
+    String event();
+
+    /**
+     * The class of {@link RemoteEventReceiver} within the {@link #event()} to deliver to, see {@link EventReceiverListener}
+     * @return
+     */
+    Class<?> eventClass();
 }

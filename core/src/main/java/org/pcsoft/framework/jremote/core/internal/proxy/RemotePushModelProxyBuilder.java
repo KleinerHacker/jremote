@@ -31,7 +31,7 @@ final class RemotePushModelProxyBuilder extends ProxyBuilder<PushModelProperty, 
 
     @Override
     protected Object invokeMethod(PushModelProperty modelProperty, Map<MethodKey, Object> dataMap, Class<?> clazz, Method method, Object[] args) {
-        final MethodKey key = new MethodKey(modelProperty.sourcePushClass(), modelProperty.sourcePushMethod());
+        final MethodKey key = new MethodKey(method.getDeclaringClass(), modelProperty.value());
         final Object value = dataMap.get(key);
         if (value == null) {
             if (method.getReturnType() == char.class)

@@ -8,9 +8,9 @@ import java.rmi.RemoteException;
 
 @RemotePushService
 public interface TestRemotePushService extends Remote {
-    @Push
+    @Push(modelClass = TestRemotePushModel.class, property = "name")
     void pushName(String name) throws RemoteException;
 
-    @Push
+    @Push(modelClass = TestRemotePushModel.class, property = "value")
     void pushValue(int value) throws RemoteException;
 }

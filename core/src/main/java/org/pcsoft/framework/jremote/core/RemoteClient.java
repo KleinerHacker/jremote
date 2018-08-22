@@ -175,7 +175,7 @@ public final class RemoteClient implements Remote<ClientState> {
         }
 
         public <T> T getRemoteEventObserver(Class<T> clazz) {
-            return proxyManager.getRemoteEventObserverProxy(clazz);
+            return proxyManager.getRemoteEventReceiverProxy(clazz);
         }
     }
 

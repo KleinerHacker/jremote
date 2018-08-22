@@ -1,7 +1,7 @@
 package org.pcsoft.framework.jremote.core.internal.manager;
 
-import org.pcsoft.framework.jremote.api.type.EventChangeListener;
-import org.pcsoft.framework.jremote.api.type.PushChangeListener;
+import org.pcsoft.framework.jremote.api.type.EventReceivedListener;
+import org.pcsoft.framework.jremote.api.type.PushChangedListener;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
 import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
@@ -23,8 +23,8 @@ public final class ClientProxyManager {
 
     //Data
     private final Map<MethodKey, Object> propertyValueMap = new HashMap<>();
-    private final Map<MethodKey, List<PushChangeListener>> pushObserverListenerMap = new HashMap<>();
-    private final Map<MethodKey, List<EventChangeListener>> eventObserverListenerMap = new HashMap<>();
+    private final Map<MethodKey, List<PushChangedListener>> pushObserverListenerMap = new HashMap<>();
+    private final Map<MethodKey, List<EventReceivedListener>> eventReceiverListenerMap = new HashMap<>();
 
     //region Push Model Proxy
     public <T> void addRemotePushModelProxy(Class<T> clazz) {
@@ -92,24 +92,24 @@ public final class ClientProxyManager {
     }
     //endregion
 
-    //region Event Observer Proxy
-    public <T> void addRemoteEventObserverProxy(Class<T> clazz) {
+    //region Event Receiver Proxy
+    public <T> void addRemoteEventReceiverProxy(Class<T> clazz) {
         if (eventObserverProxyMap.containsKey(clazz))
-            throw new IllegalStateException("Remote event observer class already added: " + clazz.getName());
+            throw new IllegalStateException("Remote event receiver class already added: " + clazz.getName());
 
-        final T proxy = ProxyFactory.buildRemoteEventObserverProxy(clazz, eventObserverListenerMap);
+        final T proxy = ProxyFactory.buildRemoteEventReceiverProxy(clazz, eventReceiverListenerMap);
         eventObserverProxyMap.put(clazz, proxy);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getRemoteEventObserverProxy(Class<T> clazz) {
+    public <T> T getRemoteEventReceiverProxy(Class<T> clazz) {
         if (!eventObserverProxyMap.containsKey(clazz))
-            throw new IllegalStateException("Unknown event push observer class: " + clazz.getName());
+            throw new IllegalStateException("Unknown event push receiver class: " + clazz.getName());
 
         return (T) eventObserverProxyMap.get(clazz);
     }
 
-    public Class[] getRemoteEventObserverClasses() {
+    public Class[] getRemoteEventReceiverClasses() {
         return eventObserverProxyMap.keySet().toArray(new Class[0]);
     }
     //endregion
@@ -119,7 +119,7 @@ public final class ClientProxyManager {
         if (eventServiceProxyMap.containsKey(clazz))
             throw new IllegalStateException("Remote event service class already added: " + clazz.getName());
 
-        final T proxy = ProxyFactory.buildRemoteEventServiceProxy(clazz, eventObserverListenerMap);
+        final T proxy = ProxyFactory.buildRemoteEventServiceProxy(clazz, eventReceiverListenerMap);
         eventServiceProxyMap.put(clazz, proxy);
     }
 

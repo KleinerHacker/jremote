@@ -90,7 +90,7 @@ public final class ServerProxyManager {
             if (pushModelHandlerMap.containsKey(clazz))
             throw new IllegalStateException("Push model data class already added: " + clazz.getName());
 
-        pushModelHandlerMap.put(clazz, new PushModelHandler(impl));
+        pushModelHandlerMap.put(clazz, new PushModelHandler(impl, this::getRemotePushClasses));
     }
 
     @SuppressWarnings("unchecked")

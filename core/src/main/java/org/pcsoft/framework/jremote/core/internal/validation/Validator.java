@@ -28,7 +28,7 @@ public final class Validator {
     }
 
     public static void validateForRemoteEventObserver(Class<?> clazz) throws JRemoteAnnotationException {
-        RemoteEventObserverAnnotationValidator.getInstance().validate(clazz);
+        RemoteEventReceiverAnnotationValidator.getInstance().validate(clazz);
     }
 
     public static void validateForRemoteRegistrationService(Class<?> clazz) throws JRemoteAnnotationException {

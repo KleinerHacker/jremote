@@ -1,7 +1,7 @@
 package org.pcsoft.framework.jremote.core.internal.proxy;
 
-import org.pcsoft.framework.jremote.api.type.EventChangeListener;
-import org.pcsoft.framework.jremote.api.type.PushChangeListener;
+import org.pcsoft.framework.jremote.api.type.EventReceivedListener;
+import org.pcsoft.framework.jremote.api.type.PushChangedListener;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
 import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
 
@@ -14,19 +14,19 @@ public final class ProxyFactory {
         return RemotePushModelProxyBuilder.getInstance().buildProxy(clazz, dataMap);
     }
 
-    public static <T> T buildRemotePushObserverProxy(Class<T> clazz, Map<MethodKey, List<PushChangeListener>> listenerMap) {
+    public static <T> T buildRemotePushObserverProxy(Class<T> clazz, Map<MethodKey, List<PushChangedListener>> listenerMap) {
         return RemotePushObserverProxyBuilder.getInstance().buildProxy(clazz, listenerMap);
     }
 
-    public static <T> T buildRemoteEventObserverProxy(Class<T> clazz, Map<MethodKey, List<EventChangeListener>> listenerMap) {
-        return RemoteEventObserverProxyBuilder.getInstance().buildProxy(clazz, listenerMap);
+    public static <T> T buildRemoteEventReceiverProxy(Class<T> clazz, Map<MethodKey, List<EventReceivedListener>> listenerMap) {
+        return RemoteEventReceiverProxyBuilder.getInstance().buildProxy(clazz, listenerMap);
     }
 
-    public static <T> T buildRemotePushServiceProxy(Class<T> clazz, Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangeListener>> listenerMap) {
+    public static <T> T buildRemotePushServiceProxy(Class<T> clazz, Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangedListener>> listenerMap) {
         return RemotePushServiceProxyBuilder.getInstance().buildProxy(clazz, new RemotePushServiceProxyBuilder.DataHolder(dataMap, listenerMap));
     }
 
-    public static <T> T buildRemoteEventServiceProxy(Class<T> clazz, Map<MethodKey, List<EventChangeListener>> listenerMap) {
+    public static <T> T buildRemoteEventServiceProxy(Class<T> clazz, Map<MethodKey, List<EventReceivedListener>> listenerMap) {
         return RemoteEventServiceProxyBuilder.getInstance().buildProxy(clazz, listenerMap);
     }
 

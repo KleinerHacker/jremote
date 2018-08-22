@@ -12,16 +12,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface PushModelProperty {
     /**
-     * Class of push with method to observe, must be annotated with {@link RemotePushService}
-     *
+     * The name of the model property. Used for referencing from {@link RemotePushService} or {@link RemotePushObserver} class, see {@link Push} or {@link PushObserverListener}
      * @return
      */
-    Class<?> sourcePushClass();
-
-    /**
-     * Method name of push class to observe
-     *
-     * @return
-     */
-    String sourcePushMethod();
+    String value();
 }
