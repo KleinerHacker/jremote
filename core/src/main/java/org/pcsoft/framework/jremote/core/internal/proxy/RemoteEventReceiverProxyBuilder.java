@@ -36,7 +36,7 @@ final class RemoteEventReceiverProxyBuilder extends RemoteListenerProxyBuilder<E
 
     @Override
     protected String getProxyName() {
-        return "Remote Event Observer";
+        return "Remote Event Receiver";
     }
 
     private RemoteEventReceiverProxyBuilder() {

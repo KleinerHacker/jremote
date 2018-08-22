@@ -39,12 +39,12 @@ final class RemoteEventReceiverAnnotationValidator extends SimpleAnnotationValid
 
     @Override
     protected String getServiceName() {
-        return "Remote Event Observer";
+        return "Remote Event Receiver";
     }
 
     @Override
     protected String getServiceMethodName() {
-        return "Event Observer Listener Method";
+        return "Event Receiver Listener Method";
     }
 
     private RemoteEventReceiverAnnotationValidator() {
