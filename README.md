@@ -1,4 +1,4 @@
-# jremote
+# JRemote
 Remote API and IMPL for Java based on REST with multi client support, push support and more
 
 # Overview
@@ -10,3 +10,46 @@ The __server__ gets one or more push or event services to call all clients are c
 
 Internal a client is registered in server (via a _registration service_) and check its own connection via a _keep alive service_ so 
 if the client is disconnected from server it try reconnect automatically. So if you open the client he waits automatically for service.
+
+# Quick Start
+This example shows a hello world code. For more information see wiki pages.
+
+```Java
+@RemoteControlService
+public interface HelloServerControlService {
+  @Control
+  void sayHello(String name);
+}
+```
+This is the control interface to control the service. We want to instruct the server to say _Hello_ with a specified name.
+
+```Java
+@RemotePushModel
+public interface HelloModel {
+  @PushModelProperty("greeting")
+  String getGreeting();
+}
+```
+Now we define a _Remote Model_ where the data from server push is stored into. We store the greeting of the server here.
+
+```Java
+@RemotePushObserver
+public interface HelloObserver {
+  @PushObserverListener(modelClass = HelloModel.class, property = "greeting")
+  void addGreetingListener(PushChangedListener listener);
+  
+  @PushObserverListener(modelClass = HelloModel.class, property = "greeting")
+  void removeGreetingListener(PushChangedListener listener);
+```
+New we define a _Remote Observer_ to listen that the server send greeting to us. The detection for _add_ or _remove_ listener runs
+automatically via prefix _add_ or _remove_. The annotation need the reference to the _Remote Model_ and the property to listen.
+
+```Java
+@RemotePushService
+public interface HelloPushService  {
+  @Push(modelClass = HelloModel.class, property = "greeting")
+  void pushGreeting(String greeting);
+}
+```
+This interface is used for the server to push greetings to the connected clients. The greeting is pushed into the client remote model
+with name _HelloModel_ into property with name _greeting_.
