@@ -113,3 +113,20 @@ public class ServerRunner {
 }
 ```
 In this snipped we create the remote server via a builder, put in all interfaces we need on server side (_HelloPushService_ as client, _HelloControlServiceImpl_ as conrete implementation (no proxy), _HelloModelData_ for initialize _Remote Model_ of a new connected client) and open it. After all we wait until user press enter and we close the service.
+
+```Java
+public class ClientRunner {
+  public static void main(String[] args) {
+    final RemoteClient remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
+                .withRemotePushModel(HelloModel.class)
+                .withRemotePushObserver(HelloObserver.class)
+                .withRemotePushService(HelloPushService.class)
+                .withRemoteControlClient(HelloControlService.class)
+                .build();
+                
+    remoteClient.open();
+    
+    
+  }
+}
+```
