@@ -74,7 +74,6 @@
                         </goals>
                         <phase>package</phase>
                         <configuration>
-                            <skip>true</skip>
                             <attach>true</attach>
                             <additionalOptions>-Xdoclint:none</additionalOptions>
                             <debug>true</debug>
