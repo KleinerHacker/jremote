@@ -16,7 +16,7 @@ This example shows a hello world code. For more information see wiki pages.
 
 ```Java
 @RemoteControlService
-public interface HelloServerControlService {
+public interface HelloControlService {
   @Control
   void sayHello(String name);
 }
@@ -42,7 +42,8 @@ public interface HelloObserver {
   void removeGreetingListener(PushChangedListener listener);
 ```
 New we define a _Remote Observer_ to listen that the server send greeting to us. The detection for _add_ or _remove_ listener runs
-automatically via prefix _add_ or _remove_. The annotation need the reference to the _Remote Model_ and the property to listen.
+automatically via prefix _add_ or _remove_. The annotation need the reference to the _Remote Model_ and the property to listen, here
+_HelloModel_ and _greeting_.
 
 ```Java
 @RemotePushService
@@ -53,3 +54,62 @@ public interface HelloPushService  {
 ```
 This interface is used for the server to push greetings to the connected clients. The greeting is pushed into the client remote model
 with name _HelloModel_ into property with name _greeting_.
+
+```Java
+public class HelloModelData implements HelloModel {
+  private static String lastGreeting = "";
+  
+  public static void setLastGreeting(String greeting) {
+    lastGreeting = greeting;
+  }
+  
+  public static String getLastGreeting() {
+    return lastGreeting;
+  }
+  
+  @Overrite 
+  public String getGreeting() {
+    return lastGreeting;
+  }
+}
+```
+Here we define which data are set if a client is registered on server. The server send this client initial all current data and initialize the client _Remote Model_. In this case we store the last greeting in a static field and return it if a new client is connected. This is optional.
+
+```Java
+public class HelloControlServiceImpl implements HelloControlService {
+  private final Supplier<HelloPushService> pushSupplier;
+  
+  public HelloControlServiceImpl(Supplier<HelloPushService> pushSupplier) {
+    this.pushSupplier = pushSupplier;
+  }
+
+  @Overrite
+  public void sayHello(String name) {
+    HelloModelData.setLastGreeting("Hello, " + name);
+    pushSupplier.get().pushGreeting(HelloModelData.getLastGreeting());
+  }
+}
+```
+At the end we need an implementation for the control service to push the greeting to all clients. In this case we need a supplier cause the proxy is not created if this implementation class is initialized. See below.
+
+```Java
+public class ServerRunner {
+  public static void main(String[] args) {
+    final RemoteServer remoteServer = RemoteServerBuilder.create("localhost", 9998)
+                .withPushClient(HelloPushService.class)
+                .withControlService(new HelloControlServiceImpl(
+                        () -> remoteServer.getBroadcast().getPushClient(HelloPushService.class)
+                ))
+                .withPushModelData(HelloModelData.class)
+                .build();
+    
+    remoteServer.open();
+    
+    // Stay open until enter a key
+    System.console().readLine();
+    
+    remoteServer.close();
+  }
+}
+```
+In this snipped we create the remote server via a builder, put in all interfaces we need on server side (_HelloPushService_ as client, _HelloControlServiceImpl_ as conrete implementation (no proxy), _HelloModelData_ for initialize _Remote Model_ of a new connected client) and open it. After all we wait until user press enter and we close the service.
