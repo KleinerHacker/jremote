@@ -116,7 +116,7 @@ In this snipped we create the remote server via a builder, put in all interfaces
 
 ```Java
 public class ClientRunner {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     final RemoteClient remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
                 .withRemotePushModel(HelloModel.class)
                 .withRemotePushObserver(HelloObserver.class)
@@ -126,7 +126,28 @@ public class ClientRunner {
                 
     remoteClient.open();
     
+    Thread.sleep(1500);
     
+    final HelloModel remotePushModel = remoteClient.getData().getRemotePushModel(HelloModel.class);
+    final HelloObserver remotePushObserver = remoteClient.getData().getRemotePushObserver(HelloObserver.class);
+    final HelloControlService controlClient = remoteClient.getControl().getControlClient(HelloControlService.class);
+    
+    //Register for greetings
+    remotePushObserver.addGreetingListener(() -> System.out.println("New Greeting: " + remotePushModel.getGreeting()));
+    
+    //Print current greeting
+    System.out.println("Current Greeting: " + remotePushModel.getGreeting());
+    
+    //Control server
+    controlClient.sayHello("everybody");
+    
+    // Stay open until enter a key
+    System.console().readLine();
+    
+    remoteClient.close();
   }
 }
 ```
+This is the client implementation. We use a builder, too, and register all needed client side interfaces. Than we get the proxies to add observer listener and control the server. After the user press enter the client is closed.
+
+Thats all.
