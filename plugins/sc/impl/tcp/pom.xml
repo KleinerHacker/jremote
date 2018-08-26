@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>jremote-plugins.sc-impl.tcp</artifactId>
+    <name>${project.groupId} - ${project.artifactId}</name>
     <packaging>jar</packaging>
 
     <build>
