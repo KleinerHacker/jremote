@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.pcsoft.framework</groupId>
+        <groupId>com.github.kleinerhacker</groupId>
         <artifactId>jremote-plugins.np</artifactId>
         <version>0.1.0</version>
     </parent>
