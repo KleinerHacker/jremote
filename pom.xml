@@ -168,6 +168,7 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-resources-plugin</artifactId>
+                        <inherited>false</inherited>
                         <executions>
                             <execution>
                                 <id>copy-doxygen</id>
@@ -225,6 +226,29 @@
                                     <arguments>
                                         <argument>${basedir}/target/doxy.dat</argument>
                                     </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>attach-artifacts</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>attach-artifact</goal>
+                                </goals>
+                                <configuration>
+                                    <artifacts>
+                                        <artifact>
+                                            <file>${basedir}/target/doxygen/jremote.chm</file>
+                                            <type>chm</type>
+                                        </artifact>
+                                    </artifacts>
                                 </configuration>
                             </execution>
                         </executions>
