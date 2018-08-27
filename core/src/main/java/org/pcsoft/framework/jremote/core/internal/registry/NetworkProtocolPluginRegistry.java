@@ -28,7 +28,7 @@ public final class NetworkProtocolPluginRegistry extends PluginRegistry {
     private final Class<?> keepAliveServiceClass;
 
     private NetworkProtocolPluginRegistry() {
-        LOGGER.info("Start loading server client plugins");
+        LOGGER.info("Start loading network protocol plugins");
 
         LOGGER.debug("> Check for found plugins in classpath / module path");
         if (ServiceLoader.load(NetworkProtocolPlugin.class).stream().count() > 1)
@@ -37,7 +37,7 @@ public final class NetworkProtocolPluginRegistry extends PluginRegistry {
         final NetworkProtocolPlugin networkProtocolPlugin = ServiceLoader.load(NetworkProtocolPlugin.class).findFirst().orElse(null);
         if (networkProtocolPlugin == null)
             throw new IllegalStateException("Unable to find any JRemote service client plugin implementation for the Network Protocol API");
-        LOGGER.debug("> Found server client plugin is: " + networkProtocolPlugin.getClass().getName());
+        LOGGER.debug("> Found network protocol plugin is: " + networkProtocolPlugin.getClass().getName());
 
         serviceClass = networkProtocolPlugin.getServiceClass();
         clientClass = networkProtocolPlugin.getClientClass();
@@ -56,7 +56,7 @@ public final class NetworkProtocolPluginRegistry extends PluginRegistry {
      * @return
      */
     public Service createService() {
-        LOGGER.trace("> Create service from server client plugin");
+        LOGGER.trace("> Create service from network protocol plugin");
         try {
             return serviceClass.getConstructor().newInstance();
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -69,7 +69,7 @@ public final class NetworkProtocolPluginRegistry extends PluginRegistry {
      * @return
      */
     public Client createClient() {
-        LOGGER.trace("> Create client from server client plugin");
+        LOGGER.trace("> Create client from network protocol plugin");
         try {
             return clientClass.getConstructor().newInstance();
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
