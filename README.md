@@ -1,5 +1,5 @@
 # JRemote
-Remote API and IMPL for Java based on REST with multi client support, push support and more. For documentation see [JRemote Documentation](https://github.com/KleinerHacker/jremote/releases/download/0.1.0/jremote.chm)
+Remote API and IMPL for Java based on REST with multi client support, push support and more. For documentation see [JRemote Documentation](https://github.com/KleinerHacker/jremote/releases/download/0.1.0/jremote.chm) or [Wiki](https://github.com/KleinerHacker/jremote/wiki)
 
 # Overview
 This API provides a client and a server implementation to communicate between clients and server asynchronious. 
