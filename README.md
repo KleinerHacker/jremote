@@ -150,4 +150,14 @@ public class ClientRunner {
 ```
 This is the client implementation. We use a builder, too, and register all needed client side interfaces. Than we get the proxies to add observer listener and control the server. After the user press enter the client is closed.
 
+To run JRemote you need a network protocol implementation like RMI:
+
+<pre>
+&lt;dependency>
+  &lt;groupId>com.github.kleinerhacker&lt;/groupId>
+  &lt;artifactId>jremote-plugins.np-impl.rmi&lt;/artifactId>
+  &lt;version>0.1.0&lt;/version>
+&lt;/dependency>
+</pre>
+
 Thats all.
