@@ -2,8 +2,8 @@ package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.core.internal.manager.ClientProxyManager;
 import org.pcsoft.framework.jremote.core.internal.processor.KeepAliveProcessor;
-import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
-import org.pcsoft.framework.jremote.sc.api.Service;
+import org.pcsoft.framework.jremote.core.internal.registry.NetworkProtocolPluginRegistry;
+import org.pcsoft.framework.jremote.np.api.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +121,7 @@ public final class RemoteClient implements Remote<ClientState> {
         for (final Class<?> pushClass : proxyManager.getRemotePushClasses()) {
             final Object pushServiceProxy = proxyManager.getRemotePushServiceProxy(pushClass);
 
-            final Service service = ServerClientPluginRegistry.getInstance().createService();
+            final Service service = NetworkProtocolPluginRegistry.getInstance().createService();
             service.setServiceImplementation(pushServiceProxy);
             service.open(host, ownPort);
 
@@ -143,7 +143,7 @@ public final class RemoteClient implements Remote<ClientState> {
         for (final Class<?> pushClass : proxyManager.getRemoteEventClasses()) {
             final Object eventServiceProxy = proxyManager.getRemoteEventServiceProxy(pushClass);
 
-            final Service service = ServerClientPluginRegistry.getInstance().createService();
+            final Service service = NetworkProtocolPluginRegistry.getInstance().createService();
             service.setServiceImplementation(eventServiceProxy);
             service.open(host, ownPort);
 

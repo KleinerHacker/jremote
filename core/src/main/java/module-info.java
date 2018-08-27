@@ -1,4 +1,4 @@
-import org.pcsoft.framework.jremote.sc.api.ServiceClientPlugin;
+import org.pcsoft.framework.jremote.np.api.NetworkProtocolPlugin;
 
 module pcsoft.jremote.core {
     requires pcsoft.jremote.api;
@@ -10,5 +10,5 @@ module pcsoft.jremote.core {
 
     exports org.pcsoft.framework.jremote.core;
 
-    uses ServiceClientPlugin;
+    uses NetworkProtocolPlugin;
 }

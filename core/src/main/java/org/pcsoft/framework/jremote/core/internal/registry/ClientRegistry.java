@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * Registry for connected clients
+ */
 public final class ClientRegistry {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientRegistry.class);
 
@@ -17,6 +20,12 @@ public final class ClientRegistry {
     private final List<Consumer<Client>> clientRegisteredListenerList = new ArrayList<>();
     private final List<Consumer<Client>> clientUnregisteredListenerList = new ArrayList<>();
 
+    /**
+     * Register a new client (this client is connected now)
+     * @param uuid
+     * @param host
+     * @param port
+     */
     public void registerClient(String uuid, String host, int port) {
         LOGGER.info("> Register new client <" + uuid + "> from " + host + ":" + port);
         synchronized (clientMap) {
@@ -26,6 +35,10 @@ public final class ClientRegistry {
         }
     }
 
+    /**
+     * Unregister a known client (this client is disconnected now)
+     * @param uuid
+     */
     public void unregisterClient(String uuid) {
         LOGGER.info("> Unregister client <" + uuid + ">");
         synchronized (clientMap) {
@@ -36,12 +49,21 @@ public final class ClientRegistry {
         }
     }
 
+    /**
+     * Returns all known connected clients
+     * @return
+     */
     public Client[] getClients() {
         synchronized (clientMap) {
             return clientMap.values().toArray(new Client[0]);
         }
     }
 
+    /**
+     * Check that this client is known (also connected)
+     * @param uuid
+     * @return
+     */
     public boolean containsClient(String uuid) {
         synchronized (clientMap) {
             return clientMap.containsKey(uuid);

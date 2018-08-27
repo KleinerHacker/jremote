@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core;
 
-import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
+import org.pcsoft.framework.jremote.core.internal.registry.NetworkProtocolPluginRegistry;
 
 public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
     public static RemoteClientBuilder create(String host, int port, int ownPort) {
@@ -11,8 +11,8 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
 
     private RemoteClientBuilder(String host, int port, int ownPort) {
         remoteClient = new RemoteClient(host, port, ownPort);
-        remoteClient.getProxyManager().setRemoteRegistrationClient(ServerClientPluginRegistry.getInstance().getRegistrationServiceClass(), host, port);
-        remoteClient.getProxyManager().setRemoteKeepAliveClient(ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass(), host, port);
+        remoteClient.getProxyManager().setRemoteRegistrationClient(NetworkProtocolPluginRegistry.getInstance().getRegistrationServiceClass(), host, port);
+        remoteClient.getProxyManager().setRemoteKeepAliveClient(NetworkProtocolPluginRegistry.getInstance().getKeepAliveServiceClass(), host, port);
     }
 
     public final RemoteClientBuilder withRemotePushModel(Class<?>... pushModelClasses) {

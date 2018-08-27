@@ -3,7 +3,7 @@ package org.pcsoft.framework.jremote.core;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.exception.JRemoteExecutionException;
 import org.pcsoft.framework.jremote.commons.ReflectionUtils;
-import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
+import org.pcsoft.framework.jremote.core.internal.registry.NetworkProtocolPluginRegistry;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,10 +21,10 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
     private RemoteServerBuilder(String host, int port) {
         remoteServer = new RemoteServer(host, port);
         remoteServer.getProxyManager().setRemoteRegistrationServiceProxy(
-                ServerClientPluginRegistry.getInstance().getRegistrationServiceClass()
+                NetworkProtocolPluginRegistry.getInstance().getRegistrationServiceClass()
         );
         remoteServer.getProxyManager().setRemoteKeepAliveServiceProxy(
-                ServerClientPluginRegistry.getInstance().getKeepAliveServiceClass()
+                NetworkProtocolPluginRegistry.getInstance().getKeepAliveServiceClass()
         );
     }
 

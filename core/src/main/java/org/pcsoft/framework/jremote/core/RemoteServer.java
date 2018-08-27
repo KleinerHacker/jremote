@@ -2,8 +2,8 @@ package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.core.internal.handler.PushModelHandler;
 import org.pcsoft.framework.jremote.core.internal.manager.ServerProxyManager;
-import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
-import org.pcsoft.framework.jremote.sc.api.Service;
+import org.pcsoft.framework.jremote.core.internal.registry.NetworkProtocolPluginRegistry;
+import org.pcsoft.framework.jremote.np.api.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,7 +136,7 @@ public final class RemoteServer implements Remote<ServerState> {
     private void createAndOpenRegistrationService() throws IOException {
         LOGGER.debug("> Create and open registration service");
 
-        final Service service = ServerClientPluginRegistry.getInstance().createService();
+        final Service service = NetworkProtocolPluginRegistry.getInstance().createService();
         service.setServiceImplementation(proxyManager.getRemoteRegistrationServiceProxy());
         service.open(host, port);
 
@@ -153,7 +153,7 @@ public final class RemoteServer implements Remote<ServerState> {
     private void createAndOpenKeepAliveService() throws IOException {
         LOGGER.debug("> Create and open keep alive service");
 
-        final Service service = ServerClientPluginRegistry.getInstance().createService();
+        final Service service = NetworkProtocolPluginRegistry.getInstance().createService();
         service.setServiceImplementation(proxyManager.getRemoteKeepAliveServiceProxy());
         service.open(host, port);
 
@@ -173,7 +173,7 @@ public final class RemoteServer implements Remote<ServerState> {
         for (final Class<?> controlServiceClass : proxyManager.getRemoteControlClasses()) {
             final Object remoteControlServiceImpl = proxyManager.getRemoteControlServiceImpl(controlServiceClass);
 
-            final Service service = ServerClientPluginRegistry.getInstance().createService();
+            final Service service = NetworkProtocolPluginRegistry.getInstance().createService();
             service.setServiceImplementation(remoteControlServiceImpl);
             service.open(host, port);
 

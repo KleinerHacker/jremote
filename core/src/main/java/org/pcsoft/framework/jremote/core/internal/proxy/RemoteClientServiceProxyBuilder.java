@@ -2,9 +2,9 @@ package org.pcsoft.framework.jremote.core.internal.proxy;
 
 import org.pcsoft.framework.jremote.api.internal.RemoteMethod;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
-import org.pcsoft.framework.jremote.core.internal.registry.ServerClientPluginRegistry;
+import org.pcsoft.framework.jremote.core.internal.registry.NetworkProtocolPluginRegistry;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
-import org.pcsoft.framework.jremote.sc.api.Client;
+import org.pcsoft.framework.jremote.np.api.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,7 @@ final class RemoteClientServiceProxyBuilder {
     }
 
     private static <T> Object callClient(String host, int port, Class<T> clazz, Method method, Object[] args) throws IOException {
-        try (final Client client = ServerClientPluginRegistry.getInstance().createClient()) {
+        try (final Client client = NetworkProtocolPluginRegistry.getInstance().createClient()) {
             client.setServiceClass(clazz);
             client.open(host, port);
             return client.invokeRemote(method, args);
