@@ -97,7 +97,7 @@ public class ServerRunner {
   public static void main(String[] args) {
     final RemoteServer remoteServer = RemoteServerBuilder.create("localhost", 9998)
                 .withPushClient(HelloPushService.class)
-                .withControlService(new HelloControlServiceImpl(
+                .withRemoteControlService(new HelloControlServiceImpl(
                         () -> remoteServer.getBroadcast().getPushClient(HelloPushService.class)
                 ))
                 .withPushModelData(HelloModelData.class)
