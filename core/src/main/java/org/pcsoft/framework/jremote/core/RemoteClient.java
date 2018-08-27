@@ -13,12 +13,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public final class RemoteClient implements Remote<ClientState> {
+public final class RemoteClient extends RemoteBase<ClientState> {
     private static final Logger LOGGER = LoggerFactory.getLogger(RemoteClient.class);
 
     private final UUID uuid = UUID.randomUUID();
-    private final String host;
-    private final int port, ownPort;
+    private final int ownPort;
 
     private final ClientProxyManager proxyManager;
     private final DataManager dataManager = new DataManager();
@@ -29,8 +28,7 @@ public final class RemoteClient implements Remote<ClientState> {
     private final KeepAliveProcessor keepAliveProcessor = new KeepAliveProcessor();
 
     RemoteClient(String host, int port, int ownPort) {
-        this.host = host;
-        this.port = port;
+        super(host, port);
         this.ownPort = ownPort;
 
         this.proxyManager = new ClientProxyManager();
@@ -41,10 +39,16 @@ public final class RemoteClient implements Remote<ClientState> {
     }
 
     public DataManager getData() {
+        if (getLifecycleState() != LifecycleState.Opened)
+            throw new IllegalStateException("Cannot get data manager now: client not opened");
+
         return dataManager;
     }
 
     public ControlManager getControl() {
+        if (getLifecycleState() != LifecycleState.Opened)
+            throw new IllegalStateException("Cannot get control manager now: client not opened");
+
         return controlManager;
     }
 
@@ -67,7 +71,7 @@ public final class RemoteClient implements Remote<ClientState> {
     }
 
     @Override
-    public void open() throws IOException {
+    public void doOpen() throws IOException {
         LOGGER.info("Open Remote Client on " + host + ":" + port + " (push on " + ownPort + ")");
 
         createAndOpenPushServices();
@@ -76,7 +80,7 @@ public final class RemoteClient implements Remote<ClientState> {
     }
 
     @Override
-    public void close() throws Exception {
+    public void doClose() throws Exception {
         LOGGER.info("Close Remote Client on " + host + ":" + port);
 
         stopKeepAlive();
@@ -86,6 +90,9 @@ public final class RemoteClient implements Remote<ClientState> {
 
     @Override
     public ClientState getState() {
+        if (getLifecycleState() != LifecycleState.Opened)
+            throw new IllegalStateException("Cannot get state now: client not opened");
+
         return keepAliveProcessor.getConnectionState();
     }
 

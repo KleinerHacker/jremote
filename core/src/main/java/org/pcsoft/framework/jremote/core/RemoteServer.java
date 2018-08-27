@@ -12,11 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class RemoteServer implements Remote<ServerState> {
+public final class RemoteServer extends RemoteBase<ServerState> {
     private static final Logger LOGGER = LoggerFactory.getLogger(RemoteServer.class);
-
-    private final String host;
-    private final int port;
 
     private final ServerProxyManager proxyManager;
     private final BroadcastManager broadcastManager = new BroadcastManager();
@@ -29,8 +26,7 @@ public final class RemoteServer implements Remote<ServerState> {
     private final List<Consumer<ServerState>> stateChangeListenerList = new ArrayList<>();
 
     RemoteServer(String host, int port) {
-        this.host = host;
-        this.port = port;
+        super(host, port);
 
         this.proxyManager = new ServerProxyManager();
         this.proxyManager.addClientRegisteredListener(c -> {
@@ -46,11 +42,17 @@ public final class RemoteServer implements Remote<ServerState> {
     }
 
     public BroadcastManager getBroadcast() {
+        if (getLifecycleState() != LifecycleState.Opened)
+            throw new IllegalStateException("Cannot get broadcast manager now: server not opened");
+
         return broadcastManager;
     }
 
     //region Delegates
     public Client[] getConnectedClients() {
+        if (getLifecycleState() != LifecycleState.Opened)
+            throw new IllegalStateException("Cannot get connected clients now: server not opened");
+
         return proxyManager.getConnectedClients();
     }
 
@@ -82,7 +84,7 @@ public final class RemoteServer implements Remote<ServerState> {
     }
 
     @Override
-    public void open() throws IOException {
+    public void doOpen() throws IOException {
         if (state == ServerState.Opened)
             throw new IllegalStateException("Unable to open an opened service");
 
@@ -97,7 +99,7 @@ public final class RemoteServer implements Remote<ServerState> {
     }
 
     @Override
-    public void close() throws Exception {
+    public void doClose() throws Exception {
         if (state == ServerState.Closed)
             throw new IllegalStateException("Unable to close a closed service");
 
@@ -113,6 +115,9 @@ public final class RemoteServer implements Remote<ServerState> {
 
     @Override
     public ServerState getState() {
+        if (getLifecycleState() != LifecycleState.Opened)
+            throw new IllegalStateException("Cannot get state now: server not opened");
+
         return state;
     }
 
