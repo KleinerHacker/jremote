@@ -42,7 +42,7 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
         return this;
     }
 
-    public RemoteServerBuilder withControlService(Class<?>... controlServiceImplClasses) {
+    public RemoteServerBuilder withRemoteControlService(Class<?>... controlServiceImplClasses) {
         final Object[] impls = Arrays.stream(controlServiceImplClasses)
                 .map(cl -> {
                     if (cl.isInterface() || Modifier.isAbstract(cl.getModifiers()) || cl.isMemberClass())
@@ -59,10 +59,10 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
                 })
                 .toArray(Object[]::new);
 
-        return withControlService(impls);
+        return withRemoteControlService(impls);
     }
 
-    public RemoteServerBuilder withControlService(Object... controlServiceImpls) {
+    public RemoteServerBuilder withRemoteControlService(Object... controlServiceImpls) {
         for (final Object impl : controlServiceImpls) {
             final List<Class<?>> classList = ReflectionUtils.findInterfaces(impl.getClass(), clazz -> {
                 try {

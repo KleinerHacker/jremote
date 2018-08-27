@@ -181,7 +181,7 @@ public final class RemoteClient extends RemoteBase<ClientState> {
             return proxyManager.getRemotePushObserverProxy(clazz);
         }
 
-        public <T> T getRemoteEventObserver(Class<T> clazz) {
+        public <T> T getRemoteEventReceiver(Class<T> clazz) {
             return proxyManager.getRemoteEventReceiverProxy(clazz);
         }
     }

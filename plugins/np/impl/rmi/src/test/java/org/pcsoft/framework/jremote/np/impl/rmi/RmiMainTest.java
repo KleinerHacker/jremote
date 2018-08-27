@@ -38,7 +38,7 @@ class RmiMainTest {
                 .withPushClient(TestRemotePushService.class)
                 .withPushModelData(TestRemotePushModelData.class)
                 .withEventClient(TestRemoteEventService.class)
-                .withControlService(new TestRemoteControllerImpl(
+                .withRemoteControlService(new TestRemoteControllerImpl(
                         () -> remoteServer.getBroadcast().getPushClient(TestRemotePushService.class),
                         () -> remoteServer.getBroadcast().getEventClient(TestRemoteEventService.class)
                 ))
@@ -48,7 +48,7 @@ class RmiMainTest {
                 .withRemotePushModel(TestRemotePushModel.class)
                 .withRemotePushObserver(TestRemotePushObserver.class)
                 .withRemotePushService(TestRemotePushService.class)
-                .withRemoteEventObserver(TestRemoteEventReceiver.class)
+                .withRemoteEventReceiver(TestRemoteEventReceiver.class)
                 .withRemoteEventService(TestRemoteEventService.class)
                 .withRemoteControlClient(TestRemoteController.class)
                 .build();
@@ -69,7 +69,7 @@ class RmiMainTest {
         Assertions.assertNotNull(remotePushModel);
         remotePushObserver = remoteClient.getData().getRemotePushObserver(TestRemotePushObserver.class);
         Assertions.assertNotNull(remotePushObserver);
-        remoteEventObserver = remoteClient.getData().getRemoteEventObserver(TestRemoteEventReceiver.class);
+        remoteEventObserver = remoteClient.getData().getRemoteEventReceiver(TestRemoteEventReceiver.class);
         Assertions.assertNotNull(remoteEventObserver);
         controlClient = remoteClient.getControl().getControlClient(TestRemoteController.class);
         Assertions.assertNotNull(controlClient);

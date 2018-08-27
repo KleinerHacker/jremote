@@ -29,8 +29,8 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
         return this;
     }
 
-    public final RemoteClientBuilder withRemoteEventObserver(Class<?>... eventObserverClasses) {
-        for (final Class<?> observerClass : eventObserverClasses) {
+    public final RemoteClientBuilder withRemoteEventReceiver(Class<?>... eventReceiverClasses) {
+        for (final Class<?> observerClass : eventReceiverClasses) {
             remoteClient.getProxyManager().addRemoteEventReceiverProxy(observerClass);
         }
         return this;
