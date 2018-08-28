@@ -4,7 +4,7 @@ import org.pcsoft.framework.jremote.core.Client;
 import org.pcsoft.framework.jremote.core.internal.handler.PushModelHandler;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
-import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 
 import java.util.HashMap;
 import java.util.Map;

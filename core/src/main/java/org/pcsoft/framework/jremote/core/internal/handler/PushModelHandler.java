@@ -10,7 +10,7 @@ import org.pcsoft.framework.jremote.commons.AnnotationUtils;
 import org.pcsoft.framework.jremote.commons.ReflectionUtils;
 import org.pcsoft.framework.jremote.core.Client;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
-import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

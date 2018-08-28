@@ -6,7 +6,7 @@ import org.pcsoft.framework.jremote.core.RemoteClientBuilder;
 import org.pcsoft.framework.jremote.core.RemoteServer;
 import org.pcsoft.framework.jremote.core.RemoteServerBuilder;
 import org.pcsoft.framework.jremote.core.test.basic.api.*;
-import org.pcsoft.framework.jremote.np.impl.rmi.RmiProtocol;
+import org.pcsoft.framework.jremote.ext.np.impl.rmi.RmiProtocol;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

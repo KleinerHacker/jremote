@@ -4,7 +4,7 @@ import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.exception.JRemoteExecutionException;
 import org.pcsoft.framework.jremote.commons.ReflectionUtils;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
-import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;

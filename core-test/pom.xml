@@ -33,7 +33,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>jremote-plugins.np-impl.rmi</artifactId>
+            <artifactId>jremote-extensions.np-impl.rmi</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

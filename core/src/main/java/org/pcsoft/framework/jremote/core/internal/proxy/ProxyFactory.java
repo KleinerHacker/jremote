@@ -4,7 +4,7 @@ import org.pcsoft.framework.jremote.api.type.EventReceivedListener;
 import org.pcsoft.framework.jremote.api.type.PushChangedListener;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
 import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
-import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 
 import java.util.List;
 import java.util.Map;

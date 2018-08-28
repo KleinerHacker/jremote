@@ -3,8 +3,8 @@ package org.pcsoft.framework.jremote.core.internal.proxy;
 import org.pcsoft.framework.jremote.api.internal.RemoteMethod;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
-import org.pcsoft.framework.jremote.np.api.Client;
-import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.np.api.Client;
+import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

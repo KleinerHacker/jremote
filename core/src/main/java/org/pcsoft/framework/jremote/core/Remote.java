@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core;
 
-import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 
 import java.io.IOException;
 import java.util.function.Consumer;

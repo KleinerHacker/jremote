@@ -34,7 +34,7 @@
         <module>commons</module>
         <module>core</module>
         <module>core-test</module>
-        <module>plugins</module>
+        <module>extensions</module>
     </modules>
 
     <build>

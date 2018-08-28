@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core;
 
-import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 
 public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
     public static RemoteClientBuilder create(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass) {

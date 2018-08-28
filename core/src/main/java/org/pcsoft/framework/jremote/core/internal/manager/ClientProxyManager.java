@@ -6,7 +6,7 @@ import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
 import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
 import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteRegistrationClientWrapper;
-import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 
 import java.util.HashMap;
 import java.util.List;

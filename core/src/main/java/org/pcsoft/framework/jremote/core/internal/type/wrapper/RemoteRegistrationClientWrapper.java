@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.type.wrapper;
 
-import org.pcsoft.framework.jremote.np.api.annotation.Registration;
+import org.pcsoft.framework.jremote.ext.np.api.annotation.Registration;
 
 public final class RemoteRegistrationClientWrapper extends ClientWrapper {
     public RemoteRegistrationClientWrapper(Object clientProxy) {
