@@ -1,0 +1,14 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://pcsoft.org/framework/jremote/config/server"
+           xmlns:svr="http://pcsoft.org/framework/jremote/config/server"
+           xmlns:c="http://pcsoft.org/framework/jremote/config/commons">
+    <xs:import schemaLocation="commons.xsd" namespace="http://pcsoft.org/framework/jremote/config/commons"/>
+
+    <xs:complexType name="ServerConfigurationType">
+        <xs:complexContent>
+            <xs:extension base="c:RemoteConfigurationType"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="server-configuration" type="svr:ServerConfigurationType"/>
+</xs:schema>

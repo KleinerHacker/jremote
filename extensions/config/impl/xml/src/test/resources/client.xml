@@ -1,0 +1,5 @@
+<cl:client-configuration xmlns:cl="http://pcsoft.org/framework/jremote/config/client">
+    <host>www.client.com</host>
+    <port>9876</port>
+    <own-port>6789</own-port>
+</cl:client-configuration>

@@ -1,5 +1,5 @@
-module pcsoft.jremote.io.impl.rmi {
-    requires pcsoft.jremote.io.api;
+module pcsoft.jremote.ext.np.impl.rmi {
+    requires pcsoft.jremote.ext.np.api;
     requires java.rmi;
     requires org.slf4j;
     requires pcsoft.jremote.commons;

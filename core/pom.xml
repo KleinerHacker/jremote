@@ -27,6 +27,12 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>jremote-extensions.config-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jremote-commons</artifactId>
             <version>${project.version}</version>
         </dependency>

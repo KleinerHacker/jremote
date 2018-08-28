@@ -1,0 +1,18 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://pcsoft.org/framework/jremote/config/client"
+           xmlns:cl="http://pcsoft.org/framework/jremote/config/client"
+           xmlns:c="http://pcsoft.org/framework/jremote/config/commons">
+    <xs:import schemaLocation="commons.xsd" namespace="http://pcsoft.org/framework/jremote/config/commons"/>
+
+    <xs:complexType name="ClientConfigurationType">
+        <xs:complexContent>
+            <xs:extension base="c:RemoteConfigurationType">
+                <xs:sequence>
+                    <xs:element name="own-port" type="xs:int"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="client-configuration" type="cl:ClientConfigurationType"/>
+</xs:schema>

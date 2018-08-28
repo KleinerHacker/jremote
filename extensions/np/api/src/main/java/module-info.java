@@ -1,4 +1,4 @@
-module pcsoft.jremote.io.api {
+module pcsoft.jremote.ext.np.api {
     requires pcsoft.jremote.api;
 
     exports org.pcsoft.framework.jremote.ext.np.api;

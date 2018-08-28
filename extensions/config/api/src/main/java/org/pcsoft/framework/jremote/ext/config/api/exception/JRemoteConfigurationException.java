@@ -1,6 +1,8 @@
-package org.pcsoft.framework.jremote.api.exception;
+package org.pcsoft.framework.jremote.ext.config.api.exception;
 
-public class JRemoteConfigurationException extends JRemoteException {
+import org.pcsoft.framework.jremote.api.exception.JRemoteExtensionException;
+
+public class JRemoteConfigurationException extends JRemoteExtensionException {
     public JRemoteConfigurationException() {
     }
 

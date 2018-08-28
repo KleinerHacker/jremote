@@ -1,0 +1,10 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://pcsoft.org/framework/jremote/config/commons"
+           xmlns:c="http://pcsoft.org/framework/jremote/config/commons">
+    <xs:complexType name="RemoteConfigurationType" abstract="true">
+        <xs:sequence>
+            <xs:element name="host" type="xs:string"/>
+            <xs:element name="port" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

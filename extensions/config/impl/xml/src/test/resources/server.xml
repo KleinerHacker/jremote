@@ -1,0 +1,4 @@
+<svr:server-configuration xmlns:svr="http://pcsoft.org/framework/jremote/config/server">
+    <host>www.server.com</host>
+    <port>4321</port>
+</svr:server-configuration>

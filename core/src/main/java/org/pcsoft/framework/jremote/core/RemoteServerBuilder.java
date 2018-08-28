@@ -4,6 +4,7 @@ import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.exception.JRemoteExecutionException;
 import org.pcsoft.framework.jremote.commons.ReflectionUtils;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
+import org.pcsoft.framework.jremote.ext.config.api.ServerConfiguration;
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,6 +15,11 @@ import java.util.List;
 public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
     public static RemoteServerBuilder create(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass) {
         return new RemoteServerBuilder(host, port, networkProtocolClass);
+    }
+
+    public static RemoteServerBuilder create(ServerConfiguration configuration, Class<? extends NetworkProtocol> networkProtocolClass) {
+        configuration.validate();
+        return create(configuration.getHost(), configuration.getPort(), networkProtocolClass);
     }
 
     private final RemoteServer remoteServer;
