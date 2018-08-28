@@ -3,8 +3,8 @@ package org.pcsoft.framework.jremote.core;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.exception.JRemoteExecutionException;
 import org.pcsoft.framework.jremote.commons.ReflectionUtils;
-import org.pcsoft.framework.jremote.core.internal.registry.NetworkProtocolPluginRegistry;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -12,32 +12,28 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
-    public static RemoteServerBuilder create(String host, int port) {
-        return new RemoteServerBuilder(host, port);
+    public static RemoteServerBuilder create(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass) {
+        return new RemoteServerBuilder(host, port, networkProtocolClass);
     }
 
     private final RemoteServer remoteServer;
 
-    private RemoteServerBuilder(String host, int port) {
-        remoteServer = new RemoteServer(host, port);
-        remoteServer.getProxyManager().setRemoteRegistrationServiceProxy(
-                NetworkProtocolPluginRegistry.getInstance().getRegistrationServiceClass()
-        );
-        remoteServer.getProxyManager().setRemoteKeepAliveServiceProxy(
-                NetworkProtocolPluginRegistry.getInstance().getKeepAliveServiceClass()
-        );
+    private RemoteServerBuilder(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass) {
+        remoteServer = new RemoteServer(host, port, networkProtocolClass);
+        remoteServer.getProxyManager().setRemoteRegistrationServiceProxy(remoteServer.getNetworkProtocol().getRegistrationServiceClass());
+        remoteServer.getProxyManager().setRemoteKeepAliveServiceProxy(remoteServer.getNetworkProtocol().getKeepAliveServiceClass());
     }
 
     public RemoteServerBuilder withPushClient(Class<?>... pushClientClasses) {
         for (final Class<?> clazz : pushClientClasses) {
-            remoteServer.getProxyManager().addRemotePushClientProxy(clazz);
+            remoteServer.getProxyManager().addRemotePushClientProxy(clazz, remoteServer.getNetworkProtocol());
         }
         return this;
     }
 
     public RemoteServerBuilder withEventClient(Class<?>... eventClientClasses) {
         for (final Class<?> clazz : eventClientClasses) {
-            remoteServer.getProxyManager().addRemoteEventClientProxy(clazz);
+            remoteServer.getProxyManager().addRemoteEventClientProxy(clazz, remoteServer.getNetworkProtocol());
         }
         return this;
     }

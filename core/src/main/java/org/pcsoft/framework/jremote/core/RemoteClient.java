@@ -2,7 +2,7 @@ package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.core.internal.manager.ClientProxyManager;
 import org.pcsoft.framework.jremote.core.internal.processor.KeepAliveProcessor;
-import org.pcsoft.framework.jremote.core.internal.registry.NetworkProtocolPluginRegistry;
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
 import org.pcsoft.framework.jremote.np.api.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +27,8 @@ public final class RemoteClient extends RemoteBase<ClientState> {
     private final List<Service> eventServiceList = new ArrayList<>();
     private final KeepAliveProcessor keepAliveProcessor = new KeepAliveProcessor();
 
-    RemoteClient(String host, int port, int ownPort) {
-        super(host, port);
+    RemoteClient(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass) {
+        super(host, port, networkProtocolClass);
         this.ownPort = ownPort;
 
         this.proxyManager = new ClientProxyManager();
@@ -128,8 +128,7 @@ public final class RemoteClient extends RemoteBase<ClientState> {
         for (final Class<?> pushClass : proxyManager.getRemotePushClasses()) {
             final Object pushServiceProxy = proxyManager.getRemotePushServiceProxy(pushClass);
 
-            final Service service = NetworkProtocolPluginRegistry.getInstance().createService();
-            service.setServiceImplementation(pushServiceProxy);
+            final Service service = networkProtocol.createService(pushServiceProxy);
             service.open(host, ownPort);
 
             this.pushServiceList.add(service);
@@ -150,8 +149,7 @@ public final class RemoteClient extends RemoteBase<ClientState> {
         for (final Class<?> pushClass : proxyManager.getRemoteEventClasses()) {
             final Object eventServiceProxy = proxyManager.getRemoteEventServiceProxy(pushClass);
 
-            final Service service = NetworkProtocolPluginRegistry.getInstance().createService();
-            service.setServiceImplementation(eventServiceProxy);
+            final Service service = networkProtocol.createService(eventServiceProxy);
             service.open(host, ownPort);
 
             this.eventServiceList.add(service);

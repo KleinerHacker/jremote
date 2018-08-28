@@ -3,4 +3,5 @@ module pcsoft.jremote.io.api {
 
     exports org.pcsoft.framework.jremote.np.api;
     exports org.pcsoft.framework.jremote.np.api.annotation;
+    exports org.pcsoft.framework.jremote.np.api.exception;
 }

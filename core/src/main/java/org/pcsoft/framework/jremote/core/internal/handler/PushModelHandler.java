@@ -10,6 +10,7 @@ import org.pcsoft.framework.jremote.commons.AnnotationUtils;
 import org.pcsoft.framework.jremote.commons.ReflectionUtils;
 import org.pcsoft.framework.jremote.core.Client;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +50,9 @@ public final class PushModelHandler {
      * the push client and the push method is searched for and invoke with get value from model.
      *
      * @param client Client to push with data
+     * @param networkProtocol Network Protocol to use for client creation
      */
-    public void pushModelData(Client client) {
+    public void pushModelData(Client client, NetworkProtocol networkProtocol) {
         //Map of push client proxies (for re-use)
         final Map<Class<?>, Object> pushClientProxyMap = new HashMap<>();
 
@@ -61,7 +63,7 @@ public final class PushModelHandler {
             assert modelProperty != null;
 
             //Create a push invoke object (containing a method to invoke push method)
-            final PushInvoke pushInvoke = createPushInvoke(client, modelProperty, propertyMethod, pushClientProxyMap);
+            final PushInvoke pushInvoke = createPushInvoke(client, modelProperty, propertyMethod, pushClientProxyMap, networkProtocol);
             if (pushInvoke == null) return;
 
             //Get value from model
@@ -88,10 +90,11 @@ public final class PushModelHandler {
      * @param modelProperty      Property in {@link RemotePushModel}
      * @param propertyMethod     Method of property in {@link RemotePushModel}
      * @param pushClientProxyMap Map of proxies (only for re-use, performance)
+     * @param networkProtocol Network Protocol to use for client creation
      * @return The created push invoke
      */
     private PushInvoke createPushInvoke(final Client client, final PushModelProperty modelProperty, final Method propertyMethod,
-                                        final Map<Class<?>, Object> pushClientProxyMap) {
+                                        final Map<Class<?>, Object> pushClientProxyMap, final NetworkProtocol networkProtocol) {
         //Search for fit push method via push annotation
         final Method pushMethod = Arrays.stream(pushClassesFunc.get())
                 .map(Class::getDeclaredMethods)
@@ -108,7 +111,7 @@ public final class PushModelHandler {
 
         //Create new push proxy for single client, if not exists
         if (!pushClientProxyMap.containsKey(pushClass)) {
-            final Object proxy = ProxyFactory.buildRemoteClientProxy(pushClass, client.getHost(), client.getPort());
+            final Object proxy = ProxyFactory.buildRemoteClientProxy(pushClass, client.getHost(), client.getPort(), networkProtocol);
             pushClientProxyMap.put(pushClass, proxy);
         }
         final Object pushClient = pushClientProxyMap.get(pushClass);

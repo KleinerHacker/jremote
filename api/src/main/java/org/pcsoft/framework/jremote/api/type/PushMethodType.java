@@ -9,7 +9,7 @@ public enum PushMethodType {
      */
     Default,
     /**
-     * A single item of a list / array is pushed / updated
+     * A single item of a list / array is pushed / updated, see {@link PushItemUpdate}
      */
     SingleListItem
 }

@@ -1,7 +1,7 @@
-package org.pcsoft.framework.jremote.np.impl.tcp;
+package org.pcsoft.framework.jremote.np.impl.tcp.internal;
 
 import org.pcsoft.framework.jremote.np.api.ServiceBase;
-import org.pcsoft.framework.jremote.np.impl.tcp.internal.TcpServer;
+import org.pcsoft.framework.jremote.np.impl.tcp.internal.logic.TcpServer;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +18,10 @@ public final class TcpService extends ServiceBase {
     private final AtomicBoolean interrupt = new AtomicBoolean(false);
     private ServerSocket serverSocket = null;
 
+    public TcpService(Object serviceImplementation) {
+        super(serviceImplementation);
+    }
+
     @Override
     public void open(String host, int port) throws IOException {
         interrupt.set(false);
@@ -27,12 +31,12 @@ public final class TcpService extends ServiceBase {
             try {
                 final TcpServer tcpServer = new TcpServer(serverSocket, invocation -> {
                     try {
-                        final Method method = getServiceImplementation().getClass().getDeclaredMethod(invocation.getMethodName(), invocation.getParameterClasses());
+                        final Method method = serviceImplementation.getClass().getDeclaredMethod(invocation.getMethodName(), invocation.getParameterClasses());
                         if (method.getReturnType() != invocation.getReturnType().getClazz())
                             throw new IllegalStateException(String.format("Wrong return type found: expected is %s, but found was %s",
                                     invocation.getReturnType().getClazz().getName(), method.getReturnType().getName()));
 
-                        return method.invoke(getServiceImplementation(), invocation.getParameterValues());
+                        return method.invoke(serviceImplementation, invocation.getParameterValues());
                     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                         throw new IllegalStateException("Unable to invoke function " + invocation.getMethodName(), e);
                     }

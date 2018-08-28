@@ -1,18 +1,18 @@
 package org.pcsoft.framework.jremote.core;
 
-import org.pcsoft.framework.jremote.core.internal.registry.NetworkProtocolPluginRegistry;
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
 
 public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
-    public static RemoteClientBuilder create(String host, int port, int ownPort) {
-        return new RemoteClientBuilder(host, port, ownPort);
+    public static RemoteClientBuilder create(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass) {
+        return new RemoteClientBuilder(host, port, ownPort, networkProtocolClass);
     }
 
     private final RemoteClient remoteClient;
 
-    private RemoteClientBuilder(String host, int port, int ownPort) {
-        remoteClient = new RemoteClient(host, port, ownPort);
-        remoteClient.getProxyManager().setRemoteRegistrationClient(NetworkProtocolPluginRegistry.getInstance().getRegistrationServiceClass(), host, port);
-        remoteClient.getProxyManager().setRemoteKeepAliveClient(NetworkProtocolPluginRegistry.getInstance().getKeepAliveServiceClass(), host, port);
+    private RemoteClientBuilder(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass) {
+        remoteClient = new RemoteClient(host, port, ownPort, networkProtocolClass);
+        remoteClient.getProxyManager().setRemoteRegistrationClient(host, port, remoteClient.getNetworkProtocol());
+        remoteClient.getProxyManager().setRemoteKeepAliveClient(host, port, remoteClient.getNetworkProtocol());
     }
 
     public final RemoteClientBuilder withRemotePushModel(Class<?>... pushModelClasses) {
@@ -52,7 +52,8 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
 
     public final RemoteClientBuilder withRemoteControlClient(Class<?>... controlClientClasses) {
         for (final Class<?> pushServiceClass : controlClientClasses) {
-            remoteClient.getProxyManager().addRemoteControlClientProxy(pushServiceClass, remoteClient.getHost(), remoteClient.getPort());
+            remoteClient.getProxyManager().addRemoteControlClientProxy(
+                    pushServiceClass, remoteClient.getHost(), remoteClient.getPort(), remoteClient.getNetworkProtocol());
         }
         return this;
     }

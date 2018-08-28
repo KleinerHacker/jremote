@@ -15,18 +15,4 @@ public interface Service extends Closeable {
      * @throws IOException
      */
     void open(String host, int port) throws IOException;
-
-    /**
-     * Setup the service implementation to call methods on
-     *
-     * @param serviceImplementation
-     */
-    void setServiceImplementation(Object serviceImplementation);
-
-    /**
-     * Returns the service implementation, see {@link #setServiceImplementation(Object)}
-     *
-     * @return
-     */
-    Object getServiceImplementation();
 }

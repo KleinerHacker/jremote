@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.np.impl.rmi;
+package org.pcsoft.framework.jremote.np.impl.rmi.internal;
 
 import org.apache.commons.lang3.StringUtils;
 import org.pcsoft.framework.jremote.commons.AnnotationUtils;
@@ -26,12 +26,14 @@ public final class RmiService extends ServiceBase {
     private Registry registry;
     private Remote exportObject;
 
+    public RmiService(Object serviceImplementation) {
+        super(serviceImplementation);
+    }
+
     @Override
     public void open(String host, int port) throws IOException {
-        if (getServiceImplementation() == null)
-            throw new IllegalStateException("Service not ready yet: no service implementation was set");
-        if (!(getServiceImplementation() instanceof Remote))
-            throw new IllegalStateException("Needed remote interface is not implemented: " + getServiceImplementation().getClass().getName());
+        if (!(serviceImplementation instanceof Remote))
+            throw new IllegalStateException("Needed remote interface is not implemented: " + serviceImplementation.getClass().getName());
 
         //Try get existing registry
         registry = LocateRegistry.getRegistry(host, port);
@@ -43,7 +45,7 @@ public final class RmiService extends ServiceBase {
         }
 
         LOGGER.debug("> Open RMI service at " + host + ":" + port + " with names " + StringUtils.join(getServiceNames(), ','));
-        exportObject = UnicastRemoteObject.exportObject((Remote) getServiceImplementation(), 0);
+        exportObject = UnicastRemoteObject.exportObject((Remote) serviceImplementation, 0);
         for (final String serviceName : getServiceNames()) {
             try {
                 registry.bind(serviceName, exportObject);
@@ -69,10 +71,10 @@ public final class RmiService extends ServiceBase {
     private List<String> getServiceNames() {
         final List<String> list = new ArrayList<>();
 
-        if (Proxy.isProxyClass(getServiceImplementation().getClass())) {
-            list.add(getServiceImplementation().getClass().getInterfaces()[0].getName());
+        if (Proxy.isProxyClass(serviceImplementation.getClass())) {
+            list.add(serviceImplementation.getClass().getInterfaces()[0].getName());
         } else {
-            final List<Class<?>> classList = ReflectionUtils.findInterfaces(getServiceImplementation().getClass(), AnnotationUtils::isRemoteService);
+            final List<Class<?>> classList = ReflectionUtils.findInterfaces(serviceImplementation.getClass(), AnnotationUtils::isRemoteService);
             list.addAll(
                     classList.stream()
                             .map(Class::getName)

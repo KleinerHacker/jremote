@@ -1,4 +1,4 @@
-import org.pcsoft.framework.jremote.np.api.NetworkProtocolPlugin;
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
 
 module pcsoft.jremote.core {
     requires pcsoft.jremote.api;
@@ -10,5 +10,5 @@ module pcsoft.jremote.core {
 
     exports org.pcsoft.framework.jremote.core;
 
-    uses NetworkProtocolPlugin;
+    uses NetworkProtocol;
 }

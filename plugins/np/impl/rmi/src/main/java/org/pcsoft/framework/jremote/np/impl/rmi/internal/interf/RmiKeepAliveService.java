@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.np.impl.rmi.interf;
+package org.pcsoft.framework.jremote.np.impl.rmi.internal.interf;
 
 import org.pcsoft.framework.jremote.np.api.annotation.KeepAlive;
 import org.pcsoft.framework.jremote.np.api.annotation.RemoteKeepAliveService;

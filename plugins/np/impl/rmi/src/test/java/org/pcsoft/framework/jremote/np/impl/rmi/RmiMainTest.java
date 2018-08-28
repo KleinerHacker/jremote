@@ -34,7 +34,7 @@ class RmiMainTest {
 
     @BeforeAll
     static void init() throws Exception {
-        remoteServer = RemoteServerBuilder.create("localhost", 9998)
+        remoteServer = RemoteServerBuilder.create("localhost", 9998, RmiProtocol.class)
                 .withPushClient(TestRemotePushService.class)
                 .withPushModelData(TestRemotePushModelData.class)
                 .withEventClient(TestRemoteEventService.class)
@@ -44,7 +44,7 @@ class RmiMainTest {
                 ))
                 .build();
 
-        remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
+        remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999, RmiProtocol.class)
                 .withRemotePushModel(TestRemotePushModel.class)
                 .withRemotePushObserver(TestRemotePushObserver.class)
                 .withRemotePushService(TestRemotePushService.class)

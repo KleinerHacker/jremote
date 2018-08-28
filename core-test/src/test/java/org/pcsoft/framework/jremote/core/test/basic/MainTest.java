@@ -6,6 +6,7 @@ import org.pcsoft.framework.jremote.core.RemoteClientBuilder;
 import org.pcsoft.framework.jremote.core.RemoteServer;
 import org.pcsoft.framework.jremote.core.RemoteServerBuilder;
 import org.pcsoft.framework.jremote.core.test.basic.api.*;
+import org.pcsoft.framework.jremote.np.impl.rmi.RmiProtocol;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,7 +32,7 @@ class MainTest {
 
     @BeforeAll
     static void init() throws Exception {
-        remoteServer = RemoteServerBuilder.create("localhost", 9998)
+        remoteServer = RemoteServerBuilder.create("localhost", 9998, RmiProtocol.class)
                 .withPushClient(TestRemotePushService.class)
                 .withEventClient(TestRemoteEventService.class)
                 .withRemoteControlService(new TestRemoteControllerImpl(
@@ -41,7 +42,7 @@ class MainTest {
                 .withPushModelData(TestRemotePushModelData.class)
                 .build();
 
-        remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
+        remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999, RmiProtocol.class)
                 .withRemotePushModel(TestRemotePushModel.class)
                 .withRemotePushObserver(TestRemotePushObserver.class)
                 .withRemotePushService(TestRemotePushService.class)

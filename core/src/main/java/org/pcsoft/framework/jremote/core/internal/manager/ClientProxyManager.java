@@ -6,6 +6,7 @@ import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
 import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
 import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteRegistrationClientWrapper;
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
 
 import java.util.HashMap;
 import java.util.List;
@@ -137,11 +138,11 @@ public final class ClientProxyManager {
     //endregion
 
     //region Control Client Proxy
-    public <T> void addRemoteControlClientProxy(Class<T> clazz, String host, int port) {
+    public <T> void addRemoteControlClientProxy(Class<T> clazz, String host, int port, NetworkProtocol networkProtocol) {
         if (controlClientProxyMap.containsKey(clazz))
             throw new IllegalStateException("Remote control client class already added: " + clazz.getName());
 
-        final T proxy = ProxyFactory.buildRemoteClientProxy(clazz, host, port);
+        final T proxy = ProxyFactory.buildRemoteClientProxy(clazz, host, port, networkProtocol);
         controlClientProxyMap.put(clazz, proxy);
     }
 
@@ -162,15 +163,17 @@ public final class ClientProxyManager {
         return remoteRegistrationClient;
     }
 
-    public void setRemoteRegistrationClient(Class<?> clazz, String host, int port) {
-        this.remoteRegistrationClient = new RemoteRegistrationClientWrapper(ProxyFactory.buildRemoteClientProxy(clazz, host, port));
+    public void setRemoteRegistrationClient(String host, int port, NetworkProtocol networkProtocol) {
+        this.remoteRegistrationClient = new RemoteRegistrationClientWrapper(ProxyFactory.buildRemoteClientProxy(
+                networkProtocol.getRegistrationServiceClass(), host, port, networkProtocol));
     }
 
     public RemoteKeepAliveClientWrapper getRemoteKeepAliveClient() {
         return remoteKeepAliveClient;
     }
 
-    public void setRemoteKeepAliveClient(Class<?> clazz, String host, int port) {
-        this.remoteKeepAliveClient = new RemoteKeepAliveClientWrapper(ProxyFactory.buildRemoteClientProxy(clazz, host, port));
+    public void setRemoteKeepAliveClient(String host, int port, NetworkProtocol networkProtocol) {
+        this.remoteKeepAliveClient = new RemoteKeepAliveClientWrapper(ProxyFactory.buildRemoteClientProxy(
+                networkProtocol.getKeepAliveServiceClass(), host, port, networkProtocol));
     }
 }

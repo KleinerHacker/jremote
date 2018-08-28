@@ -2,7 +2,7 @@ package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.core.internal.handler.PushModelHandler;
 import org.pcsoft.framework.jremote.core.internal.manager.ServerProxyManager;
-import org.pcsoft.framework.jremote.core.internal.registry.NetworkProtocolPluginRegistry;
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
 import org.pcsoft.framework.jremote.np.api.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +25,14 @@ public final class RemoteServer extends RemoteBase<ServerState> {
     private ServerState state = ServerState.Closed;
     private final List<Consumer<ServerState>> stateChangeListenerList = new ArrayList<>();
 
-    RemoteServer(String host, int port) {
-        super(host, port);
+    RemoteServer(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass) {
+        super(host, port, networkProtocolClass);
 
         this.proxyManager = new ServerProxyManager();
         this.proxyManager.addClientRegisteredListener(c -> {
             for (final Class<?> clazz : this.proxyManager.getPushModelHandlerClasses()) {
                 final PushModelHandler modelHandler = this.proxyManager.getPushModelHandler(clazz);
-                modelHandler.pushModelData(c);
+                modelHandler.pushModelData(c, networkProtocol);
             }
         });
     }
@@ -141,8 +141,7 @@ public final class RemoteServer extends RemoteBase<ServerState> {
     private void createAndOpenRegistrationService() throws IOException {
         LOGGER.debug("> Create and open registration service");
 
-        final Service service = NetworkProtocolPluginRegistry.getInstance().createService();
-        service.setServiceImplementation(proxyManager.getRemoteRegistrationServiceProxy());
+        final Service service = networkProtocol.createService(proxyManager.getRemoteRegistrationServiceProxy());
         service.open(host, port);
 
         this.registrationService = service;
@@ -158,8 +157,7 @@ public final class RemoteServer extends RemoteBase<ServerState> {
     private void createAndOpenKeepAliveService() throws IOException {
         LOGGER.debug("> Create and open keep alive service");
 
-        final Service service = NetworkProtocolPluginRegistry.getInstance().createService();
-        service.setServiceImplementation(proxyManager.getRemoteKeepAliveServiceProxy());
+        final Service service = networkProtocol.createService(proxyManager.getRemoteKeepAliveServiceProxy());
         service.open(host, port);
 
         this.keepAliveService = service;
@@ -178,8 +176,7 @@ public final class RemoteServer extends RemoteBase<ServerState> {
         for (final Class<?> controlServiceClass : proxyManager.getRemoteControlClasses()) {
             final Object remoteControlServiceImpl = proxyManager.getRemoteControlServiceImpl(controlServiceClass);
 
-            final Service service = NetworkProtocolPluginRegistry.getInstance().createService();
-            service.setServiceImplementation(remoteControlServiceImpl);
+            final Service service = networkProtocol.createService(remoteControlServiceImpl);
             service.open(host, port);
 
             this.controlServiceList.add(service);

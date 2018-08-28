@@ -4,6 +4,7 @@ import org.pcsoft.framework.jremote.core.Client;
 import org.pcsoft.framework.jremote.core.internal.handler.PushModelHandler;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,11 +43,11 @@ public final class ServerProxyManager {
     //endregion
 
     //region Push Client Proxy
-    public <T> void addRemotePushClientProxy(Class<T> clazz) {
+    public <T> void addRemotePushClientProxy(Class<T> clazz, NetworkProtocol networkProtocol) {
         if (pushClientProxyMap.containsKey(clazz))
             throw new IllegalStateException("Remote push client class already added: " + clazz.getName());
 
-        final T proxy = ProxyFactory.buildRemoteBroadcastClientProxy(clazz, clientRegistry);
+        final T proxy = ProxyFactory.buildRemoteBroadcastClientProxy(clazz, clientRegistry, networkProtocol);
         pushClientProxyMap.put(clazz, proxy);
     }
 
@@ -64,11 +65,11 @@ public final class ServerProxyManager {
     //endregion
 
     //region Event Client Proxy
-    public <T> void addRemoteEventClientProxy(Class<T> clazz) {
+    public <T> void addRemoteEventClientProxy(Class<T> clazz, NetworkProtocol networkProtocol) {
         if (eventClientProxyMap.containsKey(clazz))
             throw new IllegalStateException("Remote event client class already added: " + clazz.getName());
 
-        final T proxy = ProxyFactory.buildRemoteBroadcastClientProxy(clazz, clientRegistry);
+        final T proxy = ProxyFactory.buildRemoteBroadcastClientProxy(clazz, clientRegistry, networkProtocol);
         eventClientProxyMap.put(clazz, proxy);
     }
 

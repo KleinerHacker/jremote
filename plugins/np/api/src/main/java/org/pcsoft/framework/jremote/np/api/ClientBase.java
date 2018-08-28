@@ -1,15 +1,12 @@
 package org.pcsoft.framework.jremote.np.api;
 
 public abstract class ClientBase implements Client {
-    private Class<?> serviceClass;
+    protected final Class<?> serviceClass;
 
-    @Override
-    public final Class<?> getServiceClass() {
-        return serviceClass;
-    }
+    public ClientBase(Class<?> serviceClass) {
+        if (serviceClass == null)
+            throw new IllegalArgumentException("serviceClass must be set");
 
-    @Override
-    public final void setServiceClass(Class<?> serviceClass) {
         this.serviceClass = serviceClass;
     }
 }

@@ -4,15 +4,12 @@ package org.pcsoft.framework.jremote.np.api;
  * Basic implementation for a service. Contains the basic implementation.
  */
 public abstract class ServiceBase implements Service {
-    private Object serviceImplementation;
+    protected final Object serviceImplementation;
 
-    @Override
-    public final Object getServiceImplementation() {
-        return serviceImplementation;
-    }
+    public ServiceBase(Object serviceImplementation) {
+        if (serviceImplementation == null)
+            throw new IllegalArgumentException("serviceImplementation must be set");
 
-    @Override
-    public final void setServiceImplementation(Object serviceImplementation) {
         this.serviceImplementation = serviceImplementation;
     }
 }

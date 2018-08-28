@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.np.impl.tcp.internal;
+package org.pcsoft.framework.jremote.np.impl.tcp.internal.logic;
 
 import org.pcsoft.framework.jremote.np.impl.tcp.internal.type.Invocation;
 import org.pcsoft.framework.jremote.np.impl.tcp.internal.type.Type;

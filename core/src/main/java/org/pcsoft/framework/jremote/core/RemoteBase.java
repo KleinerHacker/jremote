@@ -1,6 +1,10 @@
 package org.pcsoft.framework.jremote.core;
 
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.np.api.exception.JRemoteNetworkProtocolException;
+
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -13,13 +17,19 @@ import java.util.function.Consumer;
 public abstract class RemoteBase<S extends State> implements Remote<S> {
     protected final String host;
     protected final int port;
+    protected final NetworkProtocol networkProtocol;
 
     private LifecycleState lifecycleState = LifecycleState.Created;
     private final List<Consumer<LifecycleState>> lifecycleStateChangeListenerList = new ArrayList<>();
 
-    RemoteBase(String host, int port) {
+    RemoteBase(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass) {
         this.host = host;
         this.port = port;
+        try {
+            this.networkProtocol = networkProtocolClass.getConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new JRemoteNetworkProtocolException("Unable to instantiate network protocol " + networkProtocolClass.getName(), e);
+        }
     }
 
     @Override
@@ -57,6 +67,15 @@ public abstract class RemoteBase<S extends State> implements Remote<S> {
     @Override
     public final void removeLifecycleStateChangeListener(Consumer<LifecycleState> l) {
         lifecycleStateChangeListenerList.remove(l);
+    }
+
+    @Override
+    public Class<? extends NetworkProtocol> getNetworkProtocolClass() {
+        return networkProtocol.getClass();
+    }
+
+    NetworkProtocol getNetworkProtocol() {
+        return networkProtocol;
     }
 
     private void fireLifecycleStateChanged() {

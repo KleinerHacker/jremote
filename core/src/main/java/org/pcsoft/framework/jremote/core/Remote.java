@@ -1,5 +1,7 @@
 package org.pcsoft.framework.jremote.core;
 
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
+
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -45,4 +47,10 @@ public interface Remote<S extends State> extends AutoCloseable {
      * @return
      */
     int getPort();
+
+    /**
+     * Returns the class of network protocol for this remote instance to use.
+     * @return
+     */
+    Class<? extends NetworkProtocol> getNetworkProtocolClass();
 }

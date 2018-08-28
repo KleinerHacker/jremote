@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.np.impl.rmi;
+package org.pcsoft.framework.jremote.np.impl.rmi.internal;
 
 import org.pcsoft.framework.jremote.np.api.ClientBase;
 
@@ -12,13 +12,17 @@ import java.rmi.registry.Registry;
 public final class RmiClient extends ClientBase {
     private Object stub = null;
 
+    public RmiClient(Class<?> serviceClass) {
+        super(serviceClass);
+    }
+
     @Override
     public void open(String host, int port) throws IOException {
         final Registry registry = LocateRegistry.getRegistry(host, port);
         try {
-            stub = registry.lookup(getServiceClass().getName());
+            stub = registry.lookup(serviceClass.getName());
         } catch (NotBoundException e) {
-            throw new IOException("No service for class " + getServiceClass().getName() + " are bound on " + host + ":" + port, e);
+            throw new IOException("No service for class " + serviceClass.getName() + " are bound on " + host + ":" + port, e);
         }
     }
 

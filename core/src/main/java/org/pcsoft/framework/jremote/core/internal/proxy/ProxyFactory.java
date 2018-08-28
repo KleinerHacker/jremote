@@ -4,6 +4,7 @@ import org.pcsoft.framework.jremote.api.type.EventReceivedListener;
 import org.pcsoft.framework.jremote.api.type.PushChangedListener;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
 import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
+import org.pcsoft.framework.jremote.np.api.NetworkProtocol;
 
 import java.util.List;
 import java.util.Map;
@@ -31,12 +32,12 @@ public final class ProxyFactory {
         return RemoteEventServiceProxyBuilder.getInstance().buildProxy(clazz, listenerMap);
     }
 
-    public static <T> T buildRemoteClientProxy(Class<T> clazz, String host, int port) {
-        return RemoteClientServiceProxyBuilder.buildProxy(clazz, host, port);
+    public static <T> T buildRemoteClientProxy(Class<T> clazz, String host, int port, NetworkProtocol networkProtocol) {
+        return RemoteClientServiceProxyBuilder.buildProxy(clazz, host, port, networkProtocol);
     }
 
-    public static <T> T buildRemoteBroadcastClientProxy(Class<T> clazz, ClientRegistry clientRegistry) {
-        return RemoteClientServiceProxyBuilder.buildBroadcastProxy(clazz, clientRegistry);
+    public static <T> T buildRemoteBroadcastClientProxy(Class<T> clazz, ClientRegistry clientRegistry, NetworkProtocol networkProtocol) {
+        return RemoteClientServiceProxyBuilder.buildBroadcastProxy(clazz, clientRegistry, networkProtocol);
     }
 
     public static <T> T buildRemoteRegistrationServiceProxy(Class<T> clazz, ClientRegistry clientRegistry) {

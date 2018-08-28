@@ -26,18 +26,4 @@ public interface Client extends Closeable {
      * @throws IOException
      */
     Object invokeRemote(Method method, Object... params) throws IOException;
-
-    /**
-     * Returns the service class the client work for. All methods in {@link #invokeRemote(Method, Object...)} are part of this interface class
-     *
-     * @return
-     */
-    Class<?> getServiceClass();
-
-    /**
-     * Setup the service class the client work for. See {@link #getServiceClass()}
-     *
-     * @param serviceClass
-     */
-    void setServiceClass(Class<?> serviceClass);
 }
