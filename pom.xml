@@ -3,7 +3,7 @@
 
     <groupId>com.github.kleinerhacker</groupId>
     <artifactId>jremote</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <url>https://github.com/KleinerHacker/jremote</url>
     <name>JRemote</name>

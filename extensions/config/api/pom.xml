@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.github.kleinerhacker</groupId>
         <artifactId>jremote-extensions.config</artifactId>
-        <version>0.2.0</version>
+        <version>0.2.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>jremote-extensions.config-api</artifactId>
