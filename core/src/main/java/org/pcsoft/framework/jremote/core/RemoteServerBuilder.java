@@ -6,35 +6,42 @@ import org.pcsoft.framework.jremote.commons.ReflectionUtils;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 import org.pcsoft.framework.jremote.ext.config.api.ServerConfiguration;
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
-import org.pcsoft.framework.jremote.ext.np.impl.rmi.RmiProtocol;
+import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represent a builder to create a {@link RemoteServer} with all its needed features.
+ */
 public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
-    public static RemoteServerBuilder create(String host, int port) {
-        return create(host, port, RmiProtocol.class);
-    }
-
-    public static RemoteServerBuilder create(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass) {
-        return new RemoteServerBuilder(host, port, networkProtocolClass);
-    }
-
+    /**
+     * Creates an instance of this builder (with default extension usage, see {@link ExtensionConfiguration})
+     * @param configuration Server configuration (system settings) for the server to create
+     * @return
+     */
     public static RemoteServerBuilder create(ServerConfiguration configuration) {
-        return create(configuration, RmiProtocol.class);
+        return create(configuration, new ExtensionConfiguration());
     }
 
-    public static RemoteServerBuilder create(ServerConfiguration configuration, Class<? extends NetworkProtocol> networkProtocolClass) {
-        configuration.validate();
-        return create(configuration.getHost(), configuration.getPort(), networkProtocolClass);
+    /**
+     * Creates an instance of this builder
+     * @param serverConfiguration Server configuration (system settings) for the server to create
+     * @param extensionConfiguration Extension configuration (defines extensions to use for this server)
+     * @return
+     */
+    public static RemoteServerBuilder create(ServerConfiguration serverConfiguration, ExtensionConfiguration extensionConfiguration) {
+        serverConfiguration.validate();
+        return new RemoteServerBuilder(serverConfiguration.getHost(), serverConfiguration.getPort(),
+                extensionConfiguration.getNetworkProtocolClass(), extensionConfiguration.getUpdatePolicyClass());
     }
 
     private final RemoteServer remoteServer;
 
-    private RemoteServerBuilder(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass) {
-        remoteServer = new RemoteServer(host, port, networkProtocolClass);
+    private RemoteServerBuilder(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass, Class<? extends UpdatePolicy> updatePolicyClass) {
+        remoteServer = new RemoteServer(host, port, networkProtocolClass, updatePolicyClass);
         remoteServer.getProxyManager().setRemoteRegistrationServiceProxy(remoteServer.getNetworkProtocol().getRegistrationServiceClass());
         remoteServer.getProxyManager().setRemoteKeepAliveServiceProxy(remoteServer.getNetworkProtocol().getKeepAliveServiceClass());
     }

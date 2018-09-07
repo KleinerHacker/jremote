@@ -1,6 +1,7 @@
 package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -53,4 +54,10 @@ public interface Remote<S extends State> extends AutoCloseable {
      * @return
      */
     Class<? extends NetworkProtocol> getNetworkProtocolClass();
+
+    /**
+     * Returns the class of update policy for this remote instance to use.
+     * @return
+     */
+    Class<? extends UpdatePolicy> getUpdatePolicyClass();
 }

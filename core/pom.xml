@@ -26,6 +26,12 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>jremote-extensions.up-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jremote-extensions.config-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -39,6 +45,18 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jremote-extensions.np-impl.rmi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jremote-extensions.up-impl.default</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jremote-extensions.config-impl.fluent</artifactId>
             <version>${project.version}</version>
         </dependency>
 

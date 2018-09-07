@@ -4,10 +4,11 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.pcsoft.framework.jremote.core.RemoteClient;
-import org.pcsoft.framework.jremote.core.RemoteClientBuilder;
-import org.pcsoft.framework.jremote.core.RemoteServer;
-import org.pcsoft.framework.jremote.core.RemoteServerBuilder;
+import org.pcsoft.framework.jremote.core.*;
+import org.pcsoft.framework.jremote.ext.config.api.ClientConfiguration;
+import org.pcsoft.framework.jremote.ext.config.api.ServerConfiguration;
+import org.pcsoft.framework.jremote.ext.config.impl.fluent.ClientFluentConfiguration;
+import org.pcsoft.framework.jremote.ext.config.impl.fluent.ServerFluentConfiguration;
 import org.pcsoft.framework.jremote.ext.np.impl.rmi.RmiProtocol;
 import org.pcsoft.framework.jremote.ext.np.impl.rmi.test.api.*;
 
@@ -35,7 +36,14 @@ class RmiMainTest {
 
     @BeforeAll
     static void init() throws Exception {
-        remoteServer = RemoteServerBuilder.create("localhost", 9998, RmiProtocol.class)
+        final ExtensionConfiguration extensionConfiguration = ExtensionConfigurationBuilder.create()
+                .withNetworkProtocol(RmiProtocol.class)
+                .build();
+
+        final ServerConfiguration serverConfiguration = ServerFluentConfiguration.create()
+                .setHost("localhost")
+                .setPort(9998);
+        remoteServer = RemoteServerBuilder.create(serverConfiguration, extensionConfiguration)
                 .withPushClient(TestRemotePushService.class)
                 .withPushModelData(TestRemotePushModelData.class)
                 .withEventClient(TestRemoteEventService.class)
@@ -45,7 +53,11 @@ class RmiMainTest {
                 ))
                 .build();
 
-        remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999, RmiProtocol.class)
+        final ClientConfiguration clientConfiguration = ClientFluentConfiguration.create()
+                .setHost("localhost")
+                .setPort(9998)
+                .setOwnPort(9999);
+        remoteClient = RemoteClientBuilder.create(clientConfiguration, extensionConfiguration)
                 .withRemotePushModel(TestRemotePushModel.class)
                 .withRemotePushObserver(TestRemotePushObserver.class)
                 .withRemotePushService(TestRemotePushService.class)

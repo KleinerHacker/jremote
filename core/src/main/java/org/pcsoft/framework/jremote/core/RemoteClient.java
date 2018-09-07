@@ -4,6 +4,7 @@ import org.pcsoft.framework.jremote.core.internal.manager.ClientProxyManager;
 import org.pcsoft.framework.jremote.core.internal.processor.KeepAliveProcessor;
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 import org.pcsoft.framework.jremote.ext.np.api.Service;
+import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +28,8 @@ public final class RemoteClient extends RemoteBase<ClientState> {
     private final List<Service> eventServiceList = new ArrayList<>();
     private final KeepAliveProcessor keepAliveProcessor = new KeepAliveProcessor();
 
-    RemoteClient(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass) {
-        super(host, port, networkProtocolClass);
+    RemoteClient(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass, Class<? extends UpdatePolicy> updatePolicyClass) {
+        super(host, port, networkProtocolClass, updatePolicyClass);
         this.ownPort = ownPort;
 
         this.proxyManager = new ClientProxyManager();

@@ -4,6 +4,7 @@ import org.pcsoft.framework.jremote.core.internal.handler.PushModelHandler;
 import org.pcsoft.framework.jremote.core.internal.manager.ServerProxyManager;
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 import org.pcsoft.framework.jremote.ext.np.api.Service;
+import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +26,8 @@ public final class RemoteServer extends RemoteBase<ServerState> {
     private ServerState state = ServerState.Closed;
     private final List<Consumer<ServerState>> stateChangeListenerList = new ArrayList<>();
 
-    RemoteServer(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass) {
-        super(host, port, networkProtocolClass);
+    RemoteServer(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass, Class<? extends UpdatePolicy> updatePolicyClass) {
+        super(host, port, networkProtocolClass, updatePolicyClass);
 
         this.proxyManager = new ServerProxyManager();
         this.proxyManager.addClientRegisteredListener(c -> {

@@ -9,6 +9,10 @@ import org.pcsoft.framework.jremote.core.RemoteClientBuilder;
 import org.pcsoft.framework.jremote.core.RemoteServer;
 import org.pcsoft.framework.jremote.core.RemoteServerBuilder;
 import org.pcsoft.framework.jremote.core.test.basic.api.*;
+import org.pcsoft.framework.jremote.ext.config.api.ClientConfiguration;
+import org.pcsoft.framework.jremote.ext.config.api.ServerConfiguration;
+import org.pcsoft.framework.jremote.ext.config.impl.fluent.ClientFluentConfiguration;
+import org.pcsoft.framework.jremote.ext.config.impl.fluent.ServerFluentConfiguration;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,7 +38,10 @@ class MainTest {
 
     @BeforeAll
     static void init() throws Exception {
-        remoteServer = RemoteServerBuilder.create("localhost", 9998)
+        final ServerConfiguration serverConfiguration = ServerFluentConfiguration.create()
+                .setHost("localhost")
+                .setPort(9998);
+        remoteServer = RemoteServerBuilder.create(serverConfiguration)
                 .withPushClient(TestRemotePushService.class)
                 .withEventClient(TestRemoteEventService.class)
                 .withRemoteControlService(new TestRemoteControllerImpl(
@@ -44,7 +51,11 @@ class MainTest {
                 .withPushModelData(TestRemotePushModelData.class)
                 .build();
 
-        remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
+        final ClientConfiguration clientConfiguration = ClientFluentConfiguration.create()
+                .setHost("localhost")
+                .setPort(9998)
+                .setOwnPort(9999);
+        remoteClient = RemoteClientBuilder.create(clientConfiguration)
                 .withRemotePushModel(TestRemotePushModel.class)
                 .withRemotePushObserver(TestRemotePushObserver.class)
                 .withRemotePushService(TestRemotePushService.class)
@@ -94,7 +105,7 @@ class MainTest {
         Assertions.assertEquals(List.of("Hello", "World"), remotePushModel.getWordList());
         Assertions.assertNotNull(remotePushModel.getSizeList());
         Assertions.assertEquals(3, remotePushModel.getSizeList().length);
-        Assertions.assertArrayEquals(new int[] {10, 20, 30}, remotePushModel.getSizeList());
+        Assertions.assertArrayEquals(new int[]{10, 20, 30}, remotePushModel.getSizeList());
 
         Assertions.assertEquals(0, nameChangeCounter.get());
         Assertions.assertEquals(0, valueChangeCounter.get());
@@ -155,23 +166,23 @@ class MainTest {
     @Test
     void arrayChangesTest() throws Exception {
         /*** CHANGES IN ARRAYS ***/
-        controlClient.changeSizeList(new int[] {50, 70, 66, 90, 30});
+        controlClient.changeSizeList(new int[]{50, 70, 66, 90, 30});
         Assertions.assertEquals(1, sizesChangeCounter.get());
         Assertions.assertNotNull(remotePushModel.getSizeList());
         Assertions.assertEquals(5, remotePushModel.getSizeList().length);
-        Assertions.assertArrayEquals(new int[] {50, 70, 66, 90, 30}, remotePushModel.getSizeList());
+        Assertions.assertArrayEquals(new int[]{50, 70, 66, 90, 30}, remotePushModel.getSizeList());
 
         controlClient.removeSize(66);
         Assertions.assertEquals(2, sizesChangeCounter.get());
         Assertions.assertNotNull(remotePushModel.getSizeList());
         Assertions.assertEquals(4, remotePushModel.getSizeList().length);
-        Assertions.assertArrayEquals(new int[] {50, 70, 90, 30}, remotePushModel.getSizeList());
+        Assertions.assertArrayEquals(new int[]{50, 70, 90, 30}, remotePushModel.getSizeList());
 
         controlClient.addSize(77);
         Assertions.assertEquals(3, sizesChangeCounter.get());
         Assertions.assertNotNull(remotePushModel.getSizeList());
         Assertions.assertEquals(5, remotePushModel.getSizeList().length);
-        Assertions.assertArrayEquals(new int[] {50, 70, 90, 30, 77}, remotePushModel.getSizeList());
+        Assertions.assertArrayEquals(new int[]{50, 70, 90, 30, 77}, remotePushModel.getSizeList());
     }
 
     @Test

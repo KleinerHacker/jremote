@@ -3,18 +3,17 @@
 
     <parent>
         <groupId>com.github.kleinerhacker</groupId>
-        <artifactId>jremote</artifactId>
+        <artifactId>jremote-extensions</artifactId>
         <version>0.2.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jremote-extensions</artifactId>
+    <artifactId>jremote-extensions.up</artifactId>
     <name>${project.groupId} - ${project.artifactId}</name>
     <packaging>pom</packaging>
 
     <modules>
-        <module>config</module>
-        <module>np</module>
-        <module>up</module>
+        <module>api</module>
+        <module>impl</module>
     </modules>
 
 </project>

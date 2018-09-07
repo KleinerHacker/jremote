@@ -2,6 +2,7 @@ package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
 import org.pcsoft.framework.jremote.ext.np.api.exception.JRemoteNetworkProtocolException;
+import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -18,17 +19,23 @@ public abstract class RemoteBase<S extends State> implements Remote<S> {
     protected final String host;
     protected final int port;
     protected final NetworkProtocol networkProtocol;
+    protected final UpdatePolicy updatePolicy;
 
     private LifecycleState lifecycleState = LifecycleState.Created;
     private final List<Consumer<LifecycleState>> lifecycleStateChangeListenerList = new ArrayList<>();
 
-    RemoteBase(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass) {
+    RemoteBase(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass, Class<? extends UpdatePolicy> updatePolicyClass) {
         this.host = host;
         this.port = port;
         try {
             this.networkProtocol = networkProtocolClass.getConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new JRemoteNetworkProtocolException("Unable to instantiate network protocol " + networkProtocolClass.getName(), e);
+        }
+        try {
+            this.updatePolicy = updatePolicyClass.getConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new JRemoteNetworkProtocolException("Unable to instantiate update policy " + updatePolicyClass.getName(), e);
         }
     }
 
@@ -70,12 +77,21 @@ public abstract class RemoteBase<S extends State> implements Remote<S> {
     }
 
     @Override
-    public Class<? extends NetworkProtocol> getNetworkProtocolClass() {
+    public final Class<? extends NetworkProtocol> getNetworkProtocolClass() {
         return networkProtocol.getClass();
     }
 
-    NetworkProtocol getNetworkProtocol() {
+    @Override
+    public Class<? extends UpdatePolicy> getUpdatePolicyClass() {
+        return updatePolicy.getClass();
+    }
+
+    final NetworkProtocol getNetworkProtocol() {
         return networkProtocol;
+    }
+
+    final UpdatePolicy getUpdatePolicy() {
+        return updatePolicy;
     }
 
     private void fireLifecycleStateChanged() {

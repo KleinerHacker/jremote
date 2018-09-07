@@ -2,30 +2,38 @@ package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.ext.config.api.ClientConfiguration;
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
-import org.pcsoft.framework.jremote.ext.np.impl.rmi.RmiProtocol;
+import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
 
+/**
+ * Represents a builder to create a {@link RemoteClient} with all its features.
+ */
 public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
-    public static RemoteClientBuilder create(String host, int port, int ownPort) {
-        return create(host, port, ownPort, RmiProtocol.class);
-    }
-
-    public static RemoteClientBuilder create(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass) {
-        return new RemoteClientBuilder(host, port, ownPort, networkProtocolClass);
-    }
-
+    /**
+     * Creates an instance of this builder (with default extension usage, see {@link ExtensionConfiguration})
+     * @param configuration Client configuration (system settings) for the client to create
+     * @return
+     */
     public static RemoteClientBuilder create(ClientConfiguration configuration) {
-        return create(configuration, RmiProtocol.class);
+        return create(configuration, new ExtensionConfiguration());
     }
 
-    public static RemoteClientBuilder create(ClientConfiguration configuration, Class<? extends NetworkProtocol> networkProtocolClass) {
-        configuration.validate();
-        return create(configuration.getHost(), configuration.getPort(), configuration.getOwnPort(), networkProtocolClass);
+    /**
+     * Creates an instance of this builder
+     * @param clientConfiguration Client configuration (system settings) for the client to create
+     * @param extensionConfiguration Extension configuration (defines extensions to use for this client)
+     * @return
+     */
+    public static RemoteClientBuilder create(ClientConfiguration clientConfiguration, ExtensionConfiguration extensionConfiguration) {
+        clientConfiguration.validate();
+        return new RemoteClientBuilder(clientConfiguration.getHost(), clientConfiguration.getPort(), clientConfiguration.getOwnPort(),
+                extensionConfiguration.getNetworkProtocolClass(), extensionConfiguration.getUpdatePolicyClass());
     }
 
     private final RemoteClient remoteClient;
 
-    private RemoteClientBuilder(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass) {
-        remoteClient = new RemoteClient(host, port, ownPort, networkProtocolClass);
+    private RemoteClientBuilder(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass,
+                                Class<? extends UpdatePolicy> updatePolicyClass) {
+        remoteClient = new RemoteClient(host, port, ownPort, networkProtocolClass, updatePolicyClass);
         remoteClient.getProxyManager().setRemoteRegistrationClient(host, port, remoteClient.getNetworkProtocol());
         remoteClient.getProxyManager().setRemoteKeepAliveClient(host, port, remoteClient.getNetworkProtocol());
     }

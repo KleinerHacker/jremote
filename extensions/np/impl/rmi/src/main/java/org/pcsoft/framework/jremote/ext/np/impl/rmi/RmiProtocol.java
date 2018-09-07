@@ -8,6 +8,9 @@ import org.pcsoft.framework.jremote.ext.np.impl.rmi.internal.RmiService;
 import org.pcsoft.framework.jremote.ext.np.impl.rmi.internal.interf.RmiKeepAliveService;
 import org.pcsoft.framework.jremote.ext.np.impl.rmi.internal.interf.RmiRegistrationService;
 
+/**
+ * Represent the RMI implementation for a network protocol extension.
+ */
 public final class RmiProtocol implements NetworkProtocol {
     @Override
     public Service createService(Object serviceImplementation) {
