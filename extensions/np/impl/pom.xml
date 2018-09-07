@@ -14,7 +14,7 @@
 
     <modules>
         <module>rmi</module>
-        <module>tcp</module>
+        <module>rmi-test</module>
     </modules>
 
     <dependencies>

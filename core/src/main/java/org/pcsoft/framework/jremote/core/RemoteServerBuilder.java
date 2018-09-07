@@ -6,6 +6,7 @@ import org.pcsoft.framework.jremote.commons.ReflectionUtils;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 import org.pcsoft.framework.jremote.ext.config.api.ServerConfiguration;
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.np.impl.rmi.RmiProtocol;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -13,8 +14,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
+    public static RemoteServerBuilder create(String host, int port) {
+        return create(host, port, RmiProtocol.class);
+    }
+
     public static RemoteServerBuilder create(String host, int port, Class<? extends NetworkProtocol> networkProtocolClass) {
         return new RemoteServerBuilder(host, port, networkProtocolClass);
+    }
+
+    public static RemoteServerBuilder create(ServerConfiguration configuration) {
+        return create(configuration, RmiProtocol.class);
     }
 
     public static RemoteServerBuilder create(ServerConfiguration configuration, Class<? extends NetworkProtocol> networkProtocolClass) {

@@ -2,10 +2,19 @@ package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.ext.config.api.ClientConfiguration;
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.np.impl.rmi.RmiProtocol;
 
 public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
+    public static RemoteClientBuilder create(String host, int port, int ownPort) {
+        return create(host, port, ownPort, RmiProtocol.class);
+    }
+
     public static RemoteClientBuilder create(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass) {
         return new RemoteClientBuilder(host, port, ownPort, networkProtocolClass);
+    }
+
+    public static RemoteClientBuilder create(ClientConfiguration configuration) {
+        return create(configuration, RmiProtocol.class);
     }
 
     public static RemoteClientBuilder create(ClientConfiguration configuration, Class<? extends NetworkProtocol> networkProtocolClass) {

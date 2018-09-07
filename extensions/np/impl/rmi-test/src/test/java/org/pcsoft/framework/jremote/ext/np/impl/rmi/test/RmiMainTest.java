@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.core.test.basic;
+package org.pcsoft.framework.jremote.ext.np.impl.rmi.test;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -8,14 +8,15 @@ import org.pcsoft.framework.jremote.core.RemoteClient;
 import org.pcsoft.framework.jremote.core.RemoteClientBuilder;
 import org.pcsoft.framework.jremote.core.RemoteServer;
 import org.pcsoft.framework.jremote.core.RemoteServerBuilder;
-import org.pcsoft.framework.jremote.core.test.basic.api.*;
+import org.pcsoft.framework.jremote.ext.np.impl.rmi.RmiProtocol;
+import org.pcsoft.framework.jremote.ext.np.impl.rmi.test.api.*;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings("Duplicates")
-class MainTest {
+class RmiMainTest {
     private static RemoteServer remoteServer;
     private static RemoteClient remoteClient;
 
@@ -34,17 +35,17 @@ class MainTest {
 
     @BeforeAll
     static void init() throws Exception {
-        remoteServer = RemoteServerBuilder.create("localhost", 9998)
+        remoteServer = RemoteServerBuilder.create("localhost", 9998, RmiProtocol.class)
                 .withPushClient(TestRemotePushService.class)
+                .withPushModelData(TestRemotePushModelData.class)
                 .withEventClient(TestRemoteEventService.class)
                 .withRemoteControlService(new TestRemoteControllerImpl(
                         () -> remoteServer.getBroadcast().getPushClient(TestRemotePushService.class),
                         () -> remoteServer.getBroadcast().getEventClient(TestRemoteEventService.class)
                 ))
-                .withPushModelData(TestRemotePushModelData.class)
                 .build();
 
-        remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
+        remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999, RmiProtocol.class)
                 .withRemotePushModel(TestRemotePushModel.class)
                 .withRemotePushObserver(TestRemotePushObserver.class)
                 .withRemotePushService(TestRemotePushService.class)
@@ -67,16 +68,12 @@ class MainTest {
 
         remotePushModel = remoteClient.getData().getRemotePushModel(TestRemotePushModel.class);
         Assertions.assertNotNull(remotePushModel);
-        Assertions.assertEquals(5 + 7, remotePushModel.calc(5, 7));
         remotePushObserver = remoteClient.getData().getRemotePushObserver(TestRemotePushObserver.class);
         Assertions.assertNotNull(remotePushObserver);
-        Assertions.assertEquals((int) Math.pow(5 + 7, 2), remotePushObserver.calc(5, 7));
         remoteEventObserver = remoteClient.getData().getRemoteEventReceiver(TestRemoteEventReceiver.class);
         Assertions.assertNotNull(remoteEventObserver);
-        Assertions.assertEquals((int) Math.pow(5 + 7, 3), remoteEventObserver.calc(5, 7));
         controlClient = remoteClient.getControl().getControlClient(TestRemoteController.class);
         Assertions.assertNotNull(controlClient);
-        Assertions.assertEquals(5 * 7, controlClient.calc(5, 7));
 
         remotePushObserver.addNameListener(nameChangeCounter::incrementAndGet);
         remotePushObserver.addValueListener(valueChangeCounter::incrementAndGet);
@@ -108,7 +105,7 @@ class MainTest {
         remoteClient.close();
         remoteServer.close();
 
-        Thread.sleep(1000);
+        Thread.sleep(3000);
     }
 
     @Test

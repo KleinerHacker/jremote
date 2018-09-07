@@ -3,6 +3,7 @@ module pcsoft.jremote.core {
     requires pcsoft.jremote.ext.np.api;
     requires pcsoft.jremote.ext.config.api;
     requires pcsoft.jremote.commons;
+    requires pcsoft.jremote.ext.np.impl.rmi;
     requires org.slf4j;
     requires java.rmi;
     requires org.apache.commons.lang3;
