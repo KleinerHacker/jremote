@@ -4,7 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.pcsoft.framework.jremote.api.PushModelProperty;
 import org.pcsoft.framework.jremote.api.RemotePushModel;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
-import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
+import org.pcsoft.framework.jremote.commons.type.MethodKey;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 
 import java.lang.reflect.Method;

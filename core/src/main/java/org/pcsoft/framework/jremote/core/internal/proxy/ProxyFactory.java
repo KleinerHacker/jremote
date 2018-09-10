@@ -3,8 +3,9 @@ package org.pcsoft.framework.jremote.core.internal.proxy;
 import org.pcsoft.framework.jremote.api.type.EventReceivedListener;
 import org.pcsoft.framework.jremote.api.type.PushChangedListener;
 import org.pcsoft.framework.jremote.core.internal.registry.ClientRegistry;
-import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
+import org.pcsoft.framework.jremote.commons.type.MethodKey;
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
 
 import java.util.List;
 import java.util.Map;
@@ -24,12 +25,14 @@ public final class ProxyFactory {
         return RemoteEventReceiverProxyBuilder.getInstance().buildProxy(clazz, listenerMap);
     }
 
-    public static <T> T buildRemotePushServiceProxy(Class<T> clazz, Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangedListener>> listenerMap, Supplier<Class<?>[]> modelClassesSupplier) {
-        return RemotePushServiceProxyBuilder.getInstance().buildProxy(clazz, new RemotePushServiceProxyBuilder.DataHolder(dataMap, listenerMap, modelClassesSupplier));
+    public static <T> T buildRemotePushServiceProxy(Class<T> clazz, Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangedListener>> listenerMap,
+                                                    Supplier<Class<?>[]> modelClassesSupplier, UpdatePolicy updatePolicy) {
+        return RemotePushServiceProxyBuilder.getInstance().buildProxy(clazz, new RemotePushServiceProxyBuilder.DataHolder(
+                dataMap, listenerMap, modelClassesSupplier, updatePolicy));
     }
 
-    public static <T> T buildRemoteEventServiceProxy(Class<T> clazz, Map<MethodKey, List<EventReceivedListener>> listenerMap) {
-        return RemoteEventServiceProxyBuilder.getInstance().buildProxy(clazz, listenerMap);
+    public static <T> T buildRemoteEventServiceProxy(Class<T> clazz, Map<MethodKey, List<EventReceivedListener>> listenerMap, UpdatePolicy updatePolicy) {
+        return RemoteEventServiceProxyBuilder.getInstance().buildProxy(clazz, new RemoteEventServiceProxyBuilder.DataHolder(listenerMap, updatePolicy));
     }
 
     public static <T> T buildRemoteClientProxy(Class<T> clazz, String host, int port, NetworkProtocol networkProtocol) {

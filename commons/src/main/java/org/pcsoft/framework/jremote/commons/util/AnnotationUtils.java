@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.commons;
+package org.pcsoft.framework.jremote.commons.util;
 
 import org.pcsoft.framework.jremote.api.PushModelProperty;
 import org.pcsoft.framework.jremote.api.RemotePushModel;

@@ -3,7 +3,7 @@ package org.pcsoft.framework.jremote.core.internal.proxy;
 import org.pcsoft.framework.jremote.api.PushObserverListener;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.type.PushChangedListener;
-import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
+import org.pcsoft.framework.jremote.commons.type.MethodKey;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 
 import java.lang.reflect.Method;

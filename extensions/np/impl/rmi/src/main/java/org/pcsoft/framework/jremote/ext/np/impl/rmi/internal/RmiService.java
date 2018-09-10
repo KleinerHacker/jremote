@@ -1,8 +1,8 @@
 package org.pcsoft.framework.jremote.ext.np.impl.rmi.internal;
 
 import org.apache.commons.lang3.StringUtils;
-import org.pcsoft.framework.jremote.commons.AnnotationUtils;
-import org.pcsoft.framework.jremote.commons.ReflectionUtils;
+import org.pcsoft.framework.jremote.commons.util.AnnotationUtils;
+import org.pcsoft.framework.jremote.commons.util.ReflectionUtils;
 import org.pcsoft.framework.jremote.ext.np.api.ServiceBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

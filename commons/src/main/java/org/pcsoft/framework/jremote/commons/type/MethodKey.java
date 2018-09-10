@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.core.internal.type;
+package org.pcsoft.framework.jremote.commons.type;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.core.internal.type.wrapper;
+package org.pcsoft.framework.jremote.core.internal.type;
 
 import org.pcsoft.framework.jremote.ext.np.api.annotation.Registration;
 

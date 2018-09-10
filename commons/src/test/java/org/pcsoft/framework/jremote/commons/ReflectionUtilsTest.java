@@ -7,6 +7,7 @@ import org.pcsoft.framework.jremote.commons.type.Contr;
 import org.pcsoft.framework.jremote.commons.type.Interf1;
 import org.pcsoft.framework.jremote.commons.type.Interf3;
 import org.pcsoft.framework.jremote.commons.type.Interf4;
+import org.pcsoft.framework.jremote.commons.util.ReflectionUtils;
 
 import java.util.List;
 

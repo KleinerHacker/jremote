@@ -2,8 +2,8 @@ package org.pcsoft.framework.jremote.core.internal.processor;
 
 import org.pcsoft.framework.jremote.core.ClientState;
 import org.pcsoft.framework.jremote.core.RemoteClient;
-import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
-import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteRegistrationClientWrapper;
+import org.pcsoft.framework.jremote.core.internal.type.RemoteKeepAliveClientWrapper;
+import org.pcsoft.framework.jremote.core.internal.type.RemoteRegistrationClientWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

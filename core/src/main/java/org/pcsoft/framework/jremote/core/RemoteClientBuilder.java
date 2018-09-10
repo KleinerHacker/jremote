@@ -61,14 +61,14 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
 
     public final RemoteClientBuilder withRemotePushService(Class<?>... pushServiceClasses) {
         for (final Class<?> pushServiceClass : pushServiceClasses) {
-            remoteClient.getProxyManager().addRemotePushServiceProxy(pushServiceClass);
+            remoteClient.getProxyManager().addRemotePushServiceProxy(pushServiceClass, remoteClient.getUpdatePolicy());
         }
         return this;
     }
 
     public final RemoteClientBuilder withRemoteEventService(Class<?>... eventServiceClasses) {
         for (final Class<?> pushServiceClass : eventServiceClasses) {
-            remoteClient.getProxyManager().addRemoteEventServiceProxy(pushServiceClass);
+            remoteClient.getProxyManager().addRemoteEventServiceProxy(pushServiceClass, remoteClient.getUpdatePolicy());
         }
         return this;
     }

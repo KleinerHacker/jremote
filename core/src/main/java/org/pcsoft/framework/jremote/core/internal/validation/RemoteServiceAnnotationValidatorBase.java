@@ -1,6 +1,6 @@
 package org.pcsoft.framework.jremote.core.internal.validation;
 
-import org.pcsoft.framework.jremote.commons.AnnotationUtils;
+import org.pcsoft.framework.jremote.commons.util.AnnotationUtils;
 
 import java.lang.reflect.Method;
 

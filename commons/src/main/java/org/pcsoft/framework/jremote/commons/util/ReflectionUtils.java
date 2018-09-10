@@ -1,4 +1,4 @@
-package org.pcsoft.framework.jremote.commons;
+package org.pcsoft.framework.jremote.commons.util;
 
 import java.util.ArrayList;
 import java.util.List;

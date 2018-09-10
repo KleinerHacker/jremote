@@ -3,10 +3,11 @@ package org.pcsoft.framework.jremote.core.internal.manager;
 import org.pcsoft.framework.jremote.api.type.EventReceivedListener;
 import org.pcsoft.framework.jremote.api.type.PushChangedListener;
 import org.pcsoft.framework.jremote.core.internal.proxy.ProxyFactory;
-import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
-import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteKeepAliveClientWrapper;
-import org.pcsoft.framework.jremote.core.internal.type.wrapper.RemoteRegistrationClientWrapper;
+import org.pcsoft.framework.jremote.commons.type.MethodKey;
+import org.pcsoft.framework.jremote.core.internal.type.RemoteKeepAliveClientWrapper;
+import org.pcsoft.framework.jremote.core.internal.type.RemoteRegistrationClientWrapper;
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;
+import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
 
 import java.util.HashMap;
 import java.util.List;
@@ -72,11 +73,11 @@ public final class ClientProxyManager {
     //endregion
 
     //region Push Service Proxy
-    public <T> void addRemotePushServiceProxy(Class<T> clazz) {
+    public <T> void addRemotePushServiceProxy(Class<T> clazz, UpdatePolicy updatePolicy) {
         if (pushServiceProxyMap.containsKey(clazz))
             throw new IllegalStateException("Remote push service class already added: " + clazz.getName());
 
-        final T proxy = ProxyFactory.buildRemotePushServiceProxy(clazz, propertyValueMap, pushObserverListenerMap, this::getRemotePushModelClasses);
+        final T proxy = ProxyFactory.buildRemotePushServiceProxy(clazz, propertyValueMap, pushObserverListenerMap, this::getRemotePushModelClasses, updatePolicy);
         pushServiceProxyMap.put(clazz, proxy);
     }
 
@@ -116,11 +117,11 @@ public final class ClientProxyManager {
     //endregion
 
     //region Event Service Proxy
-    public <T> void addRemoteEventServiceProxy(Class<T> clazz) {
+    public <T> void addRemoteEventServiceProxy(Class<T> clazz, UpdatePolicy updatePolicy) {
         if (eventServiceProxyMap.containsKey(clazz))
             throw new IllegalStateException("Remote event service class already added: " + clazz.getName());
 
-        final T proxy = ProxyFactory.buildRemoteEventServiceProxy(clazz, eventReceiverListenerMap);
+        final T proxy = ProxyFactory.buildRemoteEventServiceProxy(clazz, eventReceiverListenerMap, updatePolicy);
         eventServiceProxyMap.put(clazz, proxy);
     }
 

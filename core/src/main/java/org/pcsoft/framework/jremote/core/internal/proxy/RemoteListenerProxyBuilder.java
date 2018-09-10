@@ -3,7 +3,7 @@ package org.pcsoft.framework.jremote.core.internal.proxy;
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.type.RemoteListener;
 import org.pcsoft.framework.jremote.api.type.ObserverListenerType;
-import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
+import org.pcsoft.framework.jremote.commons.type.MethodKey;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

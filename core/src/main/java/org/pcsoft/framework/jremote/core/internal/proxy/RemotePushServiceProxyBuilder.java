@@ -7,8 +7,10 @@ import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.exception.JRemoteExecutionException;
 import org.pcsoft.framework.jremote.api.type.PushChangedListener;
 import org.pcsoft.framework.jremote.api.type.PushItemUpdate;
-import org.pcsoft.framework.jremote.core.internal.type.MethodKey;
+import org.pcsoft.framework.jremote.api.type.PushMethodType;
+import org.pcsoft.framework.jremote.commons.type.MethodKey;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
+import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,9 +53,14 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
     @Override
     protected Object invokeMethod(Push push, DataHolder data, Class<?> clazz, Method method, Object[] args) {
         final MethodKey key = new MethodKey(push.modelClass(), push.property());
+        final PushItemUpdate pushItemUpdate = extractPushItemUpdate(push.type(), args);
         final Class<?> targetType = findTypeFor(push, method, data.getRemoteModelClassesSupplier().get());
-        updateData(push, key, targetType, args, data.getDataMap());
-        fireChange(key, data.getListenerMap());
+
+        //Run via update policy. The algorithm can run given callback at any time (on own thread or directly)
+        data.getUpdatePolicy().runModelUpdateAndObserverInvocation(key, pushItemUpdate, args[0], () -> {
+            updateData(push, key, targetType, args, data.getDataMap());
+            fireChange(key, data.getListenerMap());
+        });
 
         return null;
     }
@@ -233,19 +240,30 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
         dataMap.put(key, data);
     }
 
+    private static PushItemUpdate extractPushItemUpdate(PushMethodType type, Object[] args) {
+        if (type == PushMethodType.SingleListItem)
+            return (PushItemUpdate) args[1];
+
+        return null;
+    }
+
     private RemotePushServiceProxyBuilder() {
         super(Push.class);
     }
 
+    //<editor-fold desc="Helper Classes">
     static final class DataHolder {
         private final Map<MethodKey, Object> dataMap;
         private final Map<MethodKey, List<PushChangedListener>> listenerMap;
         private final Supplier<Class<?>[]> remoteModelClassesSupplier;
 
-        public DataHolder(Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangedListener>> listenerMap, Supplier<Class<?>[]> remoteModelClassesSupplier) {
+        private final UpdatePolicy updatePolicy;
+
+        public DataHolder(Map<MethodKey, Object> dataMap, Map<MethodKey, List<PushChangedListener>> listenerMap, Supplier<Class<?>[]> remoteModelClassesSupplier, UpdatePolicy updatePolicy) {
             this.dataMap = dataMap;
             this.listenerMap = listenerMap;
             this.remoteModelClassesSupplier = remoteModelClassesSupplier;
+            this.updatePolicy = updatePolicy;
         }
 
         public Map<MethodKey, Object> getDataMap() {
@@ -259,5 +277,10 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
         public Supplier<Class<?>[]> getRemoteModelClassesSupplier() {
             return remoteModelClassesSupplier;
         }
+
+        public UpdatePolicy getUpdatePolicy() {
+            return updatePolicy;
+        }
     }
+    //</editor-fold>
 }

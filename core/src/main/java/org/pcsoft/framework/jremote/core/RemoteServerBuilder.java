@@ -2,7 +2,7 @@ package org.pcsoft.framework.jremote.core;
 
 import org.pcsoft.framework.jremote.api.exception.JRemoteAnnotationException;
 import org.pcsoft.framework.jremote.api.exception.JRemoteExecutionException;
-import org.pcsoft.framework.jremote.commons.ReflectionUtils;
+import org.pcsoft.framework.jremote.commons.util.ReflectionUtils;
 import org.pcsoft.framework.jremote.core.internal.validation.Validator;
 import org.pcsoft.framework.jremote.ext.config.api.ServerConfiguration;
 import org.pcsoft.framework.jremote.ext.np.api.NetworkProtocol;

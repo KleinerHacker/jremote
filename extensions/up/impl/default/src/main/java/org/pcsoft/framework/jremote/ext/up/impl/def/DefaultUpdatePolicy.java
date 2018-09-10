@@ -1,5 +1,7 @@
 package org.pcsoft.framework.jremote.ext.up.impl.def;
 
+import org.pcsoft.framework.jremote.api.type.PushItemUpdate;
+import org.pcsoft.framework.jremote.commons.type.MethodKey;
 import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
 
 /**
@@ -7,12 +9,12 @@ import org.pcsoft.framework.jremote.ext.up.api.UpdatePolicy;
  */
 public class DefaultUpdatePolicy implements UpdatePolicy {
     @Override
-    public void updateModelAndCallObserver() {
-
+    public void runModelUpdateAndObserverInvocation(MethodKey methodKey, PushItemUpdate update, Object value, Runnable updateCallback) {
+        updateCallback.run();
     }
 
     @Override
-    public void callReceiver() {
-
+    public void callReceiver(MethodKey methodKey, Runnable eventCallback) {
+        eventCallback.run();
     }
 }

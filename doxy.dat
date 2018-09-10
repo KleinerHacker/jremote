@@ -846,6 +846,7 @@ EXCLUDE_SYMBOLS        = org::pcsoft::framework::jremote::core::internal::* \
                          org::pcsoft::framework::jremote::api::internal::* \
                          org::pcsoft::framework::jremote::ext::np::impl::tcp::internal::* \
                          org::pcsoft::framework::jremote::ext::np::impl::rmi::internal::*
+                         org::pcsoft::framework::jremote::ext::up::impl::queued::internal::*
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include
