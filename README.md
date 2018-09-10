@@ -95,7 +95,7 @@ At the end we need an implementation for the control service to push the greetin
 ```Java
 public class ServerRunner {
   public static void main(String[] args) {
-    final RemoteServer remoteServer = RemoteServerBuilder.create("localhost", 9998, RmiProtocol.class)
+    final RemoteServer remoteServer = RemoteServerBuilder.create("localhost", 9998)
                 .withPushClient(HelloPushService.class)
                 .withRemoteControlService(new HelloControlServiceImpl(
                         () -> remoteServer.getBroadcast().getPushClient(HelloPushService.class)
@@ -117,7 +117,7 @@ In this snipped we create the remote server via a builder, put in all interfaces
 ```Java
 public class ClientRunner {
   public static void main(String[] args) throws Exception {
-    final RemoteClient remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999, RmiProtocol.class)
+    final RemoteClient remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
                 .withRemotePushModel(HelloModel.class)
                 .withRemotePushObserver(HelloObserver.class)
                 .withRemotePushService(HelloPushService.class)
@@ -150,14 +150,6 @@ public class ClientRunner {
 ```
 This is the client implementation. We use a builder, too, and register all needed client side interfaces. Than we get the proxies to add observer listener and control the server. After the user press enter the client is closed.
 
-To run JRemote you need the network protocol implementation RMI:
-
-<pre>
-&lt;dependency>
-  &lt;groupId>com.github.kleinerhacker&lt;/groupId>
-  &lt;artifactId>jremote-plugins.np-impl.rmi&lt;/artifactId>
-  &lt;version>...&lt;/version>
-&lt;/dependency>
-</pre>
+In default JRemote use RMI.
 
 Thats all.
