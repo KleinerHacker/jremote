@@ -25,24 +25,6 @@ final class RemoteRegistrationServiceProxyBuilder extends ProxyBuilder<Registrat
     }
 
     @Override
-    protected void assertMethod(Registration registration, Class<?> clazz, Method method, Object[] args) {
-        switch (registration.value()) {
-            case Register:
-                assert args.length == 3;
-                assert args[0] instanceof String;
-                assert args[1] instanceof String;
-                assert args[2] instanceof Integer || args[2].getClass() == int.class;
-                break;
-            case Unregister:
-                assert args.length == 1;
-                assert args[0] instanceof String;
-                break;
-            default:
-                throw new RuntimeException();
-        }
-    }
-
-    @Override
     protected Object invokeMethod(Registration registration, ClientRegistry clientRegistry, Class<?> clazz, Method method, Object[] args) {
         switch (registration.value()) {
             case Register:

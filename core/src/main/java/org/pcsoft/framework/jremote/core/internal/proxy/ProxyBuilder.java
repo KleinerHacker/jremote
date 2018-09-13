@@ -42,7 +42,6 @@ abstract class ProxyBuilder<A extends Annotation, D> {
             LOGGER.debug(String.format("Call " + getProxyName() + " method %s#%s", clazz.getName(), method.getName()));
 
             final A annotation = method.getAnnotation(methodAnnotationClass);
-            assert annotation != null || method.isDefault();
 
             if (annotation == null) {
                 if (method.isDefault())
@@ -51,9 +50,7 @@ abstract class ProxyBuilder<A extends Annotation, D> {
                             .bindTo(proxy)
                             .invokeWithArguments(args);
 
-                assert false;
-            } else {
-                assertMethod(annotation, clazz, method, args);
+                throw new RuntimeException();
             }
 
             try {
@@ -71,17 +68,6 @@ abstract class ProxyBuilder<A extends Annotation, D> {
      * @param clazz
      */
     protected abstract void validate(Class<?> clazz) throws JRemoteAnnotationException;
-
-    /**
-     * Run additional assertions (use <code>assert</code>), already validated in {@link #validate(Class)}, optional
-     *
-     * @param annotation
-     * @param method
-     * @param args
-     */
-    protected void assertMethod(A annotation, Class<?> clazz, Method method, Object[] args) {
-        //Empty, optional to overwrite
-    }
 
     /**
      * Invoke the method logic

@@ -26,11 +26,6 @@ final class RemotePushModelProxyBuilder extends ProxyBuilder<PushModelProperty, 
     }
 
     @Override
-    protected void assertMethod(PushModelProperty annotation, Class<?> clazz, Method method, Object[] args) {
-        assert method.getParameterCount() == 0 && method.getReturnType() != void.class;
-    }
-
-    @Override
     protected Object invokeMethod(PushModelProperty modelProperty, Map<MethodKey, Object> dataMap, Class<?> clazz, Method method, Object[] args) {
         final MethodKey key = new MethodKey(method.getDeclaringClass(), modelProperty.value());
         final Object value = dataMap.get(key);

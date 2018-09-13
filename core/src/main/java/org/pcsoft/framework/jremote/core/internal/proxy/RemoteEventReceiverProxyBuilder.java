@@ -23,11 +23,6 @@ final class RemoteEventReceiverProxyBuilder extends RemoteListenerProxyBuilder<E
     }
 
     @Override
-    protected void assertMethod(EventReceiverListener annotation, Class<?> clazz, Method method, Object[] args) {
-        assert method.getParameterCount() == 1 && method.getParameterTypes()[0] == EventReceivedListener.class && method.getReturnType() == void.class;
-    }
-
-    @Override
     protected Object invokeMethod(EventReceiverListener receiverListener, Map<MethodKey, List<EventReceivedListener>> listenerMap, Class<?> clazz, Method method, Object[] args) {
         addOrRemoveListener(clazz, method, (EventReceivedListener) args[0], new MethodKey(method.getDeclaringClass(), receiverListener.value()),
                 receiverListener.listenerType(), listenerMap);

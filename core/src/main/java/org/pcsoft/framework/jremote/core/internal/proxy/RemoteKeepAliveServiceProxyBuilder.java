@@ -25,13 +25,6 @@ final class RemoteKeepAliveServiceProxyBuilder extends ProxyBuilder<KeepAlive, C
     }
 
     @Override
-    protected void assertMethod(KeepAlive keepAlive, Class<?> clazz, Method method, Object[] args) {
-        assert args.length == 1;
-        assert args[0] instanceof String;
-        assert method.getReturnType() == boolean.class || method.getReturnType() == Boolean.class;
-    }
-
-    @Override
     protected Object invokeMethod(KeepAlive keepAlive, ClientRegistry clientRegistry, Class<?> clazz, Method method, Object[] args) {
         return clientRegistry.containsClient((String) args[0]);
     }

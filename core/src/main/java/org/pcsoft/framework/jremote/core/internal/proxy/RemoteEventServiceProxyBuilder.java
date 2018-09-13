@@ -28,11 +28,6 @@ final class RemoteEventServiceProxyBuilder extends ProxyBuilder<Event, RemoteEve
     }
 
     @Override
-    protected void assertMethod(Event event, Class<?> clazz, Method method, Object[] args) {
-        assert method.getParameterCount() == 1 && method.getReturnType() == void.class;
-    }
-
-    @Override
     protected Object invokeMethod(Event event, DataHolder dataHolder, Class<?> clazz, Method method, Object[] args) {
         final MethodKey key = new MethodKey(event.eventClass(), event.event());
         dataHolder.getUpdatePolicy().callReceiver(key, () -> fireEvent(key, dataHolder.getListenerMap(), args[0]));

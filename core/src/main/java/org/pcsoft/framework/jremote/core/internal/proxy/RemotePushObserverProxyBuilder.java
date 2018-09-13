@@ -23,11 +23,6 @@ final class RemotePushObserverProxyBuilder extends RemoteListenerProxyBuilder<Pu
     }
 
     @Override
-    protected void assertMethod(PushObserverListener annotation, Class<?> clazz, Method method, Object[] args) {
-        assert method.getParameterCount() == 1 && method.getParameterTypes()[0] == PushChangedListener.class && method.getReturnType() == void.class;
-    }
-
-    @Override
     protected Object invokeMethod(PushObserverListener observerListener, Map<MethodKey, List<PushChangedListener>> listenerMap, Class<?> clazz, Method method, Object[] args) {
         addOrRemoveListener(clazz, method, (PushChangedListener) args[0], new MethodKey(observerListener.modelClass(), observerListener.property()),
                 observerListener.listenerType(), listenerMap);

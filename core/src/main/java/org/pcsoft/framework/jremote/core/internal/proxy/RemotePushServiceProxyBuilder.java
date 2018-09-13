@@ -37,20 +37,6 @@ final class RemotePushServiceProxyBuilder extends ProxyBuilder<Push, RemotePushS
     }
 
     @Override
-    protected void assertMethod(Push push, Class<?> clazz, Method method, Object[] args) {
-        switch (push.type()) {
-            case Default:
-                assert method.getParameterCount() == 1 && method.getReturnType() == void.class;
-                break;
-            case SingleListItem:
-                assert method.getParameterCount() == 2 && method.getReturnType() == void.class;
-                break;
-            default:
-                throw new RuntimeException();
-        }
-    }
-
-    @Override
     protected Object invokeMethod(Push push, DataHolder data, Class<?> clazz, Method method, Object[] args) {
         final MethodKey key = new MethodKey(push.modelClass(), push.property());
         final PushItemUpdate pushItemUpdate = extractPushItemUpdate(push.type(), args);
