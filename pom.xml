@@ -35,6 +35,7 @@
         <module>core</module>
         <module>core-test</module>
         <module>extensions</module>
+        <module>tutorial</module>
     </modules>
 
     <build>
