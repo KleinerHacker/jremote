@@ -74,8 +74,8 @@ public class Tutorial {
                         () -> REMOTE_SERVER.get().getBroadcast().getEventClient(HelloEventService.class),
                         () -> REMOTE_SERVER.get().getBroadcast().getPushClient(HelloPushService.class)
                 ))
-                .withPushClient(HelloPushService.class)
-                .withEventClient(HelloEventService.class)
+                .withRemotePushClient(HelloPushService.class)
+                .withRemoteEventClient(HelloEventService.class)
                 .withPushModelData(HelloPushModelData.class)
                 .build()
         );

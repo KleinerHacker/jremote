@@ -46,14 +46,14 @@ public final class RemoteServerBuilder implements RemoteBuilder<RemoteServer> {
         remoteServer.getProxyManager().setRemoteKeepAliveServiceProxy(remoteServer.getNetworkProtocol().getKeepAliveServiceClass());
     }
 
-    public RemoteServerBuilder withPushClient(Class<?>... pushClientClasses) {
+    public RemoteServerBuilder withRemotePushClient(Class<?>... pushClientClasses) {
         for (final Class<?> clazz : pushClientClasses) {
             remoteServer.getProxyManager().addRemotePushClientProxy(clazz, remoteServer.getNetworkProtocol());
         }
         return this;
     }
 
-    public RemoteServerBuilder withEventClient(Class<?>... eventClientClasses) {
+    public RemoteServerBuilder withRemoteEventClient(Class<?>... eventClientClasses) {
         for (final Class<?> clazz : eventClientClasses) {
             remoteServer.getProxyManager().addRemoteEventClientProxy(clazz, remoteServer.getNetworkProtocol());
         }

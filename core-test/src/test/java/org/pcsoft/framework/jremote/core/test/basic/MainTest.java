@@ -42,8 +42,8 @@ class MainTest {
                 .setHost("localhost")
                 .setPort(9998);
         remoteServer = RemoteServerBuilder.create(serverConfiguration)
-                .withPushClient(TestRemotePushService.class)
-                .withEventClient(TestRemoteEventService.class)
+                .withRemotePushClient(TestRemotePushService.class)
+                .withRemoteEventClient(TestRemoteEventService.class)
                 .withRemoteControlService(new TestRemoteControllerImpl(
                         () -> remoteServer.getBroadcast().getPushClient(TestRemotePushService.class),
                         () -> remoteServer.getBroadcast().getEventClient(TestRemoteEventService.class)
