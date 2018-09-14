@@ -15,79 +15,92 @@ if the client is disconnected from server it try reconnect automatically. So if 
 This example shows a hello world code. For more information see wiki pages.
 
 ```Java
-@RemoteControlService
-public interface HelloControlService {
-  @Control
-  void sayHello(String name);
-}
-```
-This is the control interface to control the service. We want to instruct the server to say _Hello_ with a specified name.
-
-```Java
 @RemotePushModel
-public interface HelloModel {
-  @PushModelProperty("greeting")
-  String getGreeting();
+public interface HelloPushModel {
+    String PROP_GREETING_COUNT = "greeting-count";
+
+    @PushModelProperty(PROP_GREETING_COUNT)
+    int getGreetingCount();
 }
 ```
-Now we define a _Remote Model_ where the data from server push is stored into. We store the greeting of the server here.
+Now we define a _Remote Model_ where the data from server push is stored into. We store the count of greetings of the server here.
 
 ```Java
 @RemotePushObserver
-public interface HelloObserver {
-  @PushObserverListener(modelClass = HelloModel.class, property = "greeting")
-  void addGreetingListener(PushChangedListener listener);
-  
-  @PushObserverListener(modelClass = HelloModel.class, property = "greeting")
-  void removeGreetingListener(PushChangedListener listener);
+public interface HelloPushObserver {
+    @PushObserverListener(property = HelloPushModel.PROP_GREETING_COUNT, modelClass = HelloPushModel.class)
+    void addGreetingCountListener(PushChangedListener l);
+
+    @PushObserverListener(property = HelloPushModel.PROP_GREETING_COUNT, modelClass = HelloPushModel.class)
+    void removeGreetingCountListener(PushChangedListener l);
+}
 ```
-New we define a _Remote Observer_ to listen that the server send greeting to us. The detection for _add_ or _remove_ listener runs
-automatically via prefix _add_ or _remove_. The annotation need the reference to the _Remote Model_ and the property to listen, here
-_HelloModel_ and _greeting_.
+Now we define a _Remote Observer_ to listen that the server send a greeting counter update to us. The detection for _add_ or _remove_ listener runs automatically via prefix _add_ or _remove_. The annotation need the reference to the _Remote Model_ and the property to listen, here _HelloModel_ and _greeting_.
 
 ```Java
 @RemotePushService
-public interface HelloPushService  {
-  @Push(modelClass = HelloModel.class, property = "greeting")
-  void pushGreeting(String greeting);
+public interface HelloPushService extends Remote {
+    @Push(property = HelloPushModel.PROP_GREETING_COUNT, modelClass = HelloPushModel.class)
+    void pushGreetingCount(int count) throws RemoteException;
 }
 ```
 This interface is used for the server to push greetings to the connected clients. The greeting is pushed into the client remote model
 with name _HelloModel_ into property with name _greeting_.
 
 ```Java
-public class HelloModelData implements HelloModel {
-  private static String lastGreeting = "";
-  
-  public static void setLastGreeting(String greeting) {
-    lastGreeting = greeting;
-  }
-  
-  public static String getLastGreeting() {
-    return lastGreeting;
-  }
-  
-  @Overrite 
-  public String getGreeting() {
-    return lastGreeting;
-  }
+public final class GreetingManager {
+    private static final AtomicInteger COUNTER = new AtomicInteger(0);
+
+    public static int addGreeting() {
+        return COUNTER.incrementAndGet();
+    }
+
+    public static int getGreetings() {
+        return COUNTER.get();
+    }
+
+    private GreetingManager() {
+    }
 }
 ```
-Here we define which data are set if a client is registered on server. The server send this client initial all current data and initialize the client _Remote Model_. In this case we store the last greeting in a static field and return it if a new client is connected. This is optional.
+To count greetings on server side we need a manager class they allow to access ``COUNTER`` from all classes.
+
+```Java
+public class HelloPushModelData implements HelloPushModel {
+    @Override
+    public int getGreetingCount() {
+        return GreetingManager.getGreetings();
+    }
+}
+```
+Here we define which data are set if a client is registered on server. The server send this client initial all current data and initialize the client _Remote Model_. In this case we store the count of greetings in the manager (see above) and return it if a new client is connected. This is optional.
+
+```Java
+@RemoteControlService
+public interface HelloControlService extends Remote {
+    @Control
+    void sayHello(String name) throws RemoteException;
+}
+```
+This is the control interface to control the service. We want to instruct the server to say _Hello_ with a specified name.
 
 ```Java
 public class HelloControlServiceImpl implements HelloControlService {
-  private final Supplier<HelloPushService> pushSupplier;
-  
-  public HelloControlServiceImpl(Supplier<HelloPushService> pushSupplier) {
-    this.pushSupplier = pushSupplier;
-  }
+    private final Supplier<HelloEventService> eventService;
+    private final Supplier<HelloPushService> pushService;
 
-  @Overrite
-  public void sayHello(String name) {
-    HelloModelData.setLastGreeting("Hello, " + name);
-    pushSupplier.get().pushGreeting(HelloModelData.getLastGreeting());
-  }
+    public HelloControlServiceImpl(Supplier<HelloEventService> eventService, Supplier<HelloPushService> pushService) {
+        this.eventService = eventService;
+        this.pushService = pushService;
+    }
+
+    @Override
+    public void sayHello(String name) throws RemoteException {
+        final int value = GreetingManager.addGreeting();
+
+        pushService.get().pushGreetingCount(value);
+        eventService.get().onGreeting("Hello, " + name);
+    }
 }
 ```
 At the end we need an implementation for the control service to push the greeting to all clients. In this case we need a supplier cause the proxy is not created if this implementation class is initialized. See below.
