@@ -48,6 +48,29 @@ This interface is used for the server to push greetings to the connected clients
 with name _HelloModel_ into property with name _greeting_.
 
 ```Java
+@RemoteEventReceiver
+public interface HelloEventReceiver {
+    String EVENT_GREETING = "greeting";
+
+    @EventReceiverListener(EVENT_GREETING)
+    void addGreetingListener(EventReceivedListener<String> l);
+
+    @EventReceiverListener(EVENT_GREETING)
+    void removeGreetingListener(EventReceivedListener<String> l);
+}
+```
+We define an _EventReceiver_ to listen on greeting events from server. In client code we want to print out greetings from the event service below.
+
+```Java
+@RemoteEventService
+public interface HelloEventService extends Remote {
+    @Event(event = HelloEventReceiver.EVENT_GREETING, eventClass = HelloEventReceiver.class)
+    void onGreeting(String greeting) throws RemoteException;
+}
+```
+This defines the used event service with a method to send greetings to all clients.
+
+```Java
 public final class GreetingManager {
     private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
@@ -103,65 +126,87 @@ public class HelloControlServiceImpl implements HelloControlService {
     }
 }
 ```
-At the end we need an implementation for the control service to push the greeting to all clients. In this case we need a supplier cause the proxy is not created if this implementation class is initialized. See below.
+At the end we need an implementation for the control service to push the greeting counter and throws the greetings as event to all clients. In this case we need suppliers cause the proxy is not created if this implementation class is initialized. See below.
 
 ```Java
 public class ServerRunner {
+  private static final AtomicReference<RemoteServer> REMOTE_SERVER = new AtomicReference<>();
+
   public static void main(String[] args) {
-    final RemoteServer remoteServer = RemoteServerBuilder.create("localhost", 9998)
-                .withPushClient(HelloPushService.class)
-                .withRemoteControlService(new HelloControlServiceImpl(
-                        () -> remoteServer.getBroadcast().getPushClient(HelloPushService.class)
-                ))
-                .withPushModelData(HelloModelData.class)
+    final ServerConfiguration serverConfiguration = ServerFluentConfiguration.create()
+                .setHost("localhost")
+                .setPort(19999);
+    //With default values, optional
+    final ExtensionConfiguration extensionConfiguration = ExtensionConfigurationBuilder.create()
+                .withNetworkProtocol(RmiProtocol.class)
+                .withUpdatePolicy(DefaultUpdatePolicy.class)
                 .build();
-    
-    remoteServer.open();
+  
+    System.out.println("Startup service...");
+    REMOTE_SERVER.set(RemoteServerBuilder.create(serverConfiguration, extensionConfiguration)
+            .withRemoteControlService(new HelloControlServiceImpl(
+                    () -> REMOTE_SERVER.get().getBroadcast().getEventClient(HelloEventService.class),
+                    () -> REMOTE_SERVER.get().getBroadcast().getPushClient(HelloPushService.class)
+            ))
+            .withRemotePushClient(HelloPushService.class)
+            .withRemoteEventClient(HelloEventService.class)
+            .withPushModelData(HelloPushModelData.class)
+            .build()
+    );
+    REMOTE_SERVER.get().open();
     
     // Stay open until enter a key
     System.console().readLine();
     
-    remoteServer.close();
+    REMOTE_SERVER.get().close();
   }
 }
 ```
-In this snipped we create the remote server via a builder, put in all interfaces we need on server side (_HelloPushService_ as client, _HelloControlServiceImpl_ as conrete implementation (no proxy), _HelloModelData_ for initialize _Remote Model_ of a new connected client) and open it. After all we wait until user press enter and we close the service.
+In this snipped we create the remote server via a builder, put in all interfaces we need on server side (_HelloPushService_ / _HelloEventService_ as client, _HelloControlServiceImpl_ as concrete implementation (no proxy), _HelloPushModelData_ for initialize _Remote Model_ of a new connected client) and open it. After all we wait until user press enter and we close the service.
 
 ```Java
 public class ClientRunner {
+  private static final AtomicReference<RemoteClient> REMOTE_CLIENT = new AtomicReference<>();
+  private static final String[] NAMES = new String[] {
+            "Justin", "Jenny", "Nico", "Alexa", "Caroline"
+  };
+
   public static void main(String[] args) throws Exception {
-    final RemoteClient remoteClient = RemoteClientBuilder.create("localhost", 9998, 9999)
-                .withRemotePushModel(HelloModel.class)
-                .withRemotePushObserver(HelloObserver.class)
-                .withRemotePushService(HelloPushService.class)
-                .withRemoteControlClient(HelloControlService.class)
-                .build();
-                
-    remoteClient.open();
+    System.out.println("Startup client...");
+    REMOTE_CLIENT.set(RemoteClientBuilder.create(clientConfiguration, extensionConfiguration)
+            .withRemotePushModel(HelloPushModel.class)
+            .withRemotePushObserver(HelloPushObserver.class)
+            .withRemotePushService(HelloPushService.class)
+            .withRemoteEventReceiver(HelloEventReceiver.class)
+            .withRemoteEventService(HelloEventService.class)
+            .withRemoteControlClient(HelloControlService.class)
+            .build()
+    );
+    REMOTE_CLIENT.get().open();
     
-    Thread.sleep(1500);
+    final HelloPushModel pushModel = REMOTE_CLIENT.get().getData().getRemotePushModel(HelloPushModel.class);
+    final HelloPushObserver pushObserver = REMOTE_CLIENT.get().getData().getRemotePushObserver(HelloPushObserver.class);
+    final HelloEventReceiver eventReceiver = REMOTE_CLIENT.get().getData().getRemoteEventReceiver(HelloEventReceiver.class);
+    final HelloControlService controlClient = REMOTE_CLIENT.get().getControl().getControlClient(HelloControlService.class);
     
-    final HelloModel remotePushModel = remoteClient.getData().getRemotePushModel(HelloModel.class);
-    final HelloObserver remotePushObserver = remoteClient.getData().getRemotePushObserver(HelloObserver.class);
-    final HelloControlService controlClient = remoteClient.getControl().getControlClient(HelloControlService.class);
+    pushObserver.addGreetingCountListener(() -> System.out.println("New count of greetings: " + pushModel.getGreetingCount()));
+    eventReceiver.addGreetingListener(greeting -> System.out.println("Receive greetings: " + greeting));
     
-    //Register for greetings
-    remotePushObserver.addGreetingListener(() -> System.out.println("New Greeting: " + remotePushModel.getGreeting()));
-    
-    //Print current greeting
-    System.out.println("Current Greeting: " + remotePushModel.getGreeting());
-    
-    //Control server
-    controlClient.sayHello("everybody");
+    for (final String name : NAMES) {
+        System.out.println("Send 'Say Hello' for " + name);
+        controlClient.sayHello(name);
+
+        Thread.sleep(1000);
+    }
     
     // Stay open until enter a key
     System.console().readLine();
     
-    remoteClient.close();
+    REMOTE_CLIENT.get().close();
   }
 }
 ```
-This is the client implementation. We use a builder, too, and register all needed client side interfaces. Than we get the proxies to add observer listener and control the server. After the user press enter the client is closed.
+This is the client implementation. We use a builder, too, and register all needed client side interfaces. Than we get the proxies to add observer / event listener and control the server. After the user press enter the client is closed.
 
 In default JRemote use RMI.
 
