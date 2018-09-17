@@ -22,15 +22,18 @@ public abstract class ClientWrapper {
      * Find the fit method via method finder function, assert the found function and invoke it.
      *
      * @param methodFinder Finder function to find method to invoke
-     * @param assertion    Assertion predicate to assert function header
+     * @param assertion    Assertion predicate to assert function signature
      * @param args         Arguments to use for invocation
      * @return Result value of invocation
      */
-    protected final Object findAssertAndInvokeMethod(final Predicate<Method> methodFinder, final Predicate<Method> assertion, Object... args) {
+    protected final Object findAndInvokeMethod(final Predicate<Method> methodFinder, final Predicate<Method> assertion, Object... args) {
         final Method method = Stream.of(clientProxy.getClass().getInterfaces()[0].getDeclaredMethods())
                 .filter(methodFinder).findFirst().orElse(null);
-        assert method != null;
-        assert assertion.test(method);
+        if (method == null)
+            throw new IllegalStateException("Unable to find method in client proxy, see method finder");
+        if (!assertion.test(method))
+            throw new IllegalStateException(String.format("Found method %s#%s, but with wrong signature",
+                    method.getDeclaringClass().getName(), method.getName()));
 
         try {
             return method.invoke(clientProxy, args);

@@ -29,6 +29,9 @@ public final class ClientRegistry {
     public void registerClient(String uuid, String host, int port) {
         LOGGER.info("> Register new client <" + uuid + "> from " + host + ":" + port);
         synchronized (clientMap) {
+            if (clientMap.containsKey(uuid))
+                throw new IllegalStateException("Client already registered: " + uuid);
+
             final Client client = new Client(host, port);
             clientMap.put(uuid, client);
             fireClientRegistered(client);
@@ -42,6 +45,9 @@ public final class ClientRegistry {
     public void unregisterClient(String uuid) {
         LOGGER.info("> Unregister client <" + uuid + ">");
         synchronized (clientMap) {
+            if (!clientMap.containsKey(uuid))
+                throw new IllegalStateException("Client is not registered: " + uuid);
+
             final Client client = clientMap.get(uuid);
 
             clientMap.remove(uuid);

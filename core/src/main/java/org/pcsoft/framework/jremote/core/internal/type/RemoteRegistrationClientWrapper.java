@@ -8,7 +8,7 @@ public final class RemoteRegistrationClientWrapper extends ClientWrapper {
     }
 
     public void register(String uuid, String host, int port) {
-        findAssertAndInvokeMethod(
+        findAndInvokeMethod(
                 method -> method.getAnnotation(Registration.class) != null &&
                         method.getAnnotation(Registration.class).value() == Registration.RegistrationType.Register,
                 method -> method.getParameterCount() == 3 && method.getParameterTypes()[0] == String.class && method.getParameterTypes()[1] == String.class &&
@@ -18,7 +18,7 @@ public final class RemoteRegistrationClientWrapper extends ClientWrapper {
     }
 
     public void unregister(String uuid) {
-        findAssertAndInvokeMethod(
+        findAndInvokeMethod(
                 method -> method.getAnnotation(Registration.class) != null &&
                         method.getAnnotation(Registration.class).value() == Registration.RegistrationType.Unregister,
                 method -> method.getParameterCount() == 1 && method.getParameterTypes()[0] == String.class && method.getReturnType() == void.class,

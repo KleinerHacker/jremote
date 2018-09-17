@@ -8,7 +8,7 @@ public final class RemoteKeepAliveClientWrapper extends ClientWrapper {
     }
 
     public boolean ping(String uuid) {
-        return (boolean) findAssertAndInvokeMethod(
+        return (boolean) findAndInvokeMethod(
                 method -> method.getAnnotation(KeepAlive.class) != null,
                 method -> method.getParameterCount() == 1 && method.getParameterTypes()[0] == String.class &&
                         (method.getReturnType() == Boolean.class || method.getReturnType() == boolean.class),

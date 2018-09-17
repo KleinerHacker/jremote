@@ -34,8 +34,8 @@ public final class RemoteClientBuilder implements RemoteBuilder<RemoteClient> {
     private RemoteClientBuilder(String host, int port, int ownPort, Class<? extends NetworkProtocol> networkProtocolClass,
                                 Class<? extends UpdatePolicy> updatePolicyClass) {
         remoteClient = new RemoteClient(host, port, ownPort, networkProtocolClass, updatePolicyClass);
-        remoteClient.getProxyManager().setRemoteRegistrationClient(host, port, remoteClient.getNetworkProtocol());
-        remoteClient.getProxyManager().setRemoteKeepAliveClient(host, port, remoteClient.getNetworkProtocol());
+        remoteClient.getProxyManager().setupRemoteRegistrationClient(host, port, remoteClient.getNetworkProtocol());
+        remoteClient.getProxyManager().setupRemoteKeepAliveClient(host, port, remoteClient.getNetworkProtocol());
     }
 
     public final RemoteClientBuilder withRemotePushModel(Class<?>... pushModelClasses) {
